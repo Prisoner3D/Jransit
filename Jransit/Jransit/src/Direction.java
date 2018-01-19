@@ -4,7 +4,7 @@ public enum Direction {
 	
 	public Direction getDirection(char x) {
 		if(x =='S') {
-			return SOUTH;
+			return SOUTH; 
 		}
 		else if(x == 'N') {
 			return NORTH;

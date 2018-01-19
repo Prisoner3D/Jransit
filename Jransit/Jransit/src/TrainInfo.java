@@ -14,7 +14,7 @@ public class TrainInfo {
 		this.nextStation = null;// go into the api or line info and find the next line Maybe loop and find the station in the array after the parent station
 		this.direction =  Direction(trainPosition.getStopId().getCharAt(trainPosition.getStopId().length()));
 		
-	}
+	} 
 	
 	public double claculateDistanceFromStation() {
 		// use the time from station and distance from the next station
