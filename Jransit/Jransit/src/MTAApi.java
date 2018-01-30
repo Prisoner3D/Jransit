@@ -22,6 +22,8 @@ public class MTAApi {
 		this.feed = getFeed(feedID);
 	}
 
+	
+	// id is taken from trainfeed
 	private FeedMessage getFeed(TrainFeed id) throws IOException {
 		ExtensionRegistry registry = ExtensionRegistry.newInstance();
 		registry.add(GtfsRealtimeNYCT.nyctFeedHeader);
@@ -43,4 +45,9 @@ public class MTAApi {
 		return trains;
 	}
 	
+	// idk make a new station obj, and corrolate with stops.txt its broken btw
+	public List<null> getStations() {
+		List<IDK> stations = new ArrayList<IDK>();
+		this.feed.getExtension(GtfsRealtimeNYCT.nyctStopTimeUpdate.get
+	}
 }
