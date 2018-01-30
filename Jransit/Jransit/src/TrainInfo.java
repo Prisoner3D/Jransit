@@ -1,7 +1,7 @@
 import com.google.transit.realtime.GtfsRealtime.VehiclePosition;
 
 public class TrainInfo {
-	private String TrainId;
+	private String trainId;
 	private String parentStation;
 	private String nextStation;
 	private VehiclePosition trainPosition;
@@ -9,14 +9,14 @@ public class TrainInfo {
 	private Line line;
 	
 	public TrainInfo(String trainID) {
-		this.TrainId = TrainId;
+		this.trainId = trainId;
 		this.parentStation = trainPosition.getStopId();
 		this.nextStation = null;// go into the api or line info and find the next line Maybe loop and find the station in the array after the parent station
-		this.direction =  Direction(trainPosition.getStopId().charAt(trainPosition.getStopId().length()));
+		this.direction = Direction(trainPosition.getStopId().charAt(trainPosition.getStopId().length()));
 		
 	} 
 	
-	public double claculateDistanceFromStation() {
+	public double calcultateDistanceFromStation() {
 		// use the time from station and distance from the next station
 	}
 	
