@@ -3,6 +3,14 @@ package csv;
 public class Stop {
 	private final String stopID;
 	private final Entity entity;
+	private final String zoneID;
+	private final String longitude;
+	private final String latitude;
+	private final String stopUrl;
+	private final String description;
+	private final String name;
+	private final String locationType;
+	private final String parentStation;
 	
 	public String getStopID() {
 		return stopID;
@@ -11,39 +19,52 @@ public class Stop {
 	public Stop(Entity entity) {
 		this.stopID = entity.getPrimaryKey();
 		this.entity = entity;
+		this.zoneID = entity.getAttribute("zone_id");
+		this.longitude = entity.getAttribute("stop_lon");
+		this.latitude = entity.getAttribute("stop_lat");
+		this.stopUrl = entity.getAttribute("stop_url");
+		this.description = entity.getAttribute("stop_desc");
+		this.name = entity.getAttribute("stop_name");
+		this.locationType = entity.getAttribute("location_type");
+		this.parentStation = entity.getAttribute("parent_station");
 	}
 	
-	public final String getZoneID() {
-		return entity.getAttribute("zone_id");
+	public Entity getEntity() {
+		return entity;
 	}
-	
-	public final String getLongitude() {
-		return entity.getAttribute("stop_lon");
+
+	public String getZoneID() {
+		return zoneID;
 	}
-	
-	public final String getLatitude() {
-		return entity.getAttribute("stop_lat");
+
+	public String getLongitude() {
+		return longitude;
 	}
-	
-	public final String getStopUrl() {
-		return entity.getAttribute("stop_url");
+
+	public String getLatitude() {
+		return latitude;
 	}
-	
-	public final String getStopDescription() {
-		return entity.getAttribute("stop_desc");
+
+	public String getStopUrl() {
+		return stopUrl;
 	}
-	
-	public final String getStopName() {
-		return entity.getAttribute("stop_name");
+
+	public String getDescription() {
+		return description;
 	}
-	
-	public final String getLocationType() {
-		return entity.getAttribute("location_type");
+
+	public String getName() {
+		return name;
 	}
-	
-	public final String getParentStation() {
-		return entity.getAttribute("parent_station");
+
+	public String getLocationType() {
+		return locationType;
 	}
+
+	public String getParentStation() {
+		return parentStation;
+	}
+
 	
 	@Override
 	public String toString() {
