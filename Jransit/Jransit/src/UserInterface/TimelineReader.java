@@ -10,7 +10,7 @@ import com.jfoenix.controls.JFXSlider.IndicatorPosition;
 import javafx.geometry.Orientation;
 
 public class TimelineReader {
-		private CSVReader csv;
+		//private CSVReader csv;
 		private DateFrom;
 		private DateTo;
 		private JFXSlider slider;
@@ -19,13 +19,13 @@ public class TimelineReader {
 
 	public TimelineReader(CSVReader csv, JFXSlider slider) {
 		this.DateFrom = new Date(dtf.format(now));
-		this.csv = csv;
+		//this.csv = csv;
 		//this.DateTo = last row of csv reader history sort DESC
 		this.slider = slider;
 	}
 	
-    public sliderValues(double min, double max, double value) {
-        super(min, max, value);
+    public void sliderValues(double min, double max, double value) {
+    	slider.
         initialize();
     }
     
