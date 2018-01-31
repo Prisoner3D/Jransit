@@ -1,6 +1,6 @@
 
 public class LineInfo {
-	private Stations[] stations;
+	private StationInfo[] stations;
 	private String trainName;
 	private int numberOfTrains;
 	
@@ -10,13 +10,13 @@ public class LineInfo {
 		this.trainName = trainName;
 	}
 	
-	public getDistanceBetween(Station station1, Station station2) {
+	public double getDistanceBetween(Station station1, Station station2) {
 		//need to get a train that has just arrived at said station and keep a csv of distances using the average velocity and expexted arrival time 
 		//from the new station
 	}
 	
 	
-	public getStations() {
+	public StationInfo[] getStations() {
 		return this.stations;
 	}
 }
