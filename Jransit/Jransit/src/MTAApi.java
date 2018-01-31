@@ -22,7 +22,6 @@ public class MTAApi {
 		this.feed = getFeed(feedID);
 	}
 
-	
 	// id is taken from trainfeed
 	private FeedMessage getFeed(TrainFeed id) throws IOException {
 		ExtensionRegistry registry = ExtensionRegistry.newInstance();
@@ -41,12 +40,15 @@ public class MTAApi {
 				continue;
 			}
 			trains.add(entity.getVehicle());
+			//entity.getVehicle().getTrip();
+			//debug
+			//System.out.println(entity.getVehicle());
 		}
 		return trains;
 	}
 	
 	
-	
+	// ignore, not going to be used
 	// idk make a new station obj, and corrolate with stops.txt its broken btw
 	public void getStations() {
 		//List<Station> stations = new ArrayList<>();

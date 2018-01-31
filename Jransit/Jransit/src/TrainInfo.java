@@ -9,7 +9,7 @@ public class TrainInfo {
 	private Line line;
 	
 	public TrainInfo(String trainID) {
-		this.trainId = trainId;
+		this.trainId = trainID;
 		this.parentStation = trainPosition.getStopId();
 		this.nextStation = null;// go into the api or line info and find the next line Maybe loop and find the station in the array after the parent station
 		this.direction = Direction(trainPosition.getStopId().charAt(trainPosition.getStopId().length()));

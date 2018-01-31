@@ -1,6 +1,5 @@
-
 public class LineInfo {
-	private Stations[] stations;
+	private Station[] stations;
 	private String trainName;
 	private int numberOfTrains;
 	
@@ -8,6 +7,7 @@ public class LineInfo {
 		this.stations = null ; // loop through all stations with a certain track via scheduled track that pushes into propertrains station array
 								// should it be ordered northbound or southbound
 		this.trainName = trainName;
+		this.numberOfTrains = stations.size();
 	}
 	
 	public getDistanceBetween(Station station1, Station station2) {
