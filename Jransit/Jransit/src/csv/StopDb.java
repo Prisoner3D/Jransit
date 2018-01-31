@@ -13,6 +13,6 @@ public class StopDb {
 	}
 	
 	public Stop getStop(String primaryKey) {
-		return (Stop) csv.getEntity(0, primaryKey);
+		return new Stop(csv.getEntity(1, primaryKey));
 	}
 }

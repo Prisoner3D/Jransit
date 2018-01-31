@@ -5,7 +5,7 @@ import java.io.File;
 public class csvTest {
 
 	public static void main(String[] args) {
-		CSVUtilities csv = new CSVUtilities(new File("Jransit\\data\\stops.txt"));
-
+		StopDb stopDb = new StopDb();
+		System.out.println(stopDb.getStop("101"));
 	}
 }

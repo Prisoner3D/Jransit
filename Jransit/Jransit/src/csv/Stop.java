@@ -1,46 +1,52 @@
 package csv;
 
-public class Stop extends Entity {
+public class Stop {
 	private final String stopID;
+	private final Entity entity;
 	
 	public String getStopID() {
 		return stopID;
 	}
 	
-	public Stop(String stopID) {
-		super(stopID);
-		this.stopID = stopID;
+	public Stop(Entity entity) {
+		this.stopID = entity.getPrimaryKey();
+		this.entity = entity;
 	}
 	
-	public String getZoneID() {
-		return this.getAttribute("zone_id");
+	public final String getZoneID() {
+		return entity.getAttribute("zone_id");
 	}
 	
-	public String getLongitude() {
-		return this.getAttribute("stop_lon");
+	public final String getLongitude() {
+		return entity.getAttribute("stop_lon");
 	}
 	
-	public String getLatitude() {
-		return this.getAttribute("stop_lat");
+	public final String getLatitude() {
+		return entity.getAttribute("stop_lat");
 	}
 	
-	public String getStopUrl() {
-		return this.getAttribute("stop_url");
+	public final String getStopUrl() {
+		return entity.getAttribute("stop_url");
 	}
 	
-	public String getStopDescription() {
-		return this.getAttribute("stop_desc");
+	public final String getStopDescription() {
+		return entity.getAttribute("stop_desc");
 	}
 	
-	public String getStopName() {
-		return this.getAttribute("stop_name");
+	public final String getStopName() {
+		return entity.getAttribute("stop_name");
 	}
 	
-	public String getLocationType() {
-		return this.getAttribute("location_type");
+	public final String getLocationType() {
+		return entity.getAttribute("location_type");
 	}
 	
-	public String getParentStation() {
-		return this.getAttribute("parent_station");
+	public final String getParentStation() {
+		return entity.getAttribute("parent_station");
+	}
+	
+	@Override
+	public String toString() {
+		return String.valueOf(entity.getAttributes());
 	}
 }
