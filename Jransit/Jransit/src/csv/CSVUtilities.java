@@ -14,6 +14,10 @@ import java.util.Map;
 public class CSVUtilities {
 
 	ArrayList<String> CSVData;
+	public ArrayList<String> getCSVData() {
+		return CSVData;
+	}
+
 	private int numColumns;
 
 	/**
@@ -179,7 +183,6 @@ public class CSVUtilities {
 			}
 			ent.setAttribute(headers.get(i), line[i]);
 		}
-		System.out.println(ent.getAttributes());
 		return ent;
  	}
 	
