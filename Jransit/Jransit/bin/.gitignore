@@ -1,4 +1,5 @@
 /Direction.class
+/LineInfo.class
 /MTAApi.class
 /Test.class
 /TrainFeed.class
@@ -6,4 +7,4 @@
 /UserInterface/
 /com/
 /jfoenix-8.0.1.jar
-/LineInfo.class
+/StationInfo.class

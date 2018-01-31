@@ -45,9 +45,20 @@ public class MTAApi {
 		return trains;
 	}
 	
+	
+	
 	// idk make a new station obj, and corrolate with stops.txt its broken btw
-	public List<null> getStations() {
-		List<IDK> stations = new ArrayList<IDK>();
-		this.feed.getExtension(GtfsRealtimeNYCT.nyctStopTimeUpdate.get
+	public void getStations() {
+		//List<Station> stations = new ArrayList<>();
+		for (FeedEntity ent : this.feed.getEntityList()) {
+			if (!ent.hasVehicle()) {
+				continue;
+			}
+			System.out.println(ent.toString());
+			System.out.println(ent.getTripUpdate().getTrip().getRouteId());
+			//break;
+		}
+		
 	}
+		
 }
