@@ -2,8 +2,8 @@ package UserInterface;
 
 public class Widget 
 {
-	private String title;
-	private String description;
+	String title;
+	String description;
 	
 	public Widget(String title, String description)
 	{
