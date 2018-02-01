@@ -5,6 +5,8 @@ public class Test {
 		String key = "e7ed4dd1445f127eb503c38630a5d3e0";
 		MTAApi mta = new MTAApi(key, TrainFeed.BLUE);
 		//System.out.println(mta.getTrains());
-		System.out.println(mta.grabTrainInfo("074450_E..S"));
+		//mta.getStations();
+		System.out.println(mta.getStopTimes("077450_E..S").get(0));
+		//System.out.println(mta.grabTrainInfo("077450_E..S"));
 	}
 }

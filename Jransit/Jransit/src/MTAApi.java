@@ -8,6 +8,7 @@ import com.google.transit.realtime.GtfsRealtime;
 import com.google.transit.realtime.GtfsRealtime.FeedEntity;
 import com.google.transit.realtime.GtfsRealtime.FeedMessage;
 import com.google.transit.realtime.GtfsRealtime.Position;
+import com.google.transit.realtime.GtfsRealtime.TripUpdate.StopTimeUpdate;
 import com.google.transit.realtime.GtfsRealtime.VehiclePosition;
 import com.google.transit.realtime.GtfsRealtimeNYCT;
 
@@ -50,6 +51,7 @@ public class MTAApi {
 		return feed;
 	}
 
+	// Trains shouldnt be as a VehiclePosition but rather a Train object?
 	public List<VehiclePosition> getTrains() {
 		List<VehiclePosition> trains = new ArrayList<>();
 		for (FeedEntity entity : this.feed.getEntityList()) {
@@ -77,7 +79,17 @@ public class MTAApi {
         return null; // Should it return null?
     }
 	
-    public FeedMessage getStat
+    public List<GtfsRealtime.TripUpdate.StopTimeUpdate> getStopTimes(String trip_id) {
+    	for (FeedEntity ent : this.feed.getEntityList()) {
+			if (ent.hasVehicle()) {
+				continue;
+			}
+			if (ent.getTripUpdate().getTrip().getTripId().equals(trip_id)) {
+				return (List<StopTimeUpdate>) ent.getTripUpdate().getStopTimeUpdateList();
+			}
+		}
+		return null;
+    }
     
 	// Scraped, stations will be created on initialization by other parts of the application
 	public void getStations() {
