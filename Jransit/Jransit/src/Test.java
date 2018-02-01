@@ -10,5 +10,6 @@ public class Test {
 		//System.out.println(mta.getStopTimes("077450_E..S"));
 		System.out.println(mta.getArrivalTime("081100_E..S", "E01S"));
 		//System.out.println(mta.grabTrainInfo("077450_E..S"));
+		TrainInfo test = new TrainInfo("081100_E..S");
 	}
 }

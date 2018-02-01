@@ -1,5 +1,6 @@
 package csv;
 
+
 public class Stop {
 	private final String stopID;
 	private final Entity entity;

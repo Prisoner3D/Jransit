@@ -23,7 +23,8 @@ public class TrainInfo {
 		this.currentStation = trainPosition.getStopId();
 		this.nextStation = stopTimes.get(1).getStopId();
 		this.direction = Direction.getDirection(trainPosition.getStopId().charAt(trainPosition.getStopId().length()));
-		this.line = new LineInfo(this.id.substring(this.id.length() - 4,this.id.length() -3 )); // Joshua's part
+		this.line = new LineInfo(this.id.substring(this.id.length() - 4, this.id.length() - 3)); // Joshua's part
+		System.out.println(this.line);
 	} 
 	
 	public double calcultateDistanceFromStation() {
