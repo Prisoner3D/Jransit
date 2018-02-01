@@ -6,6 +6,7 @@ import java.util.List;
 import csv.CSVUtilities;
 import csv.Stop;
 import csv.StopDb;
+import csv.StopsStaticFactory;
 
 public class LineInfo {
 	private ArrayList<StationInfo> stations;
@@ -13,12 +14,11 @@ public class LineInfo {
 	private String trainName;
 	private int numberOfTrains;
 	//CSVUtilities reader = new CSVUtilities(new File("Jransit\\data\\stops.txt"));
-	StopDb reader = new StopDb();
 	public LineInfo(String trainName) throws IOException{
 		this.stations = null;   // loop through all stations with a certain track via scheduled track that pushes into propertrains station array
 		                        // should it be ordered northbound or southbound
 		this.trainName = trainName;
-		List <Stop> stationColumns = reader.getAllStops();
+		List <Stop> stationColumns = StopsStaticFactory.getAllStops();
 		for(Stop x : stationColumns) {
 			if(x.getStopID().substring(0, 1).equals(trainName)) {
 				 StationInfo newStation = new StationInfo(x);
