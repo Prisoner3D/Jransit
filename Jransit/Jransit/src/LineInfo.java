@@ -12,7 +12,7 @@ public class LineInfo {
 	private ArrayList<StationInfo> stations;
 	// private ArrayList<Station> stations; Currently unknown 
 	private String trainName;
-	private int numberOfTrains;
+	private int numberOfStations;
 	//CSVUtilities reader = new CSVUtilities(new File("Jransit\\data\\stops.txt"));
 	public LineInfo(String trainName) throws IOException{
 		this.stations = null;   // loop through all stations with a certain track via scheduled track that pushes into propertrains station array
@@ -25,7 +25,7 @@ public class LineInfo {
 				 stations.add(newStation);
 			}
 		}
-		this.numberOfTrains = stations.size();
+		this.numberOfStations = stations.size();
 	}
 	
 	public double getDistanceBetween(StationInfo station1, StationInfo station2) {
