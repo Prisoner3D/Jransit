@@ -6,7 +6,7 @@ public class Test {
 		MTAApi mta = new MTAApi(key, TrainFeed.BLUE);
 		//System.out.println(mta.getTrains());
 		//mta.getStations();
-		System.out.println(mta.getStopTimes("077450_E..S").get(0));
+		System.out.println(mta.getStopTimes("077450_E..S"));
 		//System.out.println(mta.grabTrainInfo("077450_E..S"));
 	}
 }
