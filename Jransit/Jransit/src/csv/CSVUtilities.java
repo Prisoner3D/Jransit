@@ -168,22 +168,20 @@ public class CSVUtilities {
 		return row[columnIdx];
  	}
 	
-	public Entity getEntity(int primaryKeyCol, String primaryKey) {
+	public List<Entity> getAllEntities(int primaryKeyCol, String primaryKey) {
+		List<String> headers = getColumnHeaders();
+		List<Entity> entities = new ArrayList<>();
 		String[] line = null;
 		for (int i = 0; i < CSVData.size(); i++) {
 			if ((line = CSVData.get(i).split(","))[primaryKeyCol].equals(primaryKey)) {
-				break;
+				Entity ent = new Entity(primaryKey);
+				for (int j = 0; j < headers.size(); j++) {
+					ent.setAttribute(headers.get(j), line[j]);
+				}
+				entities.add(ent);
 			}
 		}
-		List<String> headers = getColumnHeaders();
-		Entity ent = new Entity(primaryKey);
-		for (int i = 0; i < headers.size(); i++) {
-			if (i == primaryKeyCol) {
-				continue;
-			}
-			ent.setAttribute(headers.get(i), line[i]);
-		}
-		return ent;
+		return entities;
  	}
 	
 	public Entity getEntity(int primaryKeyCol, String primaryKey) {
@@ -196,9 +194,21 @@ public class CSVUtilities {
 		List<String> headers = getColumnHeaders();
 		Entity ent = new Entity(primaryKey);
 		for (int i = 0; i < headers.size(); i++) {
-			if (i == primaryKeyCol) {
-				continue;
+			ent.setAttribute(headers.get(i), line[i]);
+		}
+		return ent;
+ 	}
+	
+	public Entity getEntity(int primaryKeyCol, String primaryKey, int start) {
+		String[] line = null;
+		for (int i = start; i < CSVData.size(); i++) {
+			if ((line = CSVData.get(i).split(","))[primaryKeyCol].equals(primaryKey)) {
+				break;
 			}
+		}
+		List<String> headers = getColumnHeaders();
+		Entity ent = new Entity(primaryKey);
+		for (int i = 0; i < headers.size(); i++) {
 			ent.setAttribute(headers.get(i), line[i]);
 		}
 		return ent;
