@@ -1,6 +1,9 @@
 package UserInterface;
 	
 import com.jfoenix.controls.JFXSlider;
+import com.lynden.gmapsfx.javascript.object.LatLong;
+import com.lynden.gmapsfx.javascript.object.Marker;
+import com.lynden.gmapsfx.javascript.object.MarkerOptions;
 import com.teamdev.jxmaps.ControlPosition;
 import com.teamdev.jxmaps.LatLng;
 import com.teamdev.jxmaps.Map;
@@ -42,6 +45,7 @@ public class JavaFXExample extends Application {
                     // Creating a map options object
                     MapOptions options = new MapOptions();
                     // Creating a map type control options object
+                    
                     MapTypeControlOptions controlOptions = new MapTypeControlOptions();
                     // Changing position of the map type control
                     controlOptions.setPosition(ControlPosition.TOP_RIGHT);
@@ -52,6 +56,17 @@ public class JavaFXExample extends Application {
                     // Setting the map center
                     //40.6890° N, 73.9768° W
                     //40.7829° N, 73.9654° W
+                    
+                    MarkerOptions markerOptions = new MarkerOptions();
+
+                    markerOptions.position( new LatLong(47.6, -122.3) )
+                                .visible(Boolean.TRUE)
+                                .title("My Marker");
+
+                    Marker marker = new Marker( markerOptions );
+
+                    map.addMarker(marker);
+                    
                     map.setCenter(new LatLng(40.6890, -73.9768));
                     // Setting initial zoom value
                     map.setZoom(20.0);
