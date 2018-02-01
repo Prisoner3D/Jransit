@@ -16,6 +16,8 @@ public class Entity {
 		this.attributes = new HashMap<>();
 	}
 	
+	
+	
 	public String getAttribute(String attribute) {
 		return this.attributes.get(attribute);
 	}
