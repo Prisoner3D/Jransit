@@ -77,6 +77,8 @@ public class MTAApi {
         return null; // Should it return null?
     }
 	
+    public FeedMessage getStat
+    
 	// Scraped, stations will be created on initialization by other parts of the application
 	public void getStations() {
 		// List<Station> stations = new ArrayList<>();
