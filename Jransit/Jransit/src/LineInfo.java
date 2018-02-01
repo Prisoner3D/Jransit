@@ -6,26 +6,26 @@ import java.util.List;
 import csv.CSVUtilities;
 import csv.Stop;
 import csv.StopDb;
+import csv.StopsStaticFactory;
 
 public class LineInfo {
 	private ArrayList<StationInfo> stations;
 	// private ArrayList<Station> stations; Currently unknown 
 	private String trainName;
-	private int numberOfTrains;
+	private int numberOfStations;
 	//CSVUtilities reader = new CSVUtilities(new File("Jransit\\data\\stops.txt"));
-	StopDb reader = new StopDb();
 	public LineInfo(String trainName) throws IOException{
 		this.stations = null;   // loop through all stations with a certain track via scheduled track that pushes into propertrains station array
 		                        // should it be ordered northbound or southbound
 		this.trainName = trainName;
-		List <Stop> stationColumns = reader.getAllStops();
+		List <Stop> stationColumns = StopsStaticFactory.getAllStops();
 		for(Stop x : stationColumns) {
 			if(x.getStopID().substring(0, 1).equals(trainName)) {
 				 StationInfo newStation = new StationInfo(x);
 				 stations.add(newStation);
 			}
 		}
-		this.numberOfTrains = stations.size();
+		this.numberOfStations = stations.size();
 	}
 	
 	public double getDistanceBetween(StationInfo station1, StationInfo station2) {

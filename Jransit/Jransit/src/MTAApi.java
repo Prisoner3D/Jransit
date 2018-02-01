@@ -66,7 +66,7 @@ public class MTAApi {
 	
 	// Might change instead of trip_id to train_id, however train_id is not really used anywhere not even by the MTA
 	// Also might change so that it passes both the VehiclePosition and the TripMessage with the StopTimes
-    public VehiclePosition grabTrainInfo(String trip_id) {
+    public VehiclePosition grabVehiclePosition(String trip_id) {
         // Use trip_id to get train's VehiclePosition
         for (FeedEntity entity : this.feed.getEntityList()) {
             if (!entity.hasVehicle()) {
@@ -78,8 +78,17 @@ public class MTAApi {
         }
         return null; // Should it return null?
     }
-	
-    public List<GtfsRealtime.TripUpdate.StopTimeUpdate> getStopTimes(String trip_id) {
+    
+    public long getArrivalTime(String trip_id, String stop_id) {
+    	for (StopTimeUpdate stu : getStopTimes(trip_id)) {
+    		if (stu.getStopId().equals(stop_id)) {
+    			return stu.getArrival().getTime();
+    		}
+    	}
+    	return -1;
+    }
+    
+    public List<StopTimeUpdate> getStopTimes(String trip_id) {
     	for (FeedEntity ent : this.feed.getEntityList()) {
 			if (ent.hasVehicle()) {
 				continue;
