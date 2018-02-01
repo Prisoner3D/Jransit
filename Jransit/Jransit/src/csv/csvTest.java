@@ -6,6 +6,6 @@ public class csvTest {
 
 	public static void main(String[] args) {
 		StopDb stopDb = new StopDb();
-		System.out.println(stopDb.getStop("101"));
+		System.out.println(stopDb.getAllStops());
 	}
 }

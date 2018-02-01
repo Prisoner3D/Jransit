@@ -184,6 +184,20 @@ public class CSVUtilities {
 		return entities;
  	}
 	
+	public List<Entity> getAllEntities(int primaryKeyCol) {
+		List<String> headers = getColumnHeaders();
+		List<Entity> entities = new ArrayList<>();
+		for (int i = 1; i < CSVData.size(); i++) {
+			String[] line = CSVData.get(i).split(",");
+			Entity ent = new Entity(line[primaryKeyCol]);
+			for (int j = 0; j < headers.size() - 1; j++) {
+				ent.setAttribute(headers.get(j), line[j]);
+			}
+			entities.add(ent);
+		}
+		return entities;
+ 	}
+	
 	public Entity getEntity(int primaryKeyCol, String primaryKey) {
 		String[] line = null;
 		for (int i = 0; i < CSVData.size(); i++) {
