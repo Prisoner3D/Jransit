@@ -8,39 +8,38 @@ import com.jfoenix.controls.JFXSlider;
 import com.jfoenix.controls.JFXSlider.IndicatorPosition;
 
 import javafx.geometry.Orientation;
+import javafx.scene.control.Slider;
 
 public class TimelineReader {
-		//private CSVReader csv;
-		private DateFrom;
-		private DateTo;
+		//private CSVUtilities csv;
+		private Date DateFrom;
+		private Date DateTo;
 		private JFXSlider slider;
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm");
 		LocalDateTime now = LocalDateTime.now();
 
-	public TimelineReader(CSVReader csv, JFXSlider slider) {
+	public TimelineReader(CSVUtilities csv, JFXSlider slider) {
 		this.DateFrom = new Date(dtf.format(now));
 		//this.csv = csv;
-		//this.DateTo = last row of csv reader history sort DESC
+		//this.DateTo = last row of csv reader history sort DESC 
+		//dates (csv.getDataInt(numColumns));
 		this.slider = slider;
 	}
 	
     public void sliderValues(double min, double max, double value) {
-    	slider.
-        initialize();
+    	slider.setMinWidth(min);
+    	slider.setMaxWidth(max);
+    	slider.getIndicatorPosition();
+        slider.setMin(0); //to be based on rows
+        slider.setMax(100); //to be based on rows
+        slider.setValue(1); 
+        slider.setMinorTickCount(0);
+        slider.setMajorTickUnit(1);
+        slider.setSnapToTicks(true);
+        slider.setShowTickMarks(true);
+        slider.setShowTickLabels(true);
     }
-    
-
-    public IndicatorPosition getIndicatorPosition() {
-        return indicatorPosition == null ? IndicatorPosition.LEFT : indicatorPosition.get();
-    }
-
-    public StyleableObjectProperty<IndicatorPosition> indicatorPositionProperty() {
-        return this.indicatorPosition;
-    }
-
-    public void setIndicatorPosition(IndicatorPosition pos) {
-        this.indicatorPosition.set(pos);
-    }
+   
     
 	/**TODO:
 	 * SLIDER
