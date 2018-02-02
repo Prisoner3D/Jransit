@@ -20,6 +20,7 @@ public class MapOverlay extends Application
 		{
 			Pane root = new Pane(); 
 			Widget theWidget = new Widget("station","station description", 100, 265.2, root);
+			theWidget.addRow("xtra");
 			Scene scene = new Scene(root,1900,1000);
 			primaryStage.setScene(scene);
 			primaryStage.show();
@@ -33,10 +34,5 @@ public class MapOverlay extends Application
 	public static void main(String[] args) 
 	{
 		launch(args);
-	}
-	
-	public void addRow(Widget widget)
-	{
-		
 	}
 }

@@ -1,9 +1,6 @@
 package UserInterface;
 	
 import com.jfoenix.controls.JFXSlider;
-import com.lynden.gmapsfx.javascript.object.LatLong;
-import com.lynden.gmapsfx.javascript.object.Marker;
-import com.lynden.gmapsfx.javascript.object.MarkerOptions;
 import com.teamdev.jxmaps.ControlPosition;
 import com.teamdev.jxmaps.LatLng;
 import com.teamdev.jxmaps.Map;
@@ -11,6 +8,7 @@ import com.teamdev.jxmaps.MapOptions;
 import com.teamdev.jxmaps.MapReadyHandler;
 import com.teamdev.jxmaps.MapStatus;
 import com.teamdev.jxmaps.MapTypeControlOptions;
+import com.teamdev.jxmaps.MarkerOptions;
 import com.teamdev.jxmaps.javafx.MapView;
 import javafx.application.Application;
 import javafx.geometry.Pos;
@@ -57,7 +55,7 @@ public class JavaFXExample extends Application {
                     //40.6890° N, 73.9768° W
                     //40.7829° N, 73.9654° W
                     
-                    MarkerOptions markerOptions = new MarkerOptions();
+              /*      MarkerOptions markerOptions = new MarkerOptions();
 
                     markerOptions.position( new LatLong(47.6, -122.3) )
                                 .visible(Boolean.TRUE)
@@ -66,7 +64,7 @@ public class JavaFXExample extends Application {
                     Marker marker = new Marker( markerOptions );
 
                     map.addMarker(marker);
-                    
+                    */
                     map.setCenter(new LatLng(40.6890, -73.9768));
                     // Setting initial zoom value
                     map.setZoom(20.0);
@@ -76,13 +74,23 @@ public class JavaFXExample extends Application {
         StackPane root = new StackPane();
         BorderPane map = new BorderPane(mapView);
         map.setMaxSize(1000,1000);
-        BorderPane slider = new BorderPane();
+        Pane slider = new Pane();
         slider.setMinWidth(500);
+        
 		JFXSlider hor_left = new JFXSlider();
+		hor_left.setMin(0); //to be based on rows
+		hor_left.setMax(100); //to be based on rows
+		hor_left.setValue(1); 
+		hor_left.setMinorTickCount(0);
+		hor_left.setMajorTickUnit(1);
+		hor_left.setSnapToTicks(true);
+		hor_left.setShowTickMarks(true);
+		hor_left.setShowTickLabels(true);
 		hor_left.setMaxWidth(500);
 		slider.getChildren().add(hor_left);
-        slider.setAlignment(hor_left, Pos.CENTER_RIGHT);
-        root.getChildren().addAll(map,slider);
+     //   slider.setAlignment(hor_left, Pos.CENTER_RIGHT);
+        
+        root.getChildren().addAll(slider,map);
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
         primaryStage.show();
