@@ -20,7 +20,9 @@ public class LineInfo {
 		this.trainName = trainName;
 		List<Stop> stationColumns = StopsStaticFactory.getAllStops();
 		for(Stop x : stationColumns) {
-			if(x.getStopID().substring(0, 1).equals(trainName)) {
+			System.out.println(x.getEntity().getAttribute("stop_id"));
+			if(x != null && x.getEntity().getAttribute("stop_id").substring(0, 1).equals(trainName)) {
+				 System.out.println(x.getStopID());
 				 StationInfo newStation = new StationInfo(x);
 				 stations.add(newStation);
 			}
