@@ -93,8 +93,9 @@ public class MTAApi {
 			if (ent.hasVehicle()) {
 				continue;
 			}
+			//System.out.println(ent);
 			if (ent.getTripUpdate().getTrip().getTripId().equals(trip_id)) {
-				return (List<StopTimeUpdate>) ent.getTripUpdate().getStopTimeUpdateList();
+				return ent.getTripUpdate().getStopTimeUpdateList();
 			}
 		}
 		return null;

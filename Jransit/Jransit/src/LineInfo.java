@@ -18,7 +18,7 @@ public class LineInfo {
 		this.stations = null;   // loop through all stations with a certain track via scheduled track that pushes into propertrains station array
 		                        // should it be ordered northbound or southbound
 		this.trainName = trainName;
-		List <Stop> stationColumns = StopsStaticFactory.getAllStops();
+		List<Stop> stationColumns = StopsStaticFactory.getAllStops();
 		for(Stop x : stationColumns) {
 			if(x.getStopID().substring(0, 1).equals(trainName)) {
 				 StationInfo newStation = new StationInfo(x);
