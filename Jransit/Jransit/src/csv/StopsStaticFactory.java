@@ -2,6 +2,11 @@ package csv;
 
 import java.util.List;
 
+/**
+ * Preserves a single instance of all stops
+ * @author Alex
+ *
+ */
 public class StopsStaticFactory {
 	private static List<Stop> stops;
 	

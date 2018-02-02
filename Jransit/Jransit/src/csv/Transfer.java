@@ -1,6 +1,6 @@
 package csv;
 
-public class Transfer {
+public class Transfer implements EntityComposition {
 	private final String fromStopID;
 	private final Entity entity;
 	private final String toStopID;

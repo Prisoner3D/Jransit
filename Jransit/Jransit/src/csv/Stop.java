@@ -1,7 +1,7 @@
 package csv;
 
 
-public class Stop {
+public class Stop implements EntityComposition {
 	private final String stopID;
 	private final Entity entity;
 	private final String zoneID;
