@@ -11,6 +11,7 @@ public class Widget
 	double x;
 	double y;
 	Pane parent;
+	VBox widget;
 	
 	public Widget(String title, String description, double x, double y, Pane root)
 	{
@@ -18,7 +19,7 @@ public class Widget
 		this.description = description;
 		this.x = x;
 		this.y = y;
-		VBox widget = new VBox();
+		this.widget = new VBox();
 		Text t = new Text(title);
 		Text d = new Text(description);
 		widget.setTranslateX(x);
@@ -35,5 +36,11 @@ public class Widget
 	public String getDescription()
 	{
 		return this.description;
+	}
+	
+	public void addRow(String xtra)
+	{
+		Text extra = new Text(xtra);
+		this.widget.getChildren().add(extra);
 	}
 }
