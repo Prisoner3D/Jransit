@@ -9,7 +9,8 @@ import csv.StopDb;
 import csv.StopsStaticFactory;
 
 public class LineInfo {
-	private ArrayList<StationInfo> stations;
+	private List<StationInfo> stations = new ArrayList<StationInfo>();
+	
 	// private ArrayList<Station> stations; Currently unknown 
 	private String trainName;
 	private int numberOfStations;
@@ -20,9 +21,7 @@ public class LineInfo {
 		this.trainName = trainName;
 		List<Stop> stationColumns = StopsStaticFactory.getAllStops();
 		for(Stop x : stationColumns) {
-			System.out.println(x.getEntity().getAttribute("stop_id"));
 			if(x != null && x.getEntity().getAttribute("stop_id").substring(0, 1).equals(trainName)) {
-				 System.out.println(x.getStopID());
 				 StationInfo newStation = new StationInfo(x);
 				 stations.add(newStation);
 			}
@@ -41,7 +40,7 @@ public class LineInfo {
 		return null;
 	}
 	*/
-	public ArrayList<StationInfo> getStationInfos() {
+	public List<StationInfo> getStationInfos() {
 		return this.stations;
 	}
 	

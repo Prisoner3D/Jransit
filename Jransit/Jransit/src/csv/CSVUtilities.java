@@ -189,7 +189,7 @@ public class CSVUtilities {
 		List<Entity> entities = new ArrayList<>();
 		for (int i = 1; i < CSVData.size(); i++) {
 			String[] line = CSVData.get(i).split(",");
-			Entity ent = new Entity(line[primaryKeyCol]);
+			Entity ent = new Entity(line[primaryKeyCol-1]);
 			for (int j = 0; j < headers.size() - 1; j++) {
 				ent.setAttribute(headers.get(j), line[j]);
 			}
