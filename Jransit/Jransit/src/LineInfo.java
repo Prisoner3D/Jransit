@@ -15,7 +15,7 @@ public class LineInfo {
 	private int numberOfStations;
 	//CSVUtilities reader = new CSVUtilities(new File("Jransit\\data\\stops.txt"));
 	public LineInfo(String trainName) throws IOException{
-		this.stations = null;   // loop through all stations with a certain track via scheduled track that pushes into propertrains station array
+   // loop through all stations with a certain track via scheduled track that pushes into propertrains station array
 		                        // should it be ordered northbound or southbound
 		this.trainName = trainName;
 		List<Stop> stationColumns = StopsStaticFactory.getAllStops();
@@ -27,6 +27,7 @@ public class LineInfo {
 				 stations.add(newStation);
 			}
 		}
+		this.stations = stations;
 		this.numberOfStations = stations.size();
 	}
 	
