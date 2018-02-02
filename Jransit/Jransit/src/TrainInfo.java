@@ -9,9 +9,9 @@ public class TrainInfo {
 	private String id;
 	private VehiclePosition trainPosition;
 	private List<StopTimeUpdate> stopTimes;
-	private String currentStation;
-	private String nextStation;
-	private Direction direction;
+	private String currentStation = null;
+	private String nextStation = null;
+	private Direction direction = null;
 	private LineInfo line;
 	
 	public TrainInfo(String trip_id, LineInfo joshisbad) throws IOException {
@@ -19,16 +19,13 @@ public class TrainInfo {
 		MTAApi api = new MTAApi(key, TrainFeed.BLUE); // Might change to using existing api object
 		this.id = trip_id;
 		this.trainPosition = api.grabVehiclePosition(id);
-		//System.out.println(trainPosition);
 		this.stopTimes = api.getStopTimes(id);
-		//System.out.println(stopTimes);
-		this.currentStation = stopTimes.get(0).getStopId();
-		this.nextStation = stopTimes.get(1).getStopId();
-		this.direction = Direction.getDirection(stopTimes.get(0).getStopId().charAt(stopTimes.get(0).getStopId().length() - 1));
-		System.out.println(direction);
-		//System.out.println(id);
-		this.line = joshisbad; // Joshua u need to fix this pronto plsssssss
-		//System.out.println(this.line);
+		if (stopTimes.size() > 0) {
+			this.currentStation = stopTimes.get(0).getStopId();
+			this.nextStation = stopTimes.get(1).getStopId();
+			this.direction = Direction.getDirection(stopTimes.get(0).getStopId().charAt(stopTimes.get(0).getStopId().length() - 1));
+		}
+		this.line = joshisbad; // Joshua u need to fix this pronto plsssssss	
 	}
 	
 	public double calcultateDistanceFromStation() {
