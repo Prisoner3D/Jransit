@@ -3,6 +3,11 @@ package csv;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * An entity represents a row in a CSV file
+ * @author alex
+ *
+ */
 public class Entity {
 	private final String primaryKey;
 	private final Map<String, String> attributes;
