@@ -40,7 +40,7 @@ public class TimelineReader {
         slider.setShowTickLabels(true);
     }
    
-    
+     
 	/**TODO:
 	 * SLIDER
 	 * CSV Reader
