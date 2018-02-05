@@ -1,31 +1,55 @@
 import java.io.IOException;
 
 import csv.Stop;
+import csv.StopsStaticFactory;
 
 public class StationInfo {
-	private double latitude;
-	private double longitude;
 	private Stop stop;
 	private String name;
 	private String route;
 	private MTAApi api;
 	
+	
 	public StationInfo(MTAApi api, Stop stop) throws IOException {
+		String key = "e7ed4dd1445f127eb503c38630a5d3e0";
 		this.api = api;
-		this.longitude = Double.parseDouble(stop.getLongitude()); // go into alex's csv and pull it
-		this.latitude = Double.parseDouble(stop.getLatitude());; // see above
-		this.name = stop.getName(); // same as above
+		this.stop = stop;
 	}
 	
 	public double getLongitude() {
-		return this.longitude;
+		return Double.parseDouble(stop.getLongitude());
 	} 
 	
 	public double getLatitude() {
-		return this.latitude;
+		return Double.parseDouble(stop.getLatitude());
 	}
 	
-	public String getStationName() {
-		return this.name;
+	public String getTrainName() {
+		return stop.getName();
 	}
+	
+	public String getZoneID() {
+		return stop.getZoneID();
+	}
+
+	public String getStopUrl() {
+		return stop.getStopUrl();
+	}
+
+	public String getDescription() {
+		return stop.getDescription();
+	}
+
+	public String getName() {
+		return stop.getName();
+	}
+
+	public String getLocationType() {
+		return stop.getLocationType();
+	}
+	/*
+	public String getParentStation() {
+		//return StopsStaticFactory.getStop(stop.getParentStation());
+	}
+	*/
 }
