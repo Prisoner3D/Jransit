@@ -13,14 +13,14 @@ public class LineInfo {
 	private String lineLetter;
 	private int numberOfStations;
 
-	public LineInfo(String trainName) throws IOException{
+	public LineInfo(MTAApi api, String trainName) throws IOException{
    // loop through all stations with a certain track via scheduled track that pushes into propertrains station array
 		                        // should it be ordered northbound or southbound
 		this.lineLetter = trainName;
 		List<Stop> stationColumns = StopsStaticFactory.getAllStops();
 		for(Stop x : stationColumns) {
 			if(x != null && x.getEntity().getAttribute("stop_id").substring(0, 1).equals(trainName)) {
-				 StationInfo newStation = new StationInfo(x);
+				 StationInfo newStation = new StationInfo(api, x);
 				 stations.add(newStation);
 			}
 		}

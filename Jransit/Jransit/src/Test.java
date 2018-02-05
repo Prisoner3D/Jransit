@@ -8,11 +8,9 @@ public class Test {
 		
 		//mta.getStations();
 		//System.out.println(mta.getStopTimes("081100_E..S"));
-		System.out.println(mta.getArrivalTime("081100_E..S", "A34S"));
 		//System.out.println(mta.grabTrainInfo("081100_E..S"));
-		LineInfo ETRAIN = new LineInfo("E");
-		TrainInfo test = new TrainInfo("081100_E..S", ETRAIN);
-		System.out.println(test.getCurrentStation());
-		System.out.println(test.getNextStation());
+		LineInfo ETRAIN = new LineInfo(mta, "E");
+		//TrainInfo test = new TrainInfo("081100_E..S", ETRAIN);
+		System.out.println(ETRAIN.getStations());
 	}
 }

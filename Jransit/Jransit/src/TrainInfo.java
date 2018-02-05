@@ -1,14 +1,14 @@
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
-import com.google.transit.realtime.GtfsRealtime;
 import com.google.transit.realtime.GtfsRealtime.TripUpdate.StopTimeUpdate;
 import com.google.transit.realtime.GtfsRealtime.VehiclePosition;
 
 public class TrainInfo {
 	private String id;
 	private VehiclePosition trainPosition;
-	private List<StopTimeUpdate> stopTimes;
+	private List<StopTimeUpdate> stopTimes = new ArrayList<>();
 	private String currentStation = null;
 	private String nextStation = null;
 	private Direction direction = null;
