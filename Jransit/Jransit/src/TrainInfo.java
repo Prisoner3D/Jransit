@@ -14,9 +14,7 @@ public class TrainInfo {
 	private Direction direction = null;
 	private LineInfo line;
 	
-	public TrainInfo(String trip_id, LineInfo joshisbad) throws IOException {
-		String key = "e7ed4dd1445f127eb503c38630a5d3e0";
-		MTAApi api = new MTAApi(key, TrainFeed.BLUE); // Might change to using existing api object
+	public TrainInfo(MTAApi api, String trip_id, LineInfo line) throws IOException {
 		this.id = trip_id;
 		this.trainPosition = api.grabVehiclePosition(id);
 		this.stopTimes = api.getStopTimes(id);
@@ -25,7 +23,7 @@ public class TrainInfo {
 			this.nextStation = stopTimes.get(1).getStopId();
 			this.direction = Direction.getDirection(stopTimes.get(0).getStopId().charAt(stopTimes.get(0).getStopId().length() - 1));
 		}
-		this.line = joshisbad; // Joshua u need to fix this pronto plsssssss	
+		this.line = line; // Joshua u need to fix this pronto plsssssss	
 	}
 	
 	public double calcultateDistanceFromStation() {

@@ -79,7 +79,7 @@ public class MTAApi {
         return null; // Should it return null?
     }
     
-    public long getArrivalTime(String trip_id, String stop_id) {
+    public long getArrivalTime(String trip_id, String stop_id) { // Add null check
     	for (StopTimeUpdate stu : getStopTimes(trip_id)) {
     		if (stu.getStopId().equals(stop_id)) {
     			return stu.getArrival().getTime();

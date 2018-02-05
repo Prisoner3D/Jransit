@@ -11,7 +11,6 @@ public class StationInfo {
 	private MTAApi api;
 	
 	public StationInfo(MTAApi api, Stop stop) throws IOException {
-		String key = "e7ed4dd1445f127eb503c38630a5d3e0";
 		this.api = api;
 		this.longitude = Double.parseDouble(stop.getLongitude()); // go into alex's csv and pull it
 		this.latitude = Double.parseDouble(stop.getLatitude());; // see above
