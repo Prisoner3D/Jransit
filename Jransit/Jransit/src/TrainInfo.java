@@ -14,7 +14,7 @@ public class TrainInfo {
 	private Direction direction = null;
 	private LineInfo line;
 	
-	public TrainInfo(MTAApi api, String trip_id, LineInfo line) throws IOException {
+	public TrainInfo(MTAApi api, String trip_id) throws IOException {
 		this.id = trip_id;
 		this.trainPosition = api.grabVehiclePosition(id);
 		this.stopTimes = api.getStopTimes(id);
@@ -23,7 +23,7 @@ public class TrainInfo {
 			this.nextStation = stopTimes.get(1).getStopId();
 			this.direction = Direction.getDirection(stopTimes.get(0).getStopId().charAt(stopTimes.get(0).getStopId().length() - 1));
 		}
-		this.line = line; // Joshua u need to fix this pronto plsssssss	
+	 this.line = new LineInfo(api,this.id.substring(this.id.indexOf("_"),this.id.indexOf("_") + 1));; // Joshua u need to fix this pronto plsssssss	
 	}
 	
 	public double calcultateDistanceFromStation() {
