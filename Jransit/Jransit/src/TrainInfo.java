@@ -14,7 +14,7 @@ public class TrainInfo {
 	private Direction direction = null;
 	private LineInfo line;
 	
-	public TrainInfo(MTAApi api, String trip_id, LineInfo line) throws IOException {
+	public TrainInfo(MTAApi api, String trip_id) throws IOException {
 		this.id = trip_id;
 		this.trainPosition = api.grabVehiclePosition(id);
 		this.stopTimes = api.getStopTimes(id);
