@@ -11,7 +11,6 @@ public class StationInfo {
 	
 	
 	public StationInfo(MTAApi api, Stop stop) throws IOException {
-		String key = "e7ed4dd1445f127eb503c38630a5d3e0";
 		this.api = api;
 		this.stop = stop;
 	}

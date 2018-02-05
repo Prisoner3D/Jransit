@@ -6,15 +6,20 @@ public class Test {
 		MTAApi mta = new MTAApi(key, TrainFeed.GREEN);
 		//System.out.println(mta.getTrains());
 		
+		// For Alex: http://web.mta.info/developers/data/nyct/subway/Stations.csv
+		
 		//mta.printEverything();
-		//System.out.println(mta.getStopTimes("078100_E..S"));
+		
 		//System.out.println(mta.grabTrainInfo("081100_E..S"));
-		LineInfo ETRAIN = new LineInfo(mta, "G");
-		TrainInfo test = new TrainInfo(mta, "077650_G..S", ETRAIN);
-		System.out.println(ETRAIN.getStations());
-		for (StationInfo test2 : ETRAIN.getStationInfos()) {
-			System.out.println(test2.getStationName());
+		LineInfo gTrain = new LineInfo(mta, "G");
+		//LineInfo lTrain = new LineInfo(mta, "L");
+		//LineInfo ETRAIN = new LineInfo(mta, "G");
+		TrainInfo test = new TrainInfo(mta, "067650_G..S");
+		//System.out.println(gTrain.getStations());
+		for (StationInfo test2 : gTrain.getStationInfos()) {
+			//System.out.println(test2.getName());
 		}
+		System.out.println(mta.getStopTimes("067650_G..S"));
 		System.out.println(test.getCurrentStation());
 	}
 }
