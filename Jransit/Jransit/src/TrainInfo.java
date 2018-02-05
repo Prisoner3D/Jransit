@@ -40,15 +40,15 @@ public class TrainInfo {
     }
 
     public String getCurrentStation() {
-        return this.currentStation;
+        return currentStation;
     }
 
     public String getNextStation() {
-        return this.nextStation;
+        return nextStation;
     }
 
     public Direction getDirection() {
-        return this.direction;
+        return direction;
     }
 
     public double getLatitude() {
