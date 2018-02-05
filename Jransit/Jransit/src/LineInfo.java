@@ -10,15 +10,13 @@ import csv.StopsStaticFactory;
 
 public class LineInfo {
 	private List<StationInfo> stations = new ArrayList<StationInfo>();
-	
-	// private ArrayList<Station> stations; Currently unknown 
-	private String trainName;
+	private String lineLetter;
 	private int numberOfStations;
-	//CSVUtilities reader = new CSVUtilities(new File("Jransit\\data\\stops.txt"));
+
 	public LineInfo(String trainName) throws IOException{
    // loop through all stations with a certain track via scheduled track that pushes into propertrains station array
 		                        // should it be ordered northbound or southbound
-		this.trainName = trainName;
+		this.lineLetter = trainName;
 		List<Stop> stationColumns = StopsStaticFactory.getAllStops();
 		for(Stop x : stationColumns) {
 			if(x != null && x.getEntity().getAttribute("stop_id").substring(0, 1).equals(trainName)) {
@@ -26,7 +24,6 @@ public class LineInfo {
 				 stations.add(newStation);
 			}
 		}
-		this.stations = stations;
 		this.numberOfStations = stations.size();
 	}
 	
@@ -47,5 +44,17 @@ public class LineInfo {
 	public double getTimeBetweenStations(StationInfo sta1, StationInfo sta2) {
 		return -1;
 		// WIP
+	}
+	
+	public List<StationInfo> getStations() {
+		return stations;
+	}
+
+	public String getLineLetter() {
+		return lineLetter;
+	}
+
+	public int getNumberOfStations() {
+		return numberOfStations;
 	}
 }
