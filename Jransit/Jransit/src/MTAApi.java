@@ -51,7 +51,8 @@ public class MTAApi {
 		return feed;
 	}
 
-	// Trains shouldnt be as a VehiclePosition but rather a Train object?
+	// Gets all available trains on the current TrainFeed
+	// Trains shouldn't be as a VehiclePosition but rather a TrainInfo object?
 	public List<VehiclePosition> getTrains() {
 		List<VehiclePosition> trains = new ArrayList<>();
 		for (FeedEntity entity : this.feed.getEntityList()) {
@@ -59,12 +60,11 @@ public class MTAApi {
 				continue;
 			}
 			trains.add(entity.getVehicle());
-			// System.out.println(entity.getVehicle()); // Debug
+			// System.out.println(entity.getVehicle());
 		}
 		return trains;
 	}
 	
-	// Might change instead of trip_id to train_id, however train_id is not really used anywhere not even by the MTA
 	// Also might change so that it passes both the VehiclePosition and the TripMessage with the StopTimes
     public VehiclePosition grabVehiclePosition(String trip_id) {
         // Use trip_id to get train's VehiclePosition
@@ -79,11 +79,14 @@ public class MTAApi {
         return null; // Should it return null?
     }
     
-    public long getArrivalTime(String trip_id, String stop_id) { // Add null check
-    	for (StopTimeUpdate stu : getStopTimes(trip_id)) {
-    		if (stu.getStopId().equals(stop_id)) {
-    			return stu.getArrival().getTime();
-    		}
+    public long getArrivalTime(String trip_id, String stop_id) {
+    	List<StopTimeUpdate> stopTimes;
+    	if ((stopTimes = getStopTimes(trip_id)) != null) {
+    		for (StopTimeUpdate stu : getStopTimes(trip_id)) {
+        		if (stu.getStopId().equals(stop_id)) {
+        			return stu.getArrival().getTime();
+        		}
+        	}
     	}
     	return -1;
     }
@@ -102,7 +105,7 @@ public class MTAApi {
     }
     
 	// Scraped, stations will be created on initialization by other parts of the application
-	public void getStations() {
+	public void printEverything() {
 		// List<Station> stations = new ArrayList<>();
 		for (FeedEntity ent : this.feed.getEntityList()) {
 			if (!ent.hasVehicle()) {
@@ -123,6 +126,6 @@ public class MTAApi {
 	}
 	
 	public void grabLineInfo() {
-	    
+	    // IDK NULL
 	}
 }

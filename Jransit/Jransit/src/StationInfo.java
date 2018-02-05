@@ -25,7 +25,7 @@ public class StationInfo {
 		return this.latitude;
 	}
 	
-	public String getTrainName() {
+	public String getStationName() {
 		return this.name;
 	}
 }

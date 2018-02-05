@@ -18,7 +18,7 @@ public class TrainInfo {
 		this.id = trip_id;
 		this.trainPosition = api.grabVehiclePosition(id);
 		this.stopTimes = api.getStopTimes(id);
-		if (stopTimes.size() > 0) {
+		if (stopTimes != null) {
 			this.currentStation = stopTimes.get(0).getStopId();
 			this.nextStation = stopTimes.get(1).getStopId();
 			this.direction = Direction.getDirection(stopTimes.get(0).getStopId().charAt(stopTimes.get(0).getStopId().length() - 1));
