@@ -18,29 +18,31 @@ import javafx.stage.Stage;
  */
 public class tryit extends Application {
     private Image backgroundImage;
+    private Image openImage;
 
-    private static final double W = 800;
-    private static final double H = 600;
+    private static final double W = 630;
+    private static final double H = 630;
 
     @Override
     public void init() {
-        backgroundImage = new Image("http://www.narniaweb.com/wp-content/uploads/2009/08/NarniaMap.jpg");
+    	openImage= new Image(" file:///C:/Users/BT_1N3_07/Pictures/d.png ");
+        backgroundImage = new Image("file:///C:/Users/BT_1N3_07/Pictures/c.png");
     }
 
     @Override
     public void start(Stage stage) {
-        stage.setTitle("Drag the mouse to pan the map");
+        stage.setTitle("Jransit");
         stage.setResizable(false);
 
         // make a transparent pale blue overlay with non transparent blue writing on it.
-        final Label label = new Label("Let's\nmake\nthis efficient");
+        final Label label = new Label("Let's\nget\nstarted");
         label.setTextAlignment(TextAlignment.CENTER);
-        label.setStyle("-fx-text-fill: midnightblue;  -fx-font: bold italic 40 'serif'; -fx-padding: 0 0 20 0;");
+        label.setStyle("-fx-text-fill: white;  -fx-font: bold italic 40 'serif'; -fx-padding: 0 0 20 0;");
 
         StackPane glass = new StackPane();
         StackPane.setAlignment(label, Pos.BOTTOM_CENTER);
         glass.getChildren().addAll(label);
-        glass.setStyle("-fx-background-color: rgba(0, 100, 100, 0.5);");
+        glass.setStyle("-fx-background-color: rgba(20, 20, 20, 0.5);");
         glass.setMaxWidth(W * 1/4);
         glass.setMaxHeight(H);
         StackPane.setAlignment(glass, Pos.CENTER_LEFT);
