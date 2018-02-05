@@ -31,7 +31,7 @@ public class TrainInfo {
 	}
 	
 	public LineInfo getLine() {
-		return this.line;
+		return line;
 	}
 	
     public void updateStation() {
