@@ -18,14 +18,14 @@ public class StationInfo {
 	}
 	
 	public double getLongitude() {
-		return this.longitude;
+		return longitude;
 	} 
 	
 	public double getLatitude() {
-		return this.latitude;
+		return latitude;
 	}
 	
 	public String getTrainName() {
-		return this.name;
+		return name;
 	}
 }
