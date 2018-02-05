@@ -50,6 +50,29 @@ public enum TrainFeed {
 	@Override
 	public String toString() {
 		return String.valueOf(this.id);
-		
+	}
+	
+	public static String getLetters(TrainFeed tf) {
+		switch(tf) {
+			case BLUE:
+				return "ACE";
+			case NUM_S:
+				return "123456S";
+			case YELLOW:
+				return "NQRW";
+			case ORANGE:
+				return "BDFM";
+			case GRAY:
+				return "L";
+			case SIR:
+				return "SIR";
+			case GREEN:
+				return "G";
+			case BROWN:
+				return "JZ";
+				
+			default:
+				return null;
+		}
 	}
 }
