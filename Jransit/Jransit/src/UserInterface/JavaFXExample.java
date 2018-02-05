@@ -2,13 +2,18 @@ package UserInterface;
 	
 import com.jfoenix.controls.JFXSlider;
 import com.teamdev.jxmaps.ControlPosition;
+import com.teamdev.jxmaps.Icon;
+import com.teamdev.jxmaps.InfoWindow;
 import com.teamdev.jxmaps.LatLng;
 import com.teamdev.jxmaps.Map;
+import com.teamdev.jxmaps.MapMouseEvent;
 import com.teamdev.jxmaps.MapOptions;
 import com.teamdev.jxmaps.MapReadyHandler;
 import com.teamdev.jxmaps.MapStatus;
 import com.teamdev.jxmaps.MapTypeControlOptions;
+import com.teamdev.jxmaps.Marker;
 import com.teamdev.jxmaps.MarkerOptions;
+import com.teamdev.jxmaps.MouseEvent;
 import com.teamdev.jxmaps.javafx.MapView;
 import javafx.application.Application;
 import javafx.geometry.Pos;
@@ -20,6 +25,9 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 public class JavaFXExample extends Application {
+    final static MapView mapView = new MapView();
+    final static Stage primaryStage = new Stage();
+	
     @Override
     public void init() throws Exception {
         // Initializing of JavaFX engine
@@ -28,9 +36,6 @@ public class JavaFXExample extends Application {
 
     @Override
     public void start(final Stage primaryStage) {
-        // Creation of a JavaFX map view
-        final MapView mapView = new MapView();
-
         // Setting of a ready handler to MapView object. onMapReady will be called when map initialization is done and
         // the map object is ready to use. Current implementation of onMapReady customizes the map object.
         mapView.setOnMapReadyHandler(new MapReadyHandler() {
@@ -49,25 +54,40 @@ public class JavaFXExample extends Application {
                     controlOptions.setPosition(ControlPosition.TOP_RIGHT);
                     // Setting map type control options
                     options.setMapTypeControlOptions(controlOptions);
-                    // Setting map options
-                    map.setOptions(options);
-                    // Setting the map center
-                    //40.6890° N, 73.9768° W
-                    //40.7829° N, 73.9654° W
-                    
-              /*      MarkerOptions markerOptions = new MarkerOptions();
-
-                    markerOptions.position( new LatLong(47.6, -122.3) )
-                                .visible(Boolean.TRUE)
-                                .title("My Marker");
-
-                    Marker marker = new Marker( markerOptions );
-
-                    map.addMarker(marker);
-                    */
                     map.setCenter(new LatLng(40.6890, -73.9768));
+                    
                     // Setting initial zoom value
                     map.setZoom(20.0);
+                    // Setting map options
+                    map.setOptions(options);
+                    Marker marker = new Marker(map);
+                    // 40.650002, and the longitude is -73.949997.
+                    marker.setPosition(new LatLng(40.650002, -73.949997));
+                    InfoWindow infoWindow = new InfoWindow(map);
+                    infoWindow.setContent("dank");
+                    // Showing info windows under the marker
+                    infoWindow.open(map, marker);
+                    // Adding event listener that intercepts clicking on map
+                    map.addEventListener("click", new MapMouseEvent() {
+                        @Override
+                        public void onEvent(MouseEvent mouseEvent) {
+                            // Closing initially created info window
+                            infoWindow.close();
+                            // Creating a new marker
+                            final Marker marker = new Marker(map);
+                            // Move marker to the position where user clicked
+                            marker.setPosition(mouseEvent.latLng());
+
+                            // Adding event listener that intercepts clicking on marker
+                            marker.addEventListener("click", new MapMouseEvent() {
+                                @Override
+                                public void onEvent(MouseEvent mouseEvent) {
+                                    // Removing marker from the map
+                                    marker.remove();
+                                }
+                            });
+                        }
+                    });
                 }
             }
         });
@@ -95,6 +115,7 @@ public class JavaFXExample extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
     }
+
 
     public static void main(String[] args) {
         launch(args);
