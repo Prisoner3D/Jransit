@@ -19,11 +19,11 @@ public class StationInfo {
 	}
 	
 	public double getLongitude() {
-		return this.getLongitude();
+		return this.longitude;
 	} 
 	
 	public double getLatitude() {
-		return this.getLatitude();
+		return this.latitude;
 	}
 	
 	public String getTrainName() {
