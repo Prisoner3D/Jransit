@@ -28,7 +28,7 @@ public class MapOverlay extends Application
 			theWidget.addRow("xtra");
 			arrivalTimeWidget timeWidget = new arrivalTimeWidget("Times Sq. 42nd Street","idk lmao", 200, 400, root);
 			timeWidget.addTimeStamps(timeStamps);
-			Scene scene = new Scene(root,1900,1000);
+			Scene scene = new Scene(root,1920,1030);
 			primaryStage.setScene(scene);
 			primaryStage.show();
 		} 
