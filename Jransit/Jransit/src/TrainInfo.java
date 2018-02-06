@@ -26,6 +26,9 @@ public class TrainInfo {
 		this.line = new LineInfo(api,this.id.substring(this.id.indexOf("_")+ 1,this.id.indexOf("_") + 2)); // Memory Issue?
 	}
 	
+	public String getId() {
+		return id;
+	}
 	public double calcultateDistanceFromStation() {
         return -1; // use the time from station and distance from the next station
 	}
@@ -58,4 +61,5 @@ public class TrainInfo {
     public double getLongitude() {
         return 0;
     }
+    
 }
