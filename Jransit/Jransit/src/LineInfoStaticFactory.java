@@ -1,24 +1,27 @@
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 
 public class LineInfoStaticFactory {
-	private static final String lines = "123456SACENQRWBDFMLGJZ";
-	private static final String NUM_S = "123456S";
-	private static final String BLUE = "ACE";
-	private static final String YELLOW = "NQRW";
-	private static final String ORANGE = "BDFM";
-	private static final String GRAY = "L";
-	private static final String GREEN = "G";
-	private static final String BROWN = "JZ";
+	private static final String LINES = "123456SACENQRWBDFMLGJZ";
+	private static final String sNUM_S = "123456S";
+	private static final String sBLUE = "ACE";
+	private static final String sYELLOW = "NQRW";
+	private static final String sORANGE = "BDFM";
+	private static final String sGRAY = "L";
+	private static final String sGREEN = "G";
+	private static final String sBROWN = "JZ";
 	
-	public static List<LineInfo> getLines() {
-		return lineArray;
+	public static Map<String, LineInfo> getLines() {
+		return lineMap;
 	}
-	private static List<LineInfo> lineArray = new ArrayList<>();
+	//private static List<LineInfo> lineMap = new ArrayList<>();
+	private static Map<String, LineInfo> lineMap = new TreeMap<String, LineInfo>();
 	static {
 		Map<TrainFeed, MTAApi> apis = MTAApiStaticFactory.getApis();
 		for (Entry<TrainFeed, MTAApi> entry : apis.entrySet()) {
@@ -26,57 +29,57 @@ public class LineInfoStaticFactory {
 		    MTAApi api = entry.getValue();
 		    switch (key) {
 		    	case BLUE:
-		    		for (int i = 0; i < LineInfoStaticFactory.BLUE.length(); i++) {
+		    		for (int i = 0; i < LineInfoStaticFactory.sBLUE.length(); i++) {
 		    			try {
-							lineArray.add(new LineInfo(api, LineInfoStaticFactory.BLUE.substring(i, i+1)));
+		    				lineMap.put(LineInfoStaticFactory.sBLUE.substring(i, i+1), new LineInfo(api, LineInfoStaticFactory.sBLUE.substring(i, i+1)));
 						} catch (IOException e) {
 							e.printStackTrace();
 						}
 		    		}
 		    	case NUM_S:
-		    		for (int i = 0; i < LineInfoStaticFactory.NUM_S.length(); i++) {
+		    		for (int i = 0; i < LineInfoStaticFactory.sNUM_S.length(); i++) {
 		    			try {
-							lineArray.add(new LineInfo(api, LineInfoStaticFactory.NUM_S.substring(i, i+1)));
+							lineMap.put(LineInfoStaticFactory.sNUM_S.substring(i, i+1), new LineInfo(api, LineInfoStaticFactory.sNUM_S.substring(i, i+1)));
 						} catch (IOException e) {
 							e.printStackTrace();
 						}
 		    		}
 		    	case YELLOW:
-		    		for (int i = 0; i < LineInfoStaticFactory.YELLOW.length(); i++) {
+		    		for (int i = 0; i < LineInfoStaticFactory.sYELLOW.length(); i++) {
 		    			try {
-							lineArray.add(new LineInfo(api, LineInfoStaticFactory.YELLOW.substring(i, i+1)));
+							lineMap.put(LineInfoStaticFactory.sYELLOW.substring(i, i+1), new LineInfo(api, LineInfoStaticFactory.sYELLOW.substring(i, i+1)));
 						} catch (IOException e) {
 							e.printStackTrace();
 						}
 		    		}
 		    	case ORANGE:
-		    		for (int i = 0; i < LineInfoStaticFactory.ORANGE.length(); i++) {
+		    		for (int i = 0; i < LineInfoStaticFactory.sORANGE.length(); i++) {
 		    			try {
-							lineArray.add(new LineInfo(api, LineInfoStaticFactory.ORANGE.substring(i, i+1)));
+							lineMap.put(LineInfoStaticFactory.sORANGE.substring(i, i+1), new LineInfo(api, LineInfoStaticFactory.sORANGE.substring(i, i+1)));
 						} catch (IOException e) {
 							e.printStackTrace();
 						}
 		    		}
 		    	case GRAY:
-		    		for (int i = 0; i < LineInfoStaticFactory.GRAY.length(); i++) {
+		    		for (int i = 0; i < LineInfoStaticFactory.sGRAY.length(); i++) {
 		    			try {
-							lineArray.add(new LineInfo(api, LineInfoStaticFactory.GRAY.substring(i, i+1)));
+							lineMap.put(LineInfoStaticFactory.sGRAY.substring(i, i+1), new LineInfo(api, LineInfoStaticFactory.sGRAY.substring(i, i+1)));
 						} catch (IOException e) {
 							e.printStackTrace();
 						}
 		    		}
 		    	case GREEN:
-		    		for (int i = 0; i < LineInfoStaticFactory.GREEN.length(); i++) {
+		    		for (int i = 0; i < LineInfoStaticFactory.sGREEN.length(); i++) {
 		    			try {
-							lineArray.add(new LineInfo(api, LineInfoStaticFactory.GREEN.substring(i, i+1)));
+							lineMap.put(LineInfoStaticFactory.sGREEN.substring(i, i+1), new LineInfo(api, LineInfoStaticFactory.sGREEN.substring(i, i+1)));
 						} catch (IOException e) {
 							e.printStackTrace();
 						}
 		    		}
 		    	case BROWN:
-		    		for (int i = 0; i < LineInfoStaticFactory.BROWN.length(); i++) {
+		    		for (int i = 0; i < LineInfoStaticFactory.sBROWN.length(); i++) {
 		    			try {
-							lineArray.add(new LineInfo(api, LineInfoStaticFactory.BROWN.substring(i, i+1)));
+							lineMap.put(LineInfoStaticFactory.sBROWN.substring(i, i+1), new LineInfo(api, LineInfoStaticFactory.sBROWN.substring(i, i+1)));
 						} catch (IOException e) {
 							e.printStackTrace();
 						}
