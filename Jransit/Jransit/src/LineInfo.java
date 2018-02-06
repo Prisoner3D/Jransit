@@ -38,7 +38,7 @@ public class LineInfo {
 	}
 	*/
 	public List<StationInfo> getStationInfos() {
-		return this.stations;
+		return stations;
 	}
 	
 	public double getTimeBetweenStations(StationInfo sta1, StationInfo sta2) {
