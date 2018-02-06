@@ -6,6 +6,7 @@ import java.util.List;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 public class arrivalTimeWidget extends Widget
@@ -34,6 +35,7 @@ public class arrivalTimeWidget extends Widget
 	public void addRow(String xtra)
 	{
 		Text extra = new Text(xtra);
+		extra.setFont(Font.font("Lato", 13));
 		this.widget.getChildren().add(extra);
 	}
 	
@@ -41,8 +43,9 @@ public class arrivalTimeWidget extends Widget
 	{
 		for(int i = 0; i < theTimeStamps.size(); i++)
 		{	
-			Text extra = new Text(convertTime(theTimeStamps.get(i)));
-			this.widget.getChildren().add(extra);
+			Text timeStamp = new Text(convertTime(theTimeStamps.get(i)));
+			timeStamp.setFont(Font.font("Lato", 13));
+			this.widget.getChildren().add(timeStamp);
 		}
 	}
 	
@@ -50,7 +53,7 @@ public class arrivalTimeWidget extends Widget
 	{
 	    Calendar cal = Calendar.getInstance();
 	    cal.setTimeInMillis(time);
-	    String potatotest = cal.get(Calendar.HOUR_OF_DAY) + ":"+ cal.get(Calendar.MINUTE);
-	    return (potatotest);
+	    String milTime = cal.get(Calendar.HOUR_OF_DAY) + ":"+ cal.get(Calendar.MINUTE);
+	    return (milTime);
 	}
 }
