@@ -5,25 +5,29 @@
  */
 
 #headerLabel {
-    -fx-background-color: steelblue;
-    -fx-text-fill: white;
-    -fx-padding: 5px;
+    -fx-background-color: #D7C482;
+    -fx-text-fill: black;
+    -fx-padding: 10px;
+    -fx-font-size:16px;
 }
 
 #vistaHolder {
-    -fx-background-color: lightgrey;
+    -fx-background-color: black;
 }
 
 #vista1 {
-    -fx-background-color: #808183;
+    -fx-background-image: url("train.PNG");
+ 
+    -fx-background-position: center;
 }
 
 #vista2 {
+	 -fx-background-image: url("map.PNG");
     -fx-background-color: lightgrey;
+      -fx-background-position: center;
 }
 
 .button {
     -fx-base: white;
     -fx-font-size: 20px;
-    -fx-padding:10px;
 }

@@ -6,6 +6,6 @@
 <?import javafx.scene.layout.StackPane?>
 <StackPane fx:id="vista2" xmlns:fx="http://javafx.com/fxml" fx:controller="Vista2Controller">
   <children>
-    <Button mnemonicParsing="false" onAction="#previousPane" text="Previous Pane" />
+    <Button mnemonicParsing="false" onAction="#previousPane" text="Back" StackPane.alignment="BOTTOM_CENTER" />
   </children>
 </StackPane>
