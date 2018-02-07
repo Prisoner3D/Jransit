@@ -54,7 +54,7 @@ public class MTAApi {
 	}
 
 	/**
-	 * getTrains(): Filters out VehiclePosition objects, which represent trains and puts them into a list.
+	 * getTrains(): Filters out VehiclePosition objects in a line, which represent trains, and puts them into a list.
 	 * 
 	 * @return List<VehiclePosition> : The list of filtered "trains"
 	 */
@@ -72,7 +72,23 @@ public class MTAApi {
 	}
 	
 	/**
-	 * getTripIdAndTrain(): Makes a map assigning the trip_id and the VehiclePosition
+	 * getTripIds(): Makes a list with all available trip_ids in the line
+	 * 
+	 * @return List<String> : List of all available trip_ids
+	 */
+	public List<String> getTripIds() {
+		List<String> ids = new ArrayList<String>();
+		for (FeedEntity entity : this.feed.getEntityList()) {
+			if (!entity.hasVehicle()) {
+				continue;
+			}
+			ids.add(entity.getVehicle().getTrip().getTripId());
+		}
+		return ids;
+	}
+	
+	/**
+	 * getTripIdAndTrain(): Makes a map assigning the trip_id and the VehiclePosition in the current line
 	 * 
 	 * @return Map<String, VehiclePosition> : Map of trip_id assigned to VehiclePositon
 	 */
@@ -83,13 +99,13 @@ public class MTAApi {
 			if (!entity.hasVehicle()) {
 				continue;
 			}
-			ids.put(entity.getTripUpdate().getTrip().getTripId(), entity.getVehicle());
+			ids.put(entity.getVehicle().getTrip().getTripId(), entity.getVehicle());
 		}
 		return ids;
 	}
 	
 	/**
-	 * getVehiclePosition(): Searches for a VehiclePosition object with the passed trip_id.
+	 * getVehiclePosition(): Searches for a VehiclePosition object with the passed trip_id in the line
 	 * 
 	 * @param trip_id : The term used for search
 	 * @return VehiclePosition : The object if found, else null
@@ -109,7 +125,7 @@ public class MTAApi {
     }
     
     /**
-     * getArrivalTime(): Gets the arrival time of a specified train at at specified station
+     * getArrivalTime(): Gets the arrival time of a specified train at at specified station within the line
      * 
      * @param trip_id : The train
      * @param stop_id : The station
@@ -128,7 +144,7 @@ public class MTAApi {
     }
     
     /**
-     * getStopTimes(): Gets all stop times for a specified train
+     * getStopTimes(): Gets all stop times for a specified train within the line
      * 
      * @param trip_id : The train
      * @return List<StopTimeUpdate> : All current and future stops
@@ -148,7 +164,7 @@ public class MTAApi {
     }
     
 	/**
-	 * printEverything() : Prints everything in the feed.
+	 * printEverything() : Prints everything in the feed for the line
 	 */
 	public void printEverything() {
 		// List<Station> stations = new ArrayList<>();
