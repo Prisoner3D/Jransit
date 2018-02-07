@@ -21,14 +21,15 @@ public class MapOverlay extends Application
 		long time2 = 654864654;
 		timeStamps.add(time1);
 		timeStamps.add(time2);
+		
 		try 
 		{
 			Pane root = new Pane(); 
-			Widget theWidget = new Widget("station","station description", 100, 265.2, root);
+			Widget theWidget = new Widget("34th Street Herald Sq.","station description", 100, 265.2, root);
 			theWidget.addRow("xtra");
-			arrivalTimeWidget timeWidget = new arrivalTimeWidget("Times Sq. 42nd Street","idk lmao", 200, 400, root);
+			arrivalTimeWidget timeWidget = new arrivalTimeWidget("Times Sq. 42nd Street","station description", 200, 400, root);
 			timeWidget.addTimeStamps(timeStamps);
-			Scene scene = new Scene(root,1920,1030);
+			Scene scene = new Scene(root,1920,1000);
 			primaryStage.setScene(scene);
 			primaryStage.show();
 		} 

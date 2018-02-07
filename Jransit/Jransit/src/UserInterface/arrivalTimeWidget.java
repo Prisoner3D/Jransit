@@ -2,11 +2,8 @@ package UserInterface;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 public class arrivalTimeWidget extends Widget
@@ -34,17 +31,19 @@ public class arrivalTimeWidget extends Widget
 	
 	public void addRow(String xtra)
 	{
+		String extraLayout ="-fx-font-size: 12px;\n";
 		Text extra = new Text(xtra);
-		extra.setFont(Font.font("Lato", 13));
+		extra.setStyle(extraLayout);
 		this.widget.getChildren().add(extra);
 	}
 	
 	public void addTimeStamps(ArrayList<Long> theTimeStamps)
 	{
+		String timeLayout ="-fx-font-size: 12px;\n";
 		for(int i = 0; i < theTimeStamps.size(); i++)
 		{	
 			Text timeStamp = new Text(convertTime(theTimeStamps.get(i)));
-			timeStamp.setFont(Font.font("Lato", 13));
+			timeStamp.setStyle(timeLayout);
 			this.widget.getChildren().add(timeStamp);
 		}
 	}
