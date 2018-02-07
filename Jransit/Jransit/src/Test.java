@@ -2,11 +2,17 @@ import java.io.IOException;
 import java.util.Map;
 
 public class Test {
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException, InterruptedException {
 		Map<TrainFeed, MTAApi> apis = MTAApiStaticFactory.getApis();
 		Map<String, LineInfo> mapOfLineInfos = LineInfoStaticFactory.getLines();
 		System.out.println(mapOfLineInfos);
 
+		MTAApi forever = new MTAApi("e7ed4dd1445f127eb503c38630a5d3e0", TrainFeed.GREEN);
+		while(true) {
+			forever.printEverything();
+			Thread.sleep(4000);
+		}
+		
 		// For Alex: http://web.mta.info/developers/data/nyct/subway/Stations.csv
 		// mta.printEverything();
 

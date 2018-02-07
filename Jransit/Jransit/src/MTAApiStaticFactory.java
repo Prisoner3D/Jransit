@@ -5,10 +5,11 @@ import java.util.Map;
 public class MTAApiStaticFactory {
 	private static Map<TrainFeed, MTAApi> apis = new HashMap<>();
 	public static Map<TrainFeed, MTAApi> getApis() {
+		update();
 		return apis;
 	}
 	private static final String key = "e7ed4dd1445f127eb503c38630a5d3e0";
-	static {		
+	public static void update() {		
 		try {
 			apis.put(TrainFeed.NUM_S, new MTAApi(key, TrainFeed.NUM_S));
 			apis.put(TrainFeed.BLUE, new MTAApi(key, TrainFeed.BLUE));

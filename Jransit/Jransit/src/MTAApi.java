@@ -1,7 +1,9 @@
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.google.protobuf.ExtensionRegistry;
 import com.google.transit.realtime.GtfsRealtime;
@@ -70,13 +72,30 @@ public class MTAApi {
 	}
 	
 	/**
-	 * grabVehiclePosition(): Searches for a VehiclePosition object with the passed trip_id.
+	 * getTripIdAndTrain(): Makes a map assigning the trip_id and the VehiclePosition
+	 * 
+	 * @return Map<String, VehiclePosition> : Map of trip_id assigned to VehiclePositon
+	 */
+	// ? VehiclePosition or TrainInfo ?
+	public Map<String, VehiclePosition> getTripIdAndTrain() {
+		Map<String, VehiclePosition> ids = new HashMap<String, VehiclePosition>();
+		for (FeedEntity entity : this.feed.getEntityList()) {
+			if (!entity.hasVehicle()) {
+				continue;
+			}
+			ids.put(entity.getTripUpdate().getTrip().getTripId(), entity.getVehicle());
+		}
+		return ids;
+	}
+	
+	/**
+	 * getVehiclePosition(): Searches for a VehiclePosition object with the passed trip_id.
 	 * 
 	 * @param trip_id : The term used for search
 	 * @return VehiclePosition : The object if found, else null
 	 */
 	// ? Add StopTrips ?
-    public VehiclePosition grabVehiclePosition(String trip_id) {
+    public VehiclePosition getVehiclePosition(String trip_id) {
         // Uses trip_id to get train's VehiclePosition
         for (FeedEntity entity : this.feed.getEntityList()) {
             if (!entity.hasVehicle()) {
@@ -143,7 +162,7 @@ public class MTAApi {
 		}	
 	}
 	
-	public void grabStationInfo() {
+	public void getStationInfo() {
 		
     }
 	
@@ -151,7 +170,7 @@ public class MTAApi {
 	    
 	}
 	
-	public void grabLineInfo() {
+	public void getLineInfo() {
 		
 	}
 }

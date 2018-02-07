@@ -7,6 +7,7 @@ import com.google.transit.realtime.GtfsRealtime.TripUpdate.StopTimeUpdate;
 import com.google.transit.realtime.GtfsRealtime.VehiclePosition;
 
 public class TrainInfo {
+	private MTAApi api;
 	private String id;
 	private VehiclePosition trainPosition;
 	private List<StopTimeUpdate> stopTimes = new ArrayList<>();
@@ -16,8 +17,9 @@ public class TrainInfo {
 	private LineInfo line;
 	
 	public TrainInfo(MTAApi api, String trip_id) throws IOException {
+		this.api = api;
 		this.id = trip_id;
-		this.trainPosition = api.grabVehiclePosition(id);
+		this.trainPosition = api.getVehiclePosition(id);
 		this.stopTimes = api.getStopTimes(id);
 		if (stopTimes != null) {
 			this.currentStation = stopTimes.get(0).getStopId();
@@ -28,39 +30,43 @@ public class TrainInfo {
 	}
 	
 	public String getId() {
-		return id;
-	}
-	public double calcultateDistanceFromStation() {
-        return -1; // use the time from station and distance from the next station
+		return this.id;
 	}
 	
+	public double getArrivalTime(String stop_id) {
+    	return api.getArrivalTime(this.id, stop_id);
+    }
+	
 	public LineInfo getLine() {
-		return line;
+		return this.line;
 	}
 	
     public void updateStation() {
-        this.currentStation = this.nextStation; // get the next station using current parent station
+        this.currentStation = this.nextStation;
         this.nextStation = null; // refer to above
     }
 
     public String getCurrentStation() {
-        return currentStation;
+        return this.currentStation;
     }
 
     public String getNextStation() {
-        return nextStation;
+        return this.nextStation;
     }
 
     public Direction getDirection() {
-        return direction;
+        return this.direction;
     }
 
     public double getLatitude() {
-        return 0;
+        return -1; // CSV
     }
 
     public double getLongitude() {
-        return 0;
+        return -1; // CSV
     }
     
+    public double calcultateDistanceFromStation() {
+        return -1; // use the time from station and distance from the next station
+	}
 }

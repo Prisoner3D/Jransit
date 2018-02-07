@@ -18,11 +18,12 @@ public class LineInfoStaticFactory {
 	private static final String sBROWN = "JZ";
 	
 	public static Map<String, LineInfo> getLines() {
+		update();
 		return lineMap;
 	}
 	//private static List<LineInfo> lineMap = new ArrayList<>();
 	private static Map<String, LineInfo> lineMap = new TreeMap<String, LineInfo>();
-	static {
+	private static void update() {
 		Map<TrainFeed, MTAApi> apis = MTAApiStaticFactory.getApis();
 		for (Entry<TrainFeed, MTAApi> entry : apis.entrySet()) {
 			TrainFeed key = entry.getKey();
