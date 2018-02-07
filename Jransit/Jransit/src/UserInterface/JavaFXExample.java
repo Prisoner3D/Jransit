@@ -1,5 +1,8 @@
 package UserInterface;
 	
+import java.io.File;
+import java.util.concurrent.TimeUnit;
+
 import com.jfoenix.controls.JFXSlider;
 import com.teamdev.jxmaps.ControlPosition;
 import com.teamdev.jxmaps.Icon;
@@ -22,12 +25,16 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 
 public class JavaFXExample extends Application {
     final static MapView mapView = new MapView();
     final static Stage primaryStage = new Stage();
-	
+    TimelineReader time;
+	CSVUtilities csv = new CSVUtilities(new File("Jransit\\stops.txt"));
+    
     @Override
     public void init() throws Exception {
         // Initializing of JavaFX engine
@@ -38,6 +45,7 @@ public class JavaFXExample extends Application {
     public void start(final Stage primaryStage) {
         // Setting of a ready handler to MapView object. onMapReady will be called when map initialization is done and
         // the map object is ready to use. Current implementation of onMapReady customizes the map object.
+    	time = new TimelineReader(csv), )
         mapView.setOnMapReadyHandler(new MapReadyHandler() {
             @Override
             public void onMapReady(MapStatus status) {
@@ -93,25 +101,52 @@ public class JavaFXExample extends Application {
         });
         StackPane root = new StackPane();
         BorderPane map = new BorderPane(mapView);
-        map.setMaxSize(1000,1000);
-        Pane slider = new Pane();
+        map.setMaxSize(750,750);
+        StackPane slider = new StackPane();
         slider.setMinWidth(500);
         
-		JFXSlider hor_left = new JFXSlider();
+		JFXSlider hor_left = new JFXSlider(0,3600,20);
 		hor_left.setMin(0); //to be based on rows
 		hor_left.setMax(100); //to be based on rows
 		hor_left.setValue(1); 
 		hor_left.setMinorTickCount(0);
-		hor_left.setMajorTickUnit(1);
 		hor_left.setSnapToTicks(true);
 		hor_left.setShowTickMarks(true);
-		hor_left.setShowTickLabels(true);
 		hor_left.setMaxWidth(500);
 		slider.getChildren().add(hor_left);
-     //   slider.setAlignment(hor_left, Pos.CENTER_RIGHT);
+		root.setAlignment(slider, Pos.BOTTOM_CENTER);
+		root.setAlignment(map, Pos.CENTER);
+      slider.setAlignment(hor_left, Pos.BOTTOM_CENTER);
+      hor_left.setMajorTickUnit(450);
+      hor_left.setShowTickLabels(true);
+      StringConverter<Double> stringConverter = new StringConverter<Double>() {
+
+          @Override
+          public String toString(Double object) {
+              long seconds = object.longValue();
+              long minutes = TimeUnit.SECONDS.toMinutes(seconds);
+              long remainingseconds = seconds - TimeUnit.MINUTES.toSeconds(minutes);
+              return String.format("%02d", minutes) + ":" + String.format("%02d", remainingseconds);
+          }
+
+          @Override
+          public Double fromString(String string) {
+              return null;
+          }
+      };
+
+      hor_left.setLabelFormatter(stringConverter);
+
+      Text text = new Text();
+
+      hor_left.valueProperty().addListener((observable, oldValue, newValue) ->
+              text.setText(stringConverter.toString(newValue.doubleValue())));
+
+
+
         
         root.getChildren().addAll(slider,map);
-        Scene scene = new Scene(root);
+        Scene scene = new Scene(root,1000,1000);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
