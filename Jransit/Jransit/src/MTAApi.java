@@ -15,6 +15,7 @@ import com.google.transit.realtime.GtfsRealtime.VehiclePosition;
 import com.google.transit.realtime.GtfsRealtimeNYCT;
 
 public class MTAApi {
+	
     /*
         Useful info: 
         Each stop_time_update is a future stop time, past stop times are omitted. The first StopTime in the sequence is the stop the train
@@ -135,6 +136,9 @@ public class MTAApi {
     	List<StopTimeUpdate> stopTimes;
     	if ((stopTimes = getStopTimes(trip_id)) != null) {
     		for (StopTimeUpdate stu : stopTimes) {
+    		/*
+    		 * what does "stu" do/mean?
+    		 */
         		if (stu.getStopId().equals(stop_id)) {
         			return stu.getArrival().getTime();
         		}

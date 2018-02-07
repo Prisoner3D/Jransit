@@ -16,6 +16,8 @@ public class TrainInfo {
 	private Direction direction = null;
 	private LineInfo line;
 	
+	// Add toString, hashCode 
+	
 	public TrainInfo(MTAApi api, String trip_id) throws IOException {
 		this.api = api;
 		this.id = trip_id;
