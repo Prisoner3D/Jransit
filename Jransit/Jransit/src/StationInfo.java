@@ -1,4 +1,6 @@
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import csv.Stop;
 import csv.StopsStaticFactory;
@@ -14,7 +16,19 @@ public class StationInfo {
 		this.api = api;
 		this.stop = stop;
 	}
-	
+	public String getLine() {
+		return stop.getStopID().substring(0, 1);
+	}
+	public long getArrivalTime() {
+		List<TrainInfo> traininfos = api.getTrains();
+		List<TrainInfo> filteredTrains = new ArrayList<>();
+		for(TrainInfo x : filteredTrains) {
+			if(stop.getStopID().equals(x.getNextStation())) {
+				return x.getArrivalTime(stop.getStopID());
+			}
+		}
+		return -1;
+	}
 	public double getLongitude() {
 		return Double.parseDouble(stop.getLongitude());
 	} 

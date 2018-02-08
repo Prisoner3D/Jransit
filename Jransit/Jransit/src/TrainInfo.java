@@ -35,7 +35,7 @@ public class TrainInfo {
 		return this.id;
 	}
 	
-	public double getArrivalTime(String stop_id) {
+	public long getArrivalTime(String stop_id) {
     	return api.getArrivalTime(this.id, stop_id);
     }
 	
