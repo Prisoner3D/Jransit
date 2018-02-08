@@ -7,6 +7,7 @@ public class Test {
 		Map<String, LineInfo> mapOfLineInfos = LineInfoStaticFactory.getLines();
 		System.out.println(mapOfLineInfos);
 
+		System.out.println(Direction.NORTH);
 		MTAApi forever = new MTAApi("e7ed4dd1445f127eb503c38630a5d3e0", TrainFeed.GREEN);
 		System.out.println(forever.getTripIds());
 		

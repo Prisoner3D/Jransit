@@ -36,11 +36,15 @@ public class MTAApi {
     */
 	private final String API_KEY;
 	private final TrainFeed feedID;
-	private final FeedMessage feed;
+	private FeedMessage feed;
 
 	public MTAApi(String key, TrainFeed feedID) throws IOException {
 		this.API_KEY = key;
 		this.feedID = feedID;
+		this.feed = getFeed(feedID);
+	}
+	
+	private void updateFeed(TrainFeed id) throws IOException {
 		this.feed = getFeed(feedID);
 	}
 	
@@ -136,9 +140,6 @@ public class MTAApi {
     	List<StopTimeUpdate> stopTimes;
     	if ((stopTimes = getStopTimes(trip_id)) != null) {
     		for (StopTimeUpdate stu : stopTimes) {
-    		/*
-    		 * what does "stu" do/mean?
-    		 */
         		if (stu.getStopId().equals(stop_id)) {
         			return stu.getArrival().getTime();
         		}
