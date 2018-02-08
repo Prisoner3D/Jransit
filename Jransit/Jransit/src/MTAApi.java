@@ -64,14 +64,16 @@ public class MTAApi {
 	 * @return List<VehiclePosition> : The list of filtered "trains"
 	 */
 	// ? Change VehiclePosition to TrainInfo ?
-	public List<VehiclePosition> getTrains() {
-		List<VehiclePosition> trains = new ArrayList<>();
-		for (FeedEntity entity : this.feed.getEntityList()) {
-			if (!entity.hasVehicle()) {
-				continue;
+	public List<TrainInfo> getTrains() {
+		List<String> tripIds = getTripIds();
+		List<TrainInfo> trains = new ArrayList<>();
+		for (String tripId : tripIds) {
+			try {
+				trains.add(new TrainInfo(this, tripId));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-			trains.add(entity.getVehicle());
-			// System.out.println(entity.getVehicle());
 		}
 		return trains;
 	}
