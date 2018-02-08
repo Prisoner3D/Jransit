@@ -22,8 +22,9 @@ public class StationInfo {
 	public long getArrivalTime() {
 		List<TrainInfo> traininfos = api.getTrains();
 		List<TrainInfo> filteredTrains = new ArrayList<>();
-		for(TrainInfo x : filteredTrains) {
+		for(TrainInfo x : traininfos) {
 			if(stop.getStopID().equals(x.getNextStation())) {
+				
 				return x.getArrivalTime(stop.getStopID());
 			}
 		}
