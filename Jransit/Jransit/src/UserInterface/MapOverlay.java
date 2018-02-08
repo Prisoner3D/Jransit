@@ -27,7 +27,7 @@ public class MapOverlay extends Application
 			Pane root = new Pane(); 
 			Widget theWidget = new Widget("34th Street Herald Sq.","station description", 100, 265.2, root);
 			theWidget.addRow("xtra");
-			arrivalTimeWidget timeWidget = new arrivalTimeWidget("Times Sq. 42nd Street","station description", 200, 400, root);
+			ArrivalTimeWidget timeWidget = new ArrivalTimeWidget("Times Sq. 42nd Street","station description", 200, 400, root);
 			timeWidget.addTimeStamps(timeStamps);
 			Scene scene = new Scene(root,1920,1000);
 			primaryStage.setScene(scene);
