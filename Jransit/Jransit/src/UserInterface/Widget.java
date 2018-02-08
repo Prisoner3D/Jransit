@@ -28,7 +28,7 @@ public class Widget
 		"-fx-border-radius: 5;\n" + "-fx-padding: 5; \n" + 						  // border radius + padding		// space these out next time just to make it more visible also comment 
 		"-fx-background-radius: 5;\n" + "-fx-background-color: #e6e6e6; \n";	  // background radius + padding	// each line is doing to make it easier
 		
-		String titleLayout ="-fx-font-size: 15px;\n" + "-fx-font-weight: bold;\n";
+		String titleLayout ="-fx-font-size: 16px;\n" + "-fx-font-weight: bold;\n";
 																						
 		String descLayout ="-fx-font-size: 12px;\n";
 		
