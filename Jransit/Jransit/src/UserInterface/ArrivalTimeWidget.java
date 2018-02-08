@@ -6,7 +6,7 @@ import java.util.Calendar;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 
-public class arrivalTimeWidget extends Widget
+public class ArrivalTimeWidget extends Widget
 {
 	String title;
 	String description;
@@ -14,9 +14,11 @@ public class arrivalTimeWidget extends Widget
 	double y;
 	Pane parent;
 	
-	public arrivalTimeWidget(String title, String description, double x, double y, Pane root) 
+	// CAPITAL:IZEEE
+	
+	public ArrivalTimeWidget(StationInfo station, double x, double y, Pane root) 
 	{
-		super(title, description, x, y, root);
+		super(station.getTrainName(),"Train time goes here", x, y, root);
 	}
 
 	public String getTitle()
