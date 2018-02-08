@@ -17,22 +17,28 @@ public class LineInfoStaticFactory {
 	private static final String sGREEN = "G";
 	private static final String sBROWN = "JZ";
 	
-	public static Map<String, LineInfoPointer> getLines() {
+	public static Map<String, LineInfo> getLines() {
 		update();
 		return lineMap;
 	}
 	//private static List<LineInfo> lineMap = new ArrayList<>();
-	private static Map<String, LineInfoPointer> lineMap = new TreeMap<String, LineInfoPointer>();
+	private static Map<String, LineInfo> lineMap = new TreeMap<String, LineInfo>();
 	private static void update() {
-		Map<TrainFeed, MTAApiPointer> apis = MTAApiStaticFactory.getApis();
-		for (Entry<TrainFeed, MTAApiPointer> entry : apis.entrySet()) {
+		Map<TrainFeed, MTAApi> apis = MTAApiStaticFactory.getApis();
+		for (Entry<TrainFeed, MTAApi> entry : apis.entrySet()) {
 			TrainFeed key = entry.getKey();
-		    MTAApi api = entry.getValue().dereference();
+		    MTAApi api = entry.getValue();
+		    try {
+				api.updateFeed();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		    switch (key) {
 		    	case BLUE:
 		    		for (int i = 0; i < LineInfoStaticFactory.sBLUE.length(); i++) {
 		    			try {
-		    				lineMap.get(LineInfoStaticFactory.sBLUE.substring(i, i+1)).reference(new LineInfo(api, LineInfoStaticFactory.sBLUE.substring(i, i+1)));
+		    				lineMap.put(LineInfoStaticFactory.sBLUE.substring(i, i+1), new LineInfo(api, LineInfoStaticFactory.sBLUE.substring(i, i+1)));
 						} catch (IOException e) {
 							e.printStackTrace();
 						}
@@ -40,7 +46,7 @@ public class LineInfoStaticFactory {
 		    	case NUM_S:
 		    		for (int i = 0; i < LineInfoStaticFactory.sNUM_S.length(); i++) {
 		    			try {
-		    				lineMap.get(LineInfoStaticFactory.sNUM_S.substring(i, i+1)).reference(new LineInfo(api, LineInfoStaticFactory.sNUM_S.substring(i, i+1)));
+		    				lineMap.put(LineInfoStaticFactory.sNUM_S.substring(i, i+1), new LineInfo(api, LineInfoStaticFactory.sNUM_S.substring(i, i+1)));
 						} catch (IOException e) {
 							e.printStackTrace();
 						}
@@ -48,7 +54,7 @@ public class LineInfoStaticFactory {
 		    	case YELLOW:
 		    		for (int i = 0; i < LineInfoStaticFactory.sYELLOW.length(); i++) {
 		    			try {
-		    				lineMap.get(LineInfoStaticFactory.sYELLOW.substring(i, i+1)).reference(new LineInfo(api, LineInfoStaticFactory.sYELLOW.substring(i, i+1)));
+		   					lineMap.put(LineInfoStaticFactory.sYELLOW.substring(i, i+1), new LineInfo(api, LineInfoStaticFactory.sYELLOW.substring(i, i+1)));
 						} catch (IOException e) {
 							e.printStackTrace();
 						}
@@ -56,7 +62,7 @@ public class LineInfoStaticFactory {
 		    	case ORANGE:
 		    		for (int i = 0; i < LineInfoStaticFactory.sORANGE.length(); i++) {
 		    			try {
-		    				lineMap.get(LineInfoStaticFactory.sORANGE.substring(i, i+1)).reference(new LineInfo(api, LineInfoStaticFactory.sORANGE.substring(i, i+1)));						
+		    				lineMap.put(LineInfoStaticFactory.sORANGE.substring(i, i+1), new LineInfo(api, LineInfoStaticFactory.sORANGE.substring(i, i+1)));
 		    			} catch (IOException e) {
 							e.printStackTrace();
 						}
@@ -64,7 +70,7 @@ public class LineInfoStaticFactory {
 		    	case GRAY:
 		    		for (int i = 0; i < LineInfoStaticFactory.sGRAY.length(); i++) {
 		    			try {
-		    				lineMap.get(LineInfoStaticFactory.sGRAY.substring(i, i+1)).reference(new LineInfo(api, LineInfoStaticFactory.sGRAY.substring(i, i+1)));						
+		    				lineMap.put(LineInfoStaticFactory.sGRAY.substring(i, i+1), new LineInfo(api, LineInfoStaticFactory.sGRAY.substring(i, i+1)));
 		    			} catch (IOException e) {
 		    				e.printStackTrace();
 						}
@@ -72,7 +78,7 @@ public class LineInfoStaticFactory {
 		    	case GREEN:
 		    		for (int i = 0; i < LineInfoStaticFactory.sGREEN.length(); i++) {
 		    			try {
-		    				lineMap.get(LineInfoStaticFactory.sGREEN.substring(i, i+1)).reference(new LineInfo(api, LineInfoStaticFactory.sGREEN.substring(i, i+1)));						
+		    				lineMap.put(LineInfoStaticFactory.sGREEN.substring(i, i+1), new LineInfo(api, LineInfoStaticFactory.sGREEN.substring(i, i+1)));
 		    			} catch (IOException e) {
 		    				e.printStackTrace();
 						}
@@ -80,7 +86,7 @@ public class LineInfoStaticFactory {
 		    	case BROWN:
 		    		for (int i = 0; i < LineInfoStaticFactory.sBROWN.length(); i++) {
 		    			try {
-		    				lineMap.get(LineInfoStaticFactory.sBROWN.substring(i, i+1)).reference(new LineInfo(api, LineInfoStaticFactory.sBROWN.substring(i, i+1)));
+		    				lineMap.put(LineInfoStaticFactory.sBROWN.substring(i, i+1), new LineInfo(api, LineInfoStaticFactory.sBROWN.substring(i, i+1)));
 						} catch (IOException e) {
 							e.printStackTrace();
 						}

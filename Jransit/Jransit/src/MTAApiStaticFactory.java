@@ -3,32 +3,38 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MTAApiStaticFactory {
-	private static Map<TrainFeed, MTAApiPointer> apis = new HashMap<>();
-	static {
-		apis.put(TrainFeed.NUM_S, new MTAApiPointer());
-		apis.put(TrainFeed.BLUE,new MTAApiPointer());
-		apis.put(TrainFeed.YELLOW, new MTAApiPointer());
-		apis.put(TrainFeed.ORANGE, new MTAApiPointer());
-		apis.put(TrainFeed.GRAY, new MTAApiPointer());
-		apis.put(TrainFeed.GREEN, new MTAApiPointer());
-		apis.put(TrainFeed.BROWN, new MTAApiPointer());
-		apis.put(TrainFeed.SIR, new MTAApiPointer());
-	}
-	public static Map<TrainFeed, MTAApiPointer> getApis() {
+	private static Map<TrainFeed, MTAApi> apis = new HashMap<>();
+	
+	public static Map<TrainFeed, MTAApi> getApis() {
 		update();
 		return apis;
 	}
 	private static final String key = "e7ed4dd1445f127eb503c38630a5d3e0";
+	static {
+		try {
+			apis.put(TrainFeed.GRAY, new MTAApi(key, TrainFeed.GRAY));
+			apis.put(TrainFeed.NUM_S, new MTAApi(key, TrainFeed.NUM_S));
+			apis.put(TrainFeed.BLUE, new MTAApi(key, TrainFeed.BLUE));
+			apis.put(TrainFeed.YELLOW, new MTAApi(key, TrainFeed.YELLOW));
+			apis.put(TrainFeed.ORANGE, new MTAApi(key, TrainFeed.ORANGE));
+			apis.put(TrainFeed.GREEN, new MTAApi(key, TrainFeed.GREEN));
+			apis.put(TrainFeed.BROWN, new MTAApi(key, TrainFeed.BROWN));
+			apis.put(TrainFeed.SIR, new MTAApi(key, TrainFeed.SIR));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+	}
 	public static void update() {		
 		try {
-			apis.get(TrainFeed.NUM_S).reference(new MTAApi(key, TrainFeed.NUM_S));
-			apis.get(TrainFeed.BLUE).reference(new MTAApi(key, TrainFeed.BLUE));
-			apis.get(TrainFeed.YELLOW).reference(new MTAApi(key, TrainFeed.YELLOW));
-			apis.get(TrainFeed.ORANGE).reference(new MTAApi(key, TrainFeed.ORANGE));
-			apis.get(TrainFeed.GRAY).reference(new MTAApi(key, TrainFeed.GRAY));
-			apis.get(TrainFeed.GREEN).reference(new MTAApi(key, TrainFeed.GREEN));
-			apis.get(TrainFeed.BROWN).reference(new MTAApi(key, TrainFeed.BROWN));
-			apis.get(TrainFeed.SIR).reference(new MTAApi(key, TrainFeed.SIR));
+			apis.get(TrainFeed.NUM_S).updateFeed();
+			apis.get(TrainFeed.BLUE).updateFeed();
+			apis.get(TrainFeed.YELLOW).updateFeed();
+			apis.get(TrainFeed.ORANGE).updateFeed();
+			apis.get(TrainFeed.GRAY).updateFeed();
+			apis.get(TrainFeed.GREEN).updateFeed();
+			apis.get(TrainFeed.BROWN).updateFeed();
+			apis.get(TrainFeed.SIR).updateFeed();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

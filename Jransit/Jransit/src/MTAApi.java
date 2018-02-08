@@ -44,7 +44,7 @@ public class MTAApi {
 		this.feed = getFeed(feedID);
 	}
 	
-	private void updateFeed(TrainFeed id) throws IOException {
+	public void updateFeed() throws IOException {
 		this.feed = getFeed(feedID);
 	}
 	
