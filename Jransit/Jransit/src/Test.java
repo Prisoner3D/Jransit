@@ -1,6 +1,13 @@
 import java.io.IOException;
 import java.util.Map;
 
+import api.MTAApi;
+import api.MTAApiStaticFactory;
+import api.TrainFeed;
+import info.Direction;
+import info.LineInfo;
+import info.LineInfoStaticFactory;
+
 public class Test {
 	public static void main(String[] args) throws IOException, InterruptedException {
 		Map<TrainFeed, MTAApi> apis = MTAApiStaticFactory.getApis();

@@ -1,3 +1,4 @@
+package info;
 public enum Direction {
     NORTH, SOUTH;
 

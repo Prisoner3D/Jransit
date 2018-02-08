@@ -1,9 +1,13 @@
+package info;
 	
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.google.transit.realtime.GtfsRealtime.TripUpdate.StopTimeUpdate;
+
+import api.MTAApi;
+
 import com.google.transit.realtime.GtfsRealtime.VehiclePosition;
 
 public class TrainInfo {

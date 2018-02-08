@@ -1,3 +1,4 @@
+package api;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -11,6 +12,9 @@ import com.google.transit.realtime.GtfsRealtime.FeedEntity;
 import com.google.transit.realtime.GtfsRealtime.FeedMessage;
 import com.google.transit.realtime.GtfsRealtime.Position;
 import com.google.transit.realtime.GtfsRealtime.TripUpdate.StopTimeUpdate;
+
+import info.TrainInfo;
+
 import com.google.transit.realtime.GtfsRealtime.VehiclePosition;
 import com.google.transit.realtime.GtfsRealtimeNYCT;
 
@@ -63,7 +67,6 @@ public class MTAApi {
 	 * 
 	 * @return List<VehiclePosition> : The list of filtered "trains"
 	 */
-	// ? Change VehiclePosition to TrainInfo ?
 	public List<TrainInfo> getTrains() {
 		List<String> tripIds = getTripIds();
 		List<TrainInfo> trains = new ArrayList<>();
