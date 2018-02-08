@@ -1,46 +1,74 @@
 package csv;
 
-public class Stop extends Entity {
+
+public class Stop implements EntityComposition {
 	private final String stopID;
+	private final Entity entity;
+	private final String zoneID;
+	private final String longitude;
+	private final String latitude;
+	private final String stopUrl;
+	private final String description;
+	private final String name;
+	private final String locationType;
+	private final String parentStation;
 	
 	public String getStopID() {
 		return stopID;
 	}
 	
-	public Stop(String stopID) {
-		super(stopID);
-		this.stopID = stopID;
+	public Stop(Entity entity) {
+		this.stopID = entity.getPrimaryKey();
+		this.entity = entity;
+		this.zoneID = entity.getAttribute("zone_id");
+		this.longitude = entity.getAttribute("stop_lon");
+		this.latitude = entity.getAttribute("stop_lat");
+		this.stopUrl = entity.getAttribute("stop_url");
+		this.description = entity.getAttribute("stop_desc");
+		this.name = entity.getAttribute("stop_name");
+		this.locationType = entity.getAttribute("location_type");
+		this.parentStation = entity.getAttribute("parent_station");
 	}
 	
+	public Entity getEntity() {
+		return entity;
+	}
+
 	public String getZoneID() {
-		return this.getAttribute("zone_id");
+		return zoneID;
 	}
-	
+
 	public String getLongitude() {
-		return this.getAttribute("stop_lon");
+		return longitude;
 	}
-	
+
 	public String getLatitude() {
-		return this.getAttribute("stop_lat");
+		return latitude;
 	}
-	
+
 	public String getStopUrl() {
-		return this.getAttribute("stop_url");
+		return stopUrl;
 	}
-	
-	public String getStopDescription() {
-		return this.getAttribute("stop_desc");
+
+	public String getDescription() {
+		return description;
 	}
-	
-	public String getStopName() {
-		return this.getAttribute("stop_name");
+
+	public String getName() {
+		return name;
 	}
-	
+
 	public String getLocationType() {
-		return this.getAttribute("location_type");
+		return locationType;
 	}
-	
+
 	public String getParentStation() {
-		return this.getAttribute("parent_station");
+		return parentStation;
+	}
+
+	
+	@Override
+	public String toString() {
+		return String.valueOf(entity.getAttributes());
 	}
 }
