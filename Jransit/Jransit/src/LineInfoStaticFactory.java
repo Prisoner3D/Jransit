@@ -24,10 +24,10 @@ public class LineInfoStaticFactory {
 	//private static List<LineInfo> lineMap = new ArrayList<>();
 	private static Map<String, LineInfo> lineMap = new TreeMap<String, LineInfo>();
 	private static void update() {
-		Map<TrainFeed, MTAApi> apis = MTAApiStaticFactory.getApis();
-		for (Entry<TrainFeed, MTAApi> entry : apis.entrySet()) {
+		Map<TrainFeed, MTAApiPointer> apis = MTAApiStaticFactory.getApis();
+		for (Entry<TrainFeed, MTAApiPointer> entry : apis.entrySet()) {
 			TrainFeed key = entry.getKey();
-		    MTAApi api = entry.getValue();
+		    MTAApi api = entry.getValue().dereference();
 		    switch (key) {
 		    	case BLUE:
 		    		for (int i = 0; i < LineInfoStaticFactory.sBLUE.length(); i++) {
