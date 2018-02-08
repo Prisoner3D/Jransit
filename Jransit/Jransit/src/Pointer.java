@@ -1,5 +1,5 @@
 
 public interface Pointer {
-	public MTAApi dereference();
+	public Object dereference();
 	public void reference(Object api);
 }
