@@ -15,11 +15,9 @@ public class ArrivalTimeWidget extends Widget
 	double y;
 	Pane parent;
 	
-	// CAPITAL:IZEEE
-	
 	public ArrivalTimeWidget(StationInfo station, String description, double x, double y, Pane root) 
 	{
-		super(station.getName(),"Train time goes here", x, y, root);
+		super(station.getName(), station.getArrivalTime(), x, y, root);
 	}
 
 	public String getTitle()

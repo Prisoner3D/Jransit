@@ -5,6 +5,11 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import mapObjects.Train;
+import api.MTAApi;
+import api.MTAApiStaticFactory;
+import api.TrainFeed;
+import info.TrainInfo;
 
 /**
  * Main application class.
@@ -26,7 +31,11 @@ public class Main extends Application {
             		pane
             )
         );
-
+        
+        MTAApi theApi = MTAApiStaticFactory.getApi(TrainFeed.BLUE);
+        TrainInfo theTrainInfo = new TrainInfo(theApi, theApi.getTrains().get(0).getId());
+        Train theTrain = new Train(theTrainInfo);
+        pane.getChildren().add(theTrain);
         stage.show();
     }
 

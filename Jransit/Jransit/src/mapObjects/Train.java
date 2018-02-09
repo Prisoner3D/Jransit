@@ -1,7 +1,10 @@
 package mapObjects;
 
 import info.Location;
+import util.ImageUtilities;
 import info.TrainInfo;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import util.MappingFunctions;
 
@@ -9,6 +12,7 @@ public class Train extends Pane implements MapObject {
 	private TrainInfo info;
 	private double x;
 	private double y;
+	private Image icon;
 	public Train(TrainInfo info) {
 		super();
 		
@@ -21,18 +25,21 @@ public class Train extends Pane implements MapObject {
 		this.x = pixelCoord[0];
 		this.y = pixelCoord[1];
 		this.relocate(x, y);
+		this.icon = new Image(ImageUtilities.getTrainIcon(this.info.getLine().getLineLetter())); //Train Icon must be capitalized if a letter.
+																								 //Express trains must have the icon + exp.
+		ImageView lineIcon = new ImageView();
+		lineIcon.setImage(this.icon);
+		this.getChildren().addAll(lineIcon);
 	}
 	
 	@Override
 	public double getX() {
-		// TODO Auto-generated method stub
-		return 0;
+		return this.x;
 	}
 
 	@Override
 	public double getY() {
-		// TODO Auto-generated method stub
-		return 0;
+		return this.y;
 	}
 
 }
