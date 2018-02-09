@@ -1,5 +1,9 @@
 package UserInterface;
 
+import java.io.File;
+import java.io.IOException;
+
+import com.jfoenix.controls.JFXSlider;
 import com.lynden.gmapsfx.GoogleMapView;
 import com.lynden.gmapsfx.MapComponentInitializedListener;
 import com.lynden.gmapsfx.javascript.object.GoogleMap;
@@ -8,11 +12,17 @@ import com.lynden.gmapsfx.javascript.object.MapOptions;
 import com.lynden.gmapsfx.javascript.object.MapTypeIdEnum;
 import com.lynden.gmapsfx.javascript.object.Marker;
 import com.lynden.gmapsfx.javascript.object.MarkerOptions;
+import com.lynden.gmapsfx.util.MarkerImageFactory;
 import com.sun.prism.PhongMaterial.MapType;
+import com.teamdev.jxmaps.Icon;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import sun.invoke.util.BytecodeDescriptor;
 
 public class mapTest2 extends Application implements MapComponentInitializedListener {
 
@@ -26,12 +36,21 @@ public void start(Stage stage) throws Exception {
     //the map has been initialized, at which point we can then begin manipulating it.
     mapView = new GoogleMapView();
     mapView.addMapInializedListener(this);
-
-    Scene scene = new Scene(mapView);
-
+    BorderPane map = new BorderPane(mapView);
+    map.setMaxSize(750, 750);
+    StackPane root = new StackPane();
+    StackPane slider = new StackPane();
+    slider.setMinWidth(500);
+	TimeSlider history = new TimeSlider(new JFXSlider(), 0, 3600, slider);
+	/*	readTime = new TimelineReader(csv,history);
+	readTime.updateMap();*/
+	root.getChildren().addAll(mapView,slider);
+    Scene scene = new Scene(root);
+    stage.getIcons().add(new Image(getClass().getResourceAsStream("bus-icon.png")));
     stage.setTitle("JavaFX and Google Maps");
     stage.setScene(scene);
     stage.show();
+    System.out.println((baseDir()+"UserInterface/bus-icon.png"));
 }
 
 
@@ -54,12 +73,13 @@ public void mapInitialized() {
 
     //Add a marker to the map
     MarkerOptions markerOptions = new MarkerOptions();
-
     markerOptions.position( new LatLong(47.6, -122.3) )
-                .visible(Boolean.TRUE)
+                .visible(Boolean.TRUE) 
                 .title("My Marker");
-
+    markerOptions.icon(MarkerImageFactory.createMarkerImage("C:\\Users\\BT_1N3_05\\git\\jransit\\Jransit\\Jransit\\src\\UserInterface\\bus-icon.png", ".png"));
     Marker marker = new Marker( markerOptions );
+
+    
 
     map.addMarker(marker);
 
@@ -69,4 +89,15 @@ public static void main(String[] args) {
     launch(args);
 }
 
+private String baseDir() {
+    String baseDir = "";
+    try {
+        baseDir = new File(".").getCanonicalPath();
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+    baseDir = baseDir.replace('\\','/');
+    baseDir = "file:///" + baseDir + "/src/";
+    return baseDir;
+}
 }
