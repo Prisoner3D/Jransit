@@ -1,9 +1,11 @@
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 import api.MTAApi;
 import api.MTAApiStaticFactory;
 import api.TrainFeed;
+import ch.qos.logback.core.net.SyslogOutputStream;
 import info.Direction;
 import info.LineInfo;
 import info.LineInfoStaticFactory;
@@ -34,9 +36,14 @@ public class Test {
         // apis.get(TrainFeed.GREEN).printEverything();
         // Change: Add textfile exporting ^
         
+		List<TrainInfo> allBlueTrains = apis.get(TrainFeed.BLUE).getTrains();
+		for (TrainInfo train : allBlueTrains) {
+			System.out.println(train.getLatitude() + ", " + train.getLongitude());
+		}
+		
         // System.out.println(apis.get(TrainFeed.GREEN).getVehiclePosition("117121_G..N"));
-		System.out.println(apis.get(TrainFeed.BLUE).getStopTimes("133050_E..N"));
-        TrainInfo test = new TrainInfo(apis.get(TrainFeed.BLUE), "133050_E..N");
+		//System.out.println(apis.get(TrainFeed.BLUE).getStopTimes("133050_E..N"));
+        //TrainInfo test = new TrainInfo(apis.get(TrainFeed.BLUE), "133050_E..N");
         
         //LineInfo gTrain = mapOfLineInfos.get("G");
         // System.out.println(gTrain.getStationInfos());
@@ -46,6 +53,6 @@ public class Test {
         }
         */
         // System.out.println(apis.get(TrainFeed.GREEN).getStopTimes("116046_G..S"));
-        System.out.println(test.getCurrentStation());
+        //System.out.println(test.getCurrentStation());
 	}
 }

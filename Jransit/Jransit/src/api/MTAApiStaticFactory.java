@@ -7,11 +7,11 @@ public class MTAApiStaticFactory {
 	private static Map<TrainFeed, MTAApi> apis = new HashMap<>();
 	
 	public static Map<TrainFeed, MTAApi> getApis() {
-		update();
+		//update();
 		return apis;
 	}
 	private static final String key = "e7ed4dd1445f127eb503c38630a5d3e0";
-	static {
+	/*static {
 		try {
 			apis.put(TrainFeed.GRAY, new MTAApi(key, TrainFeed.GRAY));
 			apis.put(TrainFeed.NUM_S, new MTAApi(key, TrainFeed.NUM_S));
@@ -26,7 +26,13 @@ public class MTAApiStaticFactory {
 		}
 		
 	}
-	public static void update() {		
+	*/
+	
+	public static MTAApi getApi(TrainFeed tf) throws IOException {
+		return new MTAApi(key, tf);
+	}
+	
+	/*public static void update() {		
 		try {
 			apis.get(TrainFeed.NUM_S).updateFeed();
 			apis.get(TrainFeed.BLUE).updateFeed();
@@ -40,6 +46,7 @@ public class MTAApiStaticFactory {
 			e.printStackTrace();
 		}
 	}
+	*/
 	private MTAApiStaticFactory() {
 		
 	}
