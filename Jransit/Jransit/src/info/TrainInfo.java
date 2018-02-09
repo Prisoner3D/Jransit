@@ -19,8 +19,7 @@ public class TrainInfo {
 	private String nextStation = null;
 	private Direction direction = null;
 	private LineInfo line;
-	
-	// Add toString, hashCode 
+	private Location location;
 	
 	public TrainInfo(MTAApi api, String trip_id) throws IOException {
 		this.api = api;
@@ -29,10 +28,13 @@ public class TrainInfo {
 		this.stopTimes = api.getStopTimes(id);
 		if (stopTimes != null) {
 			this.currentStation = stopTimes.get(0).getStopId();
-			this.nextStation = stopTimes.get(1).getStopId();
+			if (stopTimes.size() > 1) {
+			    this.nextStation = stopTimes.get(1).getStopId();
+			}
 			this.direction = Direction.getDirection(stopTimes.get(0).getStopId().charAt(stopTimes.get(0).getStopId().length() - 1));
 		}
 		this.line = new LineInfo(api,this.id.substring(this.id.indexOf("_")+ 1,this.id.indexOf("_") + 2)); // Memory Issue?
+		this.location = new Location(0,0); // Add estimated location
 	}
 	
 	public String getId() {
@@ -65,14 +67,14 @@ public class TrainInfo {
     }
 
     public double getLatitude() {
-        return -1; // CSV
+        return location.getLatitude();
     }
 
     public double getLongitude() {
-        return -1; // CSV
+        return location.getLongitude();
     }
     
-    public double calcultateDistanceFromStation() {
+    public double calcultateDistanceFromStation(StationInfo station) {
         return -1; // use the time from station and distance from the next station
 	}
 }
