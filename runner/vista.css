@@ -25,6 +25,7 @@
 	 -fx-background-image: url("map.PNG");
     -fx-background-color: lightgrey;
       -fx-background-position: center;
+      -fx-background-size: 800,800;
 }
 
 .button {

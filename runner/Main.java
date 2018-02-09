@@ -32,10 +32,10 @@ public class Main extends Application {
             )
         );
         
-        MTAApi theApi = MTAApiStaticFactory.getApi(TrainFeed.BLUE);
-        TrainInfo theTrainInfo = new TrainInfo(theApi, theApi.getTrains().get(0).getId());
-        Train theTrain = new Train(theTrainInfo);
-        pane.getChildren().add(theTrain);
+        //MTAApi theApi = MTAApiStaticFactory.getApi(TrainFeed.BLUE);
+        //TrainInfo theTrainInfo = new TrainInfo(theApi, theApi.getTrains().get(0).getId());
+        //Train theTrain = new Train(theTrainInfo);
+        //pane.getChildren().add(theTrain);
         stage.show();
     }
 
