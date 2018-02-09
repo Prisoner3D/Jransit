@@ -40,7 +40,7 @@ public class StationInfo {
 		return Double.parseDouble(stop.getLatitude());
 	}
 	
-	public String getTrainName() {
+	public String getStationName() {
 		return stop.getName();
 	}
 	
