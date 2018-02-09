@@ -8,11 +8,7 @@ import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import com.jfoenix.controls.JFXSlider;
-import com.jfoenix.controls.JFXSlider.IndicatorPosition;
-
-import javafx.geometry.Orientation;
-import javafx.scene.control.Slider;
+import csv.CSVUtilities;
 
 /**
  * Reads slider value to update map according to time.
@@ -32,7 +28,7 @@ public class TimelineReader {
 	public TimelineReader(CSVUtilities csv, TimeSlider slider) {
 		this.DateFrom = dateNow;
 		this.csv = csv;
-		this.DateTo = (Date) dtf.parse((csv.getDataInt(csv.getnumColumns()).get(csv.CSVData.size())).toString());
+		this.DateTo = (Date) dtf.parse((csv.getDataInt(csv.getnumColumns()).get(csv.getCSVData().size())).toString());
 		this.slider = slider;
 	}
 	

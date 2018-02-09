@@ -235,4 +235,8 @@ public class CSVUtilities {
 		}
 		return data;
  	}
+
+	public int getnumColumns() {
+		return this.numColumns;
+	}
 }

@@ -1,20 +1,20 @@
-package com.lynden.gmapsexampleapp;
+package UserInterface;
 
 import com.lynden.gmapsfx.GoogleMapView;
 import com.lynden.gmapsfx.MapComponentInitializedListener;
 import com.lynden.gmapsfx.javascript.object.GoogleMap;
 import com.lynden.gmapsfx.javascript.object.LatLong;
 import com.lynden.gmapsfx.javascript.object.MapOptions;
-import com.lynden.gmapsfx.javascript.object.MapType;
+import com.lynden.gmapsfx.javascript.object.MapTypeIdEnum;
 import com.lynden.gmapsfx.javascript.object.Marker;
 import com.lynden.gmapsfx.javascript.object.MarkerOptions;
+import com.sun.prism.PhongMaterial.MapType;
+
 import javafx.application.Application;
-import static javafx.application.Application.launch;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-
-public class MainApp extends Application implements MapComponentInitializedListener {
+public class mapTest2 extends Application implements MapComponentInitializedListener {
 
 GoogleMapView mapView;
 GoogleMap map;
@@ -41,8 +41,8 @@ public void mapInitialized() {
     MapOptions mapOptions = new MapOptions();
 
     mapOptions.center(new LatLong(47.6097, -122.3331))
-            .mapType(MapType.ROADMAP)
-            .overviewMapControl(false)
+    			.mapType(MapTypeIdEnum.ROADMAP)
+    			.overviewMapControl(false)
             .panControl(false)
             .rotateControl(false)
             .scaleControl(false)
@@ -68,4 +68,5 @@ public void mapInitialized() {
 public static void main(String[] args) {
     launch(args);
 }
+
 }
