@@ -15,7 +15,7 @@ public class StationInfo {
     private MTAApi api;
     private Location location;
 
-    public StationInfo(MTAApi api, Stop stop) throws IOException {
+    public StationInfo(MTAApi api, Stop stop) {
         this.api = api;
         this.stop = stop;
         this.location = new Location(Double.parseDouble(stop.getLongitude()), Double.parseDouble(stop.getLatitude()));

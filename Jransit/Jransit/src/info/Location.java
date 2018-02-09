@@ -10,7 +10,7 @@ public class Location {
      * @param longitude : Longitude (X)
      * @param latitude : Latitude (Y)
      */
-    public Location(final double longitude, final double latitude) {
+    public Location(final double latitude, final double longitude) {
         this.longitude = longitude;
         this.latitude = latitude;
     }

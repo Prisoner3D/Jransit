@@ -7,6 +7,10 @@ import java.util.List;
 import com.google.transit.realtime.GtfsRealtime.TripUpdate.StopTimeUpdate;
 
 import api.MTAApi;
+import csv.Entity;
+import csv.Stop;
+import csv.StopsStaticFactory;
+import util.TrainMapsUtil;
 
 import com.google.transit.realtime.GtfsRealtime.VehiclePosition;
 
@@ -25,16 +29,9 @@ public class TrainInfo {
 		this.api = api;
 		this.id = trip_id;
 		this.trainPosition = api.getVehiclePosition(id);
-		this.stopTimes = api.getStopTimes(id);
-		if (stopTimes != null) {
-			this.currentStation = stopTimes.get(0).getStopId();
-			if (stopTimes.size() > 1) {
-			    this.nextStation = stopTimes.get(1).getStopId();
-			}
-			this.direction = Direction.getDirection(stopTimes.get(0).getStopId().charAt(stopTimes.get(0).getStopId().length() - 1));
-		}
+		updateStation();
 		this.line = new LineInfo(api,this.id.substring(this.id.indexOf("_")+ 1,this.id.indexOf("_") + 2)); // Memory Issue?
-		this.location = new Location(0,0); // Add estimated location
+		this.setLocation();
 	}
 	
 	public String getId() {
@@ -50,23 +47,38 @@ public class TrainInfo {
 	}
 	
     public void updateStation() {
-        this.currentStation = this.nextStation;
-        this.nextStation = null; // refer to above
+    	this.stopTimes = api.getStopTimes(id);
+		if (stopTimes != null) {
+			this.currentStation = stopTimes.get(0).getStopId(); // TODO: Does this always return the current stop?
+			if (stopTimes.size() > 1) {
+			    this.nextStation = stopTimes.get(1).getStopId();
+			}
+			this.direction = Direction.getDirection(stopTimes.get(0).getStopId().charAt(stopTimes.get(0).getStopId().length() - 1));
+		}
     }
 
-    public String getCurrentStation() {
-        return this.currentStation;
+    public StationInfo getCurrentStation() {
+        return new StationInfo(api, StopsStaticFactory.getStop(this.currentStation));
     }
 
-    public String getNextStation() {
-        return this.nextStation;
+    public StationInfo getNextStation() {
+        return new StationInfo(api, StopsStaticFactory.getStop(this.nextStation));
     }
 
     public Direction getDirection() {
         return this.direction;
     }
-
+    
+    public void setLocation() {
+    	StationInfo current = this.getCurrentStation();
+    	StationInfo next = this.getNextStation();
+    	Location currentCoords = new Location(current.getLatitude(), current.getLongitude());
+    	Location nextCoords = new Location(next.getLatitude(), next.getLongitude());
+    	this.location = TrainMapsUtil.getTrainPosition(currentCoords, nextCoords, this.stopTimes.get(1).getArrival().getTime() - this.stopTimes.get(0).getArrival().getTime(), 30.0); //TODO change units on time and velocity;
+    }
+    
     public double getLatitude() {
+    	
         return location.getLatitude();
     }
 

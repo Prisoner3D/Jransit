@@ -2,8 +2,8 @@
 <classpath>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="src" path="Jransit/Jransit/src"/>
-	<classpathentry kind="src" path="sample1"/>
-	<classpathentry kind="src" path="Scene"/>
+	<classpathentry kind="src" path="runner"/>
+	<classpathentry kind="src" path="scene"/>
 	<classpathentry kind="lib" path="Jransit/Jransit/jxmaps-1.3.1.jar"/>
 	<classpathentry kind="lib" path="Jransit/Jransit/jxmaps-win-1.3.1.jar"/>
 	<classpathentry kind="lib" path="Jransit/Jransit/license.jar"/>

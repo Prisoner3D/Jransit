@@ -20,7 +20,11 @@ public class VistaNavigator {
     /** The main application layout controller. */
     private static MainController mainController;
 
-    /**
+    public static MainController getMainController() {
+		return mainController;
+	}
+
+	/**
      * Stores the main controller for later use in navigation tasks.
      *
      * @param mainController the main application layout controller.
