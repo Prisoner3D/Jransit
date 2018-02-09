@@ -1,3 +1,4 @@
+<<<<<<< HEAD:Jransit/Jransit/src/LineInfo.java
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -5,6 +6,17 @@ import java.util.List;
 import csv.Stop;
 import csv.StopsStaticFactory;
 
+=======
+package info;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import api.MTAApi;
+import csv.Stop;
+import csv.StopsStaticFactory;
+
+>>>>>>> backend:Jransit/Jransit/src/info/LineInfo.java
 public class LineInfo {
 	private String lineLetter;
 	private List<StationInfo> stations = new ArrayList<StationInfo>();
