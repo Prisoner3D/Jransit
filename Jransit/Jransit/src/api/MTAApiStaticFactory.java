@@ -7,7 +7,7 @@ public class MTAApiStaticFactory {
 	private static Map<TrainFeed, MTAApi> apis = new HashMap<>();
 	
 	public static Map<TrainFeed, MTAApi> getApis() {
-		update();
+		//update();
 		return apis;
 	}
 	private static final String key = "e7ed4dd1445f127eb503c38630a5d3e0";
@@ -28,7 +28,7 @@ public class MTAApiStaticFactory {
 	}
 	*/
 	
-	public MTAApi getApi(TrainFeed tf) throws IOException {
+	public static MTAApi getApi(TrainFeed tf) throws IOException {
 		return new MTAApi(key, tf);
 	}
 	
