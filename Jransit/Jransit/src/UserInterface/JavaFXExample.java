@@ -1,9 +1,6 @@
 package UserInterface;
 	
 import java.io.File;
-import java.util.concurrent.TimeUnit;
-
-import javax.swing.ImageIcon;
 
 import com.jfoenix.controls.JFXSlider;
 import com.teamdev.jxmaps.ControlPosition;
@@ -17,20 +14,14 @@ import com.teamdev.jxmaps.MapReadyHandler;
 import com.teamdev.jxmaps.MapStatus;
 import com.teamdev.jxmaps.MapTypeControlOptions;
 import com.teamdev.jxmaps.Marker;
-import com.teamdev.jxmaps.MarkerOptions;
 import com.teamdev.jxmaps.MouseEvent;
 import com.teamdev.jxmaps.javafx.MapView;
+
 import javafx.application.Application;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.util.StringConverter;
 
 public class JavaFXExample extends Application {
     final static MapView mapView = new MapView();

@@ -14,7 +14,8 @@ public class Main extends Application {
 	@Override
 	public void start(Stage stage) throws Exception {
 		stage.setTitle("Jransit");
-
+		stage.setHeight(800);
+		stage.setWidth(800);
 		stage.setScene(createScene(loadMainPane()));
 
 		stage.show();

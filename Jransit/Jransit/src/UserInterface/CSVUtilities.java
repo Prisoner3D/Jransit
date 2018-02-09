@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import csv.Entity;
+
 public class CSVUtilities {
 
 	ArrayList<String> CSVData;

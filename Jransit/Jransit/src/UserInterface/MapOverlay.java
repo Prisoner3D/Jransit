@@ -3,12 +3,9 @@ package UserInterface;
 import java.util.ArrayList;
 
 import javafx.application.Application;
-import javafx.geometry.Insets;
-import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 public class MapOverlay extends Application 
 {

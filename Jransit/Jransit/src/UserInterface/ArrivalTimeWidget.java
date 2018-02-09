@@ -3,6 +3,7 @@ package UserInterface;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import info.StationInfo;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 
@@ -16,9 +17,9 @@ public class ArrivalTimeWidget extends Widget
 	
 	// CAPITAL:IZEEE
 	
-	public ArrivalTimeWidget(StationInfo station, double x, double y, Pane root) 
+	public ArrivalTimeWidget(StationInfo station, String description, double x, double y, Pane root) 
 	{
-		super(station.getTrainName(),"Train time goes here", x, y, root);
+		super(station.getName(),"Train time goes here", x, y, root);
 	}
 
 	public String getTitle()
