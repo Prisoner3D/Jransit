@@ -14,7 +14,7 @@ import info.TrainInfo;
 public class Test {
 	public static void main(String[] args) throws IOException, InterruptedException {
 	    // For Alex: http://web.mta.info/developers/data/nyct/subway/Stations.csv
-	    
+	    System.out.println("Jransit: Master");
 	    // MTAApi and LineInfo Factory Testing
 	    // Change: Pass in List of TrainFeeds
 	    // Change: Add Thread.sleep(200) to prevent header errors
@@ -35,8 +35,8 @@ public class Test {
         // Change: Add textfile exporting ^
         
         // System.out.println(apis.get(TrainFeed.GREEN).getVehiclePosition("117121_G..N"));
-		System.out.println(apis.get(TrainFeed.BLUE).getStopTimes("129000_E..N"));
-        TrainInfo test = new TrainInfo(apis.get(TrainFeed.BLUE), "129000_E..N");
+		System.out.println(apis.get(TrainFeed.BLUE).getStopTimes("133050_E..N"));
+        TrainInfo test = new TrainInfo(apis.get(TrainFeed.BLUE), "133050_E..N");
         
         //LineInfo gTrain = mapOfLineInfos.get("G");
         // System.out.println(gTrain.getStationInfos());
