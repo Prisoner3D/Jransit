@@ -61,7 +61,10 @@ public class TrainInfo {
     public String getNextStation() {
         return this.nextStation;
     }
-
+    
+    public List<StopTimeUpdate> getStopTime() {
+        return this.stopTimes;
+    }
     public Direction getDirection() {
         return this.direction;
     }

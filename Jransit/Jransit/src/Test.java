@@ -4,6 +4,7 @@ import java.util.Map;
 import api.MTAApi;
 import api.MTAApiStaticFactory;
 import api.TrainFeed;
+import csv.Stop;
 import info.Direction;
 import info.LineInfo;
 import info.LineInfoStaticFactory;
@@ -15,12 +16,16 @@ public class Test {
 	public static void main(String[] args) throws IOException, InterruptedException {
 	    // For Alex: http://web.mta.info/developers/data/nyct/subway/Stations.csv
 	    System.out.println("Jransit: Backend");
+	    
 	    // MTAApi and LineInfo Factory Testing
 	    // Change: Pass in List of TrainFeeds
 	    // Change: Add Thread.sleep(200) to prevent header errors
 		Map<TrainFeed, MTAApi> apis = MTAApiStaticFactory.getApis();
 		Map<String, LineInfo> mapOfLineInfos = LineInfoStaticFactory.getLines();
 		System.out.println(mapOfLineInfos); // Need to add toStrings and hashCodes maybe
+		
+		// How to use Stop thanks @afeng
+		StationInfo station = new StationInfo(apis.get(TrainFeed.BLUE), null);
 		
 		System.out.println(apis.get(TrainFeed.BLUE).getTripIds());
 		// Change: Add getTripIds for a certain line
