@@ -73,7 +73,7 @@ public class JavaFXExample extends Application {
                     // 40.650002, and the longitude is -73.949997.
                     List<Stop> stops = StopsStaticFactory.getAllStops();
                     for (Stop stop : stops) {
-                    	Marker markerlol = new Marker(map);
+                    	Marker markerlol = new Marker(map); 
                     	markerlol.setPosition(new LatLng(Double.valueOf(stop.getLatitude()), Double.valueOf(stop.getLongitude())));
                     	markerlol.setIcon(icon);
                     }
