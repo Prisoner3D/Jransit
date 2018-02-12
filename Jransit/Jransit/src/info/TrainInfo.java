@@ -71,10 +71,21 @@ public class TrainInfo {
     
     public void setLocation() {
     	StationInfo current = this.getCurrentStation();
-    	StationInfo next = this.getNextStation();
+    	StationInfo next;
+    	try {
+    		next = this.getNextStation();
+    	} catch (Exception e) {
+    		next = current;
+    	}
     	Location currentCoords = new Location(current.getLatitude(), current.getLongitude());
     	Location nextCoords = new Location(next.getLatitude(), next.getLongitude());
-    	this.location = TrainMapsUtil.getTrainPosition(currentCoords, nextCoords, this.stopTimes.get(1).getArrival().getTime() - this.stopTimes.get(0).getArrival().getTime(), 30.0); //TODO change units on time and velocity;
+    	if (next == current) {
+        	this.location = TrainMapsUtil.getTrainPosition(currentCoords, nextCoords, this.stopTimes.get(0).getArrival().getTime()
+        			- this.stopTimes.get(0).getArrival().getTime(), 30.0); //TODO change units on time and velocity;
+    	} else {
+    		this.location = TrainMapsUtil.getTrainPosition(currentCoords, nextCoords, this.stopTimes.get(1).getArrival().getTime()
+    				- this.stopTimes.get(0).getArrival().getTime(), 30.0); //TODO change units on time and velocity;
+    	}
     }
     
     public double getLatitude() {

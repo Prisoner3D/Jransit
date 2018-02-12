@@ -9,7 +9,7 @@ import info.Location;
 public class TrainMapsUtil {
 	
 	public static void main(String[] args) {
-		
+		// whys s therere a a main
 		Double[]potato = getTrainPosition(100.0,100.0,1.0,0.0,0.0,500.0);
 		System.out.println(potato[0] + "  " + potato[1]);
 		StopDb stopdb = new StopDb();
@@ -72,6 +72,9 @@ public class TrainMapsUtil {
 	// TODO: Confirm whether or not the order of current vs next is right
 	public static Location getTrainPosition(Location currentStop, Location nextStop, long time, double vel) {
 		//	Double distanceX = lat * longt * Math.sqrt(Time); 
+			if (currentStop.getLatitude() == nextStop.getLatitude() && nextStop.getLongitude() == currentStop.getLongitude()) {
+				return currentStop;
+			}
 			Double distanceX = currentStop.getLongitude()- nextStop.getLongitude();
 			Double distanceY = currentStop.getLatitude() - nextStop.getLatitude();
 			Double distanceTotal = Math.sqrt(Math.pow(distanceX, 2)+ Math.pow(distanceY,2));

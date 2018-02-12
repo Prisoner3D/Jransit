@@ -64,4 +64,9 @@ public class Location {
         final double latDiff = this.latitude - location.getLatitude();
         return (Math.toDegrees(Math.atan2(longDiff, latDiff) + 2 * Math.PI) + 180L) % 360L;
     }
+    
+    @Override
+    public String toString() {
+    	return this.getLatitude() + " " + this.getLongitude();
+    }
 }

@@ -1,15 +1,17 @@
+import java.io.IOException;
+
+import api.MTAApi;
+import api.MTAApiStaticFactory;
+import api.TrainFeed;
+import csv.StopsStaticFactory;
+import info.StationInfo;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-
-import java.io.IOException;
+import mapObjects.Station;
 import mapObjects.Train;
-import api.MTAApi;
-import api.MTAApiStaticFactory;
-import api.TrainFeed;
-import info.TrainInfo;
 
 /**
  * Main application class.
@@ -32,10 +34,10 @@ public class Main extends Application {
             )
         );
         
-        //MTAApi theApi = MTAApiStaticFactory.getApi(TrainFeed.BLUE);
-        //TrainInfo theTrainInfo = new TrainInfo(theApi, theApi.getTrains().get(0).getId());
-        //Train theTrain = new Train(theTrainInfo);
-        //pane.getChildren().add(theTrain);
+        MTAApi theApi = MTAApiStaticFactory.getApi(TrainFeed.NUM_S);
+        StationInfo theTrainInfo = new StationInfo(theApi, StopsStaticFactory.getAllStops().get(0));
+        Station theStation = new Station(theTrainInfo);
+        pane.getChildren().add(theStation);
         stage.show();
     }
 
