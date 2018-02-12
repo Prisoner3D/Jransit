@@ -1,8 +1,8 @@
 package UserInterface;
 	
 import java.io.File;
+import java.util.List;
 
-import com.jfoenix.controls.JFXSlider;
 import com.teamdev.jxmaps.ControlPosition;
 import com.teamdev.jxmaps.Icon;
 import com.teamdev.jxmaps.InfoWindow;
@@ -17,6 +17,10 @@ import com.teamdev.jxmaps.Marker;
 import com.teamdev.jxmaps.MouseEvent;
 import com.teamdev.jxmaps.javafx.MapView;
 
+import api.MTAApiStaticFactory;
+import api.TrainFeed;
+import csv.Stop;
+import csv.StopsStaticFactory;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
@@ -63,9 +67,16 @@ public class JavaFXExample extends Application {
                     map.setOptions(options);
                     Marker marker = new Marker(map);
                     Icon icon = new Icon();
-                    icon.loadFromFile(new File("/Jransit/Jransit/src/photos/bus.ico"));
+                    File ccu = new File(getClass().getResource("bus-icon.png").getFile());
+                    icon.loadFromFile(ccu);
                     marker.setIcon(icon);
                     // 40.650002, and the longitude is -73.949997.
+                    List<Stop> stops = StopsStaticFactory.getAllStops();
+                    for (Stop stop : stops) {
+                    	Marker markerlol = new Marker(map);
+                    	markerlol.setPosition(new LatLng(Double.valueOf(stop.getLatitude()), Double.valueOf(stop.getLongitude())));
+                    	markerlol.setIcon(icon);
+                    }
                     marker.setPosition(new LatLng(40.650002, -73.949997));
                     InfoWindow infoWindow = new InfoWindow(map);
                     infoWindow.setContent("dank");
@@ -101,7 +112,8 @@ public class JavaFXExample extends Application {
         map.setMaxSize(750,750);
         StackPane slider = new StackPane();
         slider.setMinWidth(500);
-		TimeSlider history = new TimeSlider(new JFXSlider(), 0, 3600, slider);
+       // JFXSlider time = new JFXSlider();
+		//TimeSlider history = new TimeSlider(time, 0, 3600, slider);
     /*	readTime = new TimelineReader(csv,history);
     	readTime.updateMap();*/
         root.getChildren().addAll(slider,map);

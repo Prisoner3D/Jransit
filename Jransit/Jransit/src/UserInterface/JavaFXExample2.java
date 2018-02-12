@@ -1,21 +1,30 @@
 package UserInterface;
 
+import java.io.File;
+import java.io.IOException;
+
 import com.jfoenix.controls.JFXSlider;
 import com.lynden.gmapsfx.GoogleMapView;
 import com.lynden.gmapsfx.MapComponentInitializedListener;
 import com.lynden.gmapsfx.javascript.object.GoogleMap;
 import com.lynden.gmapsfx.javascript.object.LatLong;
+import com.lynden.gmapsfx.javascript.object.MapOptions;
 import com.lynden.gmapsfx.javascript.object.MapTypeIdEnum;
-import com.teamdev.jxmaps.LatLng;
-import com.teamdev.jxmaps.MapOptions;
+import com.lynden.gmapsfx.javascript.object.Marker;
+import com.lynden.gmapsfx.javascript.object.MarkerOptions;
+import com.lynden.gmapsfx.shapes.MapShapeOptions;
+import com.lynden.gmapsfx.util.MarkerImageFactory;
+import com.sun.prism.PhongMaterial.MapType;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import sun.invoke.util.BytecodeDescriptor;
 
-public class mapTest2 extends Application implements MapComponentInitializedListener {
+public class JavaFXExample2 extends Application implements MapComponentInitializedListener {
 
 GoogleMapView mapView;
 GoogleMap map;
@@ -32,8 +41,7 @@ public void start(Stage stage) throws Exception {
     StackPane root = new StackPane();
     StackPane slider = new StackPane();
     slider.setMinWidth(500);
-    
-	TimeSlider history = new TimeSlider(new JFXSlider(), 0, 3600, slider);
+	//TimeSlider history = new TimeSlider(new JFXSlider(), 0, 3600, slider);
 	/*	readTime = new TimelineReader(csv,history);
 	readTime.updateMap();*/
 	root.getChildren().addAll(mapView,slider);
@@ -45,15 +53,22 @@ public void start(Stage stage) throws Exception {
 }
 
 
+@Override
 public void mapInitialized() {
     //Set the initial properties of the map.
     MapOptions mapOptions = new MapOptions();
 
-    mapOptions.setCenter(new LatLng(47.6097, -122.3331));
-    mapOptions.setZoom(12);
-    mapOptions.setPanControl(false);
+    mapOptions.center(new LatLong(47.6097, -122.3331))
+    			.mapType(MapTypeIdEnum.ROADMAP)
+    			.overviewMapControl(false)
+            .panControl(false)
+            .rotateControl(false)
+            .scaleControl(false)
+            .streetViewControl(false)
+            .zoomControl(false)
+            .zoom(12);
 
-    map = mapView.createMap();
+    map = mapView.createMap(mapOptions);
 /*
     //Add a marker to the map
     MapShapeOptions markerOptions = new MapViewOptions();
@@ -68,9 +83,5 @@ public void mapInitialized() {
    // map.addMarker(marker);
 
 }
-
-	public static void main(String[] args) {
-	    launch(args);
-	}
 
 }
