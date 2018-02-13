@@ -79,7 +79,7 @@ public class TrainInfo {
         }
         Location currentCoords = new Location(current.getLatitude(), current.getLongitude());
         Location nextCoords = new Location(next.getLatitude(), next.getLongitude());
-        if (next == current) {
+        if (next.equals(current)) {
             this.location = TrainMapsUtil.getTrainPosition(currentCoords, nextCoords, this.stopTimes.get(0).getArrival().getTime() - this.stopTimes.get(0).getArrival().getTime(),
                     30.0); // TODO change units on time and velocity;
         } else {

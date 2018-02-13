@@ -17,7 +17,6 @@ public class Test {
 	public static void main(String[] args) throws IOException, InterruptedException {
 	    // For Alex: http://web.mta.info/developers/data/nyct/subway/Stations.csv
 	    
-		
 		// DIRECTION: AIzaSyD0pqUj9v0WYoBJ5dORWFyHcaMHWQ4_iAM
 	    // NOTE: LOCATION IS LAT FIRST
 	    
