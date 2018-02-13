@@ -17,8 +17,6 @@ import com.teamdev.jxmaps.Marker;
 import com.teamdev.jxmaps.MouseEvent;
 import com.teamdev.jxmaps.javafx.MapView;
 
-import api.MTAApiStaticFactory;
-import api.TrainFeed;
 import csv.Stop;
 import csv.StopsStaticFactory;
 import javafx.application.Application;
@@ -26,6 +24,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import mapObjects.BusFactory;
 
 public class JavaFXExample extends Application {
     final static MapView mapView = new MapView();
@@ -83,6 +82,7 @@ public class JavaFXExample extends Application {
                     // Showing info windows under the marker
                     infoWindow.open(map, marker);
                     // Adding event listener that intercepts clicking on map
+                    (new BusFactory()).placeBusses(map);
                     map.addEventListener("click", new MapMouseEvent() {
                         @Override
                         public void onEvent(MouseEvent mouseEvent) {
