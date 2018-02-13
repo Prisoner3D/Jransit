@@ -10,7 +10,7 @@ import com.teamdev.jxmaps.Marker;
 import info.BusInfo;
 import javafx.scene.image.Image;
 
-public class Bus implements MapObject
+public class Bus
 {
 	private Marker marker;
 	private Map map;
