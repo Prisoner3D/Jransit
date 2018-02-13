@@ -3,7 +3,9 @@ import javafx.scene.Node;
 import javafx.scene.layout.StackPane;
 
 /**
- * Main controller class for the entire layout.
+ * Main controller class for the entire layout, the skeleton for the scenes that are to come
+ * @author Katherin
+ *
  */
 public class MainController {
 

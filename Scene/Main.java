@@ -8,6 +8,9 @@ import java.io.IOException;
 
 /**
  * Main application class.
+ * Class of panes that loads the main scene and allows for the continuation onto the next scene with a button click.
+ * @author Katherin
+ *
  */
 public class Main extends Application {
 
@@ -36,7 +39,7 @@ public class Main extends Application {
 		MainController mainController = loader.getController();
 
 		VistaNavigator.setMainController(mainController);
-		VistaNavigator.loadVista(VistaNavigator.VISTA_1);
+		VistaNavigator.loadVista(VistaNavigator.VIEWER_1);
 
 		return mainPane;
 	}

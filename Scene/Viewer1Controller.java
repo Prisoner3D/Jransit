@@ -3,8 +3,9 @@ import javafx.fxml.FXML;
 
 /**
  * Controller class for the first vista.
+ * @author Katherin
  */
-public class Vista1Controller {
+public class Viewer1Controller {
 
 	/**
 	 * Event handler fired when the user requests a new vista.
@@ -14,7 +15,7 @@ public class Vista1Controller {
 	 */
 	@FXML
 	void nextPane(ActionEvent event) {
-		VistaNavigator.loadVista(VistaNavigator.VISTA_2);
+		VistaNavigator.loadVista(VistaNavigator.VIEWER_2);
 	}
 
 }
