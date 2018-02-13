@@ -7,11 +7,8 @@
 	<classpathentry kind="lib" path="Jransit/logback-classic-1.2.1.jar"/>
 	<classpathentry kind="lib" path="Jransit/logback-core-1.2.1.jar"/>
 	<classpathentry kind="lib" path="Jransit/slf4j-api-1.7.23.jar"/>
-<<<<<<< HEAD
 	<classpathentry kind="lib" path="Jransit/jfoenix-8.0.1.jar"/>
-=======
 	<classpathentry kind="lib" path="Jransit/src/bus_api/gson-2.2.4.jar"/>
 	<classpathentry kind="lib" path="Jransit/src/bus_api/urlbuilder-1.3.2.jar"/>
->>>>>>> branch 'master' of https://github.com/Prisoner3D/Jransit.git
 	<classpathentry kind="output" path="bin"/>
 </classpath>
