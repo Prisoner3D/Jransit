@@ -12,23 +12,24 @@ public class MTAApiStaticFactory {
 	
 	static {
         try {
-            apis.put(TrainFeed.NUM_S, new MTAApi(key, TrainFeed.NUM_S));
-            Thread.sleep(200);
-            apis.put(TrainFeed.BLUE, new MTAApi(key, TrainFeed.BLUE));
-            Thread.sleep(200);
-            apis.put(TrainFeed.YELLOW, new MTAApi(key, TrainFeed.YELLOW));
-            Thread.sleep(200);
-            apis.put(TrainFeed.ORANGE, new MTAApi(key, TrainFeed.ORANGE));
-            Thread.sleep(200);
-            apis.put(TrainFeed.GRAY, new MTAApi(key, TrainFeed.GRAY));
-            Thread.sleep(200);
-            apis.put(TrainFeed.GREEN, new MTAApi(key, TrainFeed.GREEN));
-            Thread.sleep(200);
-            apis.put(TrainFeed.BROWN, new MTAApi(key, TrainFeed.BROWN));
-            Thread.sleep(200);
-            apis.put(TrainFeed.SIR, new MTAApi(key, TrainFeed.SIR));
-            Thread.sleep(200);
-        } catch (IOException | InterruptedException e) {
+        	apis.put(TrainFeed.BLUE, new MTAApi(key, TrainFeed.BLUE));
+//            apis.put(TrainFeed.NUM_S, new MTAApi(key, TrainFeed.NUM_S));
+//            Thread.sleep(400);
+//            
+//            Thread.sleep(400);
+//            apis.put(TrainFeed.YELLOW, new MTAApi(key, TrainFeed.YELLOW));
+//            Thread.sleep(400);
+//            apis.put(TrainFeed.ORANGE, new MTAApi(key, TrainFeed.ORANGE));
+//            Thread.sleep(400);
+//            apis.put(TrainFeed.GRAY, new MTAApi(key, TrainFeed.GRAY));
+//            Thread.sleep(400);
+//            apis.put(TrainFeed.GREEN, new MTAApi(key, TrainFeed.GREEN));
+//            Thread.sleep(400);
+//            apis.put(TrainFeed.BROWN, new MTAApi(key, TrainFeed.BROWN));
+//            Thread.sleep(400);
+//            apis.put(TrainFeed.SIR, new MTAApi(key, TrainFeed.SIR));
+//            Thread.sleep(400);
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -56,23 +57,25 @@ public class MTAApiStaticFactory {
 	
 	public static void update() {		
 		try {
-			apis.get(TrainFeed.NUM_S).updateFeed();
-			Thread.sleep(200);
 			apis.get(TrainFeed.BLUE).updateFeed();
-			Thread.sleep(200);
-			apis.get(TrainFeed.YELLOW).updateFeed();
-			Thread.sleep(200);
-			apis.get(TrainFeed.ORANGE).updateFeed();
-			Thread.sleep(200);
-			apis.get(TrainFeed.GRAY).updateFeed();
-			Thread.sleep(200);
-			apis.get(TrainFeed.GREEN).updateFeed();
-			Thread.sleep(200);
-			apis.get(TrainFeed.BROWN).updateFeed();
-			Thread.sleep(200);
-			apis.get(TrainFeed.SIR).updateFeed();
-			Thread.sleep(200);
-		} catch (IOException | InterruptedException e) {
+//			
+//			apis.get(TrainFeed.NUM_S).updateFeed();
+//			Thread.sleep(400);
+//			
+//			Thread.sleep(400);
+//			apis.get(TrainFeed.YELLOW).updateFeed();
+//			Thread.sleep(400);
+//			apis.get(TrainFeed.ORANGE).updateFeed();
+//			Thread.sleep(400);
+//			apis.get(TrainFeed.GRAY).updateFeed();
+//			Thread.sleep(400);
+//			apis.get(TrainFeed.GREEN).updateFeed();
+//			Thread.sleep(400);
+//			apis.get(TrainFeed.BROWN).updateFeed();
+//			Thread.sleep(400);
+//			apis.get(TrainFeed.SIR).updateFeed();
+//			Thread.sleep(400);
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}

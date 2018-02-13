@@ -88,6 +88,10 @@ public class TrainInfo {
         }
     }
 
+    public Location getLocation() {
+    	return this.location;
+    }
+    
     public double getLatitude() {
         return location.getLatitude();
     }

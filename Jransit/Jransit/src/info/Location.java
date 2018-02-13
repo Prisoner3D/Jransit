@@ -69,4 +69,16 @@ public class Location {
     public String toString() {
     	return "Lat: " + this.getLatitude() + " Long: " + this.getLongitude();
     }
+    
+    @Override
+    public boolean equals(Object location) {
+    	if (this == location) {
+    		return true;
+    	}
+    	if (!(location instanceof Location)) {
+    		return false;
+    	}
+    	Location o = (Location) location; 
+    	return this.longitude == o.getLongitude() && this.latitude == o.getLatitude();
+    }
 }

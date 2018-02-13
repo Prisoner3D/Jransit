@@ -17,6 +17,8 @@ public class Test {
 	public static void main(String[] args) throws IOException, InterruptedException {
 	    // For Alex: http://web.mta.info/developers/data/nyct/subway/Stations.csv
 	    
+		
+		// DIRECTION: AIzaSyD0pqUj9v0WYoBJ5dORWFyHcaMHWQ4_iAM
 	    // NOTE: LOCATION IS LAT FIRST
 	    
 	    // TODO
@@ -42,7 +44,7 @@ public class Test {
 		
         List<TrainInfo> allBlueTrains = apis.get(TrainFeed.BLUE).getTrains();
         for (TrainInfo train : allBlueTrains) {
-            System.out.println(train.getLatitude() + ", " + train.getLongitude());
+            System.out.println(train.getLocation());
         }
 		
         //System.out.println(apis.get(TrainFeed.GREEN).getVehiclePosition("117121_G..N"));
