@@ -16,43 +16,47 @@ import info.TrainInfo;
 public class Test {
 	public static void main(String[] args) throws IOException, InterruptedException {
 	    // For Alex: http://web.mta.info/developers/data/nyct/subway/Stations.csv
+	    
+	    // NOTE: LOCATION IS LAT FIRST
+	    
+	    // TODO
+	    // Add in dynamic factory creation based on List of TrainFeeds
+	    // Add toString, hashCodes and equals
+	    // Add getTripIds for only a certain line in feed
+	    // Add textfile for printEverything()
+	    // Add backup api
 	    System.out.println("Jransit: Master");
+	    
 	    // MTAApi and LineInfo Factory Testing
-	    // Change: Pass in List of TrainFeeds
-	    // Change: Add Thread.sleep(200) to prevent header errors
 		Map<TrainFeed, MTAApi> apis = MTAApiStaticFactory.getApis();
 		Map<String, LineInfo> mapOfLineInfos = LineInfoStaticFactory.getLines();
-		System.out.println(mapOfLineInfos); // Need to add toStrings and hashCodes maybe
-		
-		System.out.println(apis.get(TrainFeed.BLUE).getTripIds());
-		// Change: Add getTripIds for a certain line
 		
 		// Location Testing
-		// Location location = new Location(35.0, 35.0);
-		// Location location2 = new Location(33.0, 33.0);
-		// System.out.println(location.angleTo(location2));
-		// System.out.println(Direction.NORTH);
+		Location location = new Location(35.0, 35.0);
+		Location location2 = new Location(33.0, 33.0);
+		System.out.println(location.angleTo(location2));
+		//System.out.println(Direction.NORTH);
 		
-        // apis.get(TrainFeed.GREEN).printEverything();
-        // Change: Add textfile exporting ^
-        
-		List<TrainInfo> allBlueTrains = apis.get(TrainFeed.BLUE).getTrains();
-		for (TrainInfo train : allBlueTrains) {
-			System.out.println(train.getLatitude() + ", " + train.getLongitude());
-		}
+        //apis.get(TrainFeed.GREEN).printEverything();
+		//System.out.println(apis.get(TrainFeed.BLUE).getTripIds());
 		
-        // System.out.println(apis.get(TrainFeed.GREEN).getVehiclePosition("117121_G..N"));
+        List<TrainInfo> allBlueTrains = apis.get(TrainFeed.BLUE).getTrains();
+        for (TrainInfo train : allBlueTrains) {
+            System.out.println(train.getLatitude() + ", " + train.getLongitude());
+        }
+		
+        //System.out.println(apis.get(TrainFeed.GREEN).getVehiclePosition("117121_G..N"));
 		//System.out.println(apis.get(TrainFeed.BLUE).getStopTimes("133050_E..N"));
         //TrainInfo test = new TrainInfo(apis.get(TrainFeed.BLUE), "133050_E..N");
         
         //LineInfo gTrain = mapOfLineInfos.get("G");
-        // System.out.println(gTrain.getStationInfos());
+        //System.out.println(gTrain.getStationInfos());
         /*
         for (StationInfo test2 : gTrain.getStationInfos()) {
             System.out.println(test2.getName());
         }
         */
-        // System.out.println(apis.get(TrainFeed.GREEN).getStopTimes("116046_G..S"));
+        //System.out.println(apis.get(TrainFeed.GREEN).getStopTimes("116046_G..S"));
         //System.out.println(test.getCurrentStation());
 	}
 }

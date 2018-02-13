@@ -18,7 +18,7 @@ public class StationInfo {
     public StationInfo(MTAApi api, Stop stop) {
         this.api = api;
         this.stop = stop;
-        this.location = new Location(Double.parseDouble(stop.getLongitude()), Double.parseDouble(stop.getLatitude()));
+        this.location = new Location(Double.parseDouble(stop.getLatitude()), Double.parseDouble(stop.getLongitude()));
     }
 
     public String getLine() {
@@ -72,4 +72,8 @@ public class StationInfo {
     	//return StopsStaticFactory.getStop(stop.getParentStation());
     }
     */
+    @Override
+    public String toString() {
+        return "Station: " + this.name + " Line: " + this.route + " " + this.location;
+    }
 }

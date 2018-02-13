@@ -19,7 +19,6 @@ import com.google.transit.realtime.GtfsRealtime.VehiclePosition;
 import com.google.transit.realtime.GtfsRealtimeNYCT;
 
 public class MTAApi {
-	
     /*
         Useful info: 
         Each stop_time_update is a future stop time, past stop times are omitted. The first StopTime in the sequence is the stop the train
@@ -42,7 +41,7 @@ public class MTAApi {
 	private final TrainFeed feedID;
 	private FeedMessage feed;
 
-	public MTAApi(String key, TrainFeed feedID) throws IOException {
+	public MTAApi(final String key, final TrainFeed feedID) throws IOException {
 		this.API_KEY = key;
 		this.feedID = feedID;
 		this.feed = getFeed(feedID);
@@ -52,12 +51,12 @@ public class MTAApi {
 		this.feed = getFeed(feedID);
 	}
 	
-	private FeedMessage getFeed(TrainFeed id) throws IOException {
+	private FeedMessage getFeed(final TrainFeed id) throws IOException {
 		ExtensionRegistry registry = ExtensionRegistry.newInstance();
 		registry.add(GtfsRealtimeNYCT.nyctFeedHeader);
 		registry.add(GtfsRealtimeNYCT.nyctStopTimeUpdate);
 		registry.add(GtfsRealtimeNYCT.nyctTripDescriptor);
-		URL url = new URL("http://datamine.mta.info/mta_esi.php?key=" + API_KEY + "&feed_id=" + id); // id = what group of trains
+		URL url = new URL("http://datamine.mta.info/mta_esi.php?key=" + API_KEY + "&feed_id=" + id); // ID = NUMBERS ONLY
 		GtfsRealtime.FeedMessage feed = GtfsRealtime.FeedMessage.parseFrom(url.openStream(), registry);
 		return feed;
 	}
@@ -68,9 +67,9 @@ public class MTAApi {
 	 * @return List<VehiclePosition> : The list of filtered "trains"
 	 */
 	public List<TrainInfo> getTrains() {
-		List<String> tripIds = getTripIds();
-		List<TrainInfo> trains = new ArrayList<>();
-		for (String tripId : tripIds) {
+		final List<String> tripIds = getTripIds();
+		final List<TrainInfo> trains = new ArrayList<>();
+		for (final String tripId : tripIds) {
 			try {
 				trains.add(new TrainInfo(this, tripId));
 			} catch (IOException e) {
@@ -87,8 +86,8 @@ public class MTAApi {
 	 * @return List<String> : List of all available trip_ids
 	 */
 	public List<String> getTripIds() {
-		List<String> ids = new ArrayList<String>();
-		for (FeedEntity entity : this.feed.getEntityList()) {
+		final List<String> ids = new ArrayList<String>();
+		for (final FeedEntity entity : this.feed.getEntityList()) {
 			if (!entity.hasVehicle()) {
 				continue;
 			}
@@ -104,8 +103,8 @@ public class MTAApi {
 	 */
 	// ? VehiclePosition or TrainInfo ?
 	public Map<String, VehiclePosition> getTripIdAndTrain() {
-		Map<String, VehiclePosition> ids = new HashMap<String, VehiclePosition>();
-		for (FeedEntity entity : this.feed.getEntityList()) {
+		final Map<String, VehiclePosition> ids = new HashMap<String, VehiclePosition>();
+		for (final FeedEntity entity : this.feed.getEntityList()) {
 			if (!entity.hasVehicle()) {
 				continue;
 			}
@@ -121,9 +120,9 @@ public class MTAApi {
 	 * @return VehiclePosition : The object if found, else null
 	 */
 	// ? Add StopTrips ?
-    public VehiclePosition getVehiclePosition(String trip_id) {
+    public VehiclePosition getVehiclePosition(final String trip_id) {
         // Uses trip_id to get train's VehiclePosition
-        for (FeedEntity entity : this.feed.getEntityList()) {
+        for (final FeedEntity entity : this.feed.getEntityList()) {
             if (!entity.hasVehicle()) {
                 continue;
             }
@@ -141,10 +140,10 @@ public class MTAApi {
      * @param stop_id : The station
      * @return long : The expected arrival time in Unix Time
      */
-    public long getArrivalTime(String trip_id, String stop_id) {
-    	List<StopTimeUpdate> stopTimes;
-    	if ((stopTimes = getStopTimes(trip_id)) != null) {
-    		for (StopTimeUpdate stu : stopTimes) {
+    public long getArrivalTime(final String trip_id, final String stop_id) {
+    	final List<StopTimeUpdate> stopTimes = getStopTimes(trip_id);
+    	if (stopTimes != null) {
+    		for (final StopTimeUpdate stu : stopTimes) {
         		if (stu.getStopId().equals(stop_id)) {
         			return stu.getArrival().getTime();
         		}
@@ -159,8 +158,8 @@ public class MTAApi {
      * @param trip_id : The train
      * @return List<StopTimeUpdate> : All current and future stops
      */
-    public List<StopTimeUpdate> getStopTimes(String trip_id) {
-    	for (FeedEntity ent : this.feed.getEntityList()) {
+    public List<StopTimeUpdate> getStopTimes(final String trip_id) {
+    	for (final FeedEntity ent : this.feed.getEntityList()) {
 			if (ent.hasVehicle()) {
 				continue;
 			}
@@ -178,7 +177,7 @@ public class MTAApi {
 	 */
 	public void printEverything() {
 		// List<Station> stations = new ArrayList<>();
-		for (FeedEntity ent : this.feed.getEntityList()) {
+		for (final FeedEntity ent : this.feed.getEntityList()) {
 			if (!ent.hasVehicle()) {
 				// continue;
 			}

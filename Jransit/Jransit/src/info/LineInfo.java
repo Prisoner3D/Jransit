@@ -18,7 +18,7 @@ public class LineInfo {
 		for (Stop x : stationColumns) {
 			if (x != null && x.getEntity().getAttribute("stop_id").substring(0, 1).equals(trainName)) {
 				StationInfo newStation = new StationInfo(api, x);
-				stations.add(newStation);
+				this.stations.add(newStation);
 			}
 		}
 		this.numberOfStations = stations.size();
@@ -44,5 +44,8 @@ public class LineInfo {
 		return -1; // WIP
 	}
 	
-	
+	@Override
+	public String toString() {
+	    return "Line: " + this.lineLetter + " Stations: " + this.stations;
+	}
 }

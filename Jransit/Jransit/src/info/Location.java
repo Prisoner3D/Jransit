@@ -67,6 +67,6 @@ public class Location {
     
     @Override
     public String toString() {
-    	return this.getLatitude() + " " + this.getLongitude();
+    	return "Lat: " + this.getLatitude() + " Long: " + this.getLongitude();
     }
 }
