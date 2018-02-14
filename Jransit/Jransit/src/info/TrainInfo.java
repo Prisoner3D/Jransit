@@ -13,23 +13,25 @@ import csv.StopsStaticFactory;
 import util.TrainMapsUtil;
 
 import com.google.transit.realtime.GtfsRealtime.VehiclePosition;
+import com.google.transit.realtime.GtfsRealtime.VehiclePosition.VehicleStopStatus;
 
 public class TrainInfo {
     private final MTAApi api;
     private final String id;
-    private final VehiclePosition trainPosition;
     private final LineInfo line;
-    private List<StopTimeUpdate> stopTimes = new ArrayList<>();
+    private VehiclePosition trainPosition;
+    private List<StopTimeUpdate> stopTimes = null;
     private String currentStation = null;
     private String nextStation = null;
     private Direction direction = null;
     private Location location;
+    private VehicleStopStatus status;
 
     public TrainInfo(final MTAApi api, final String trip_id) throws IOException {
         this.api = api;
         this.id = trip_id;
         this.trainPosition = api.getVehiclePosition(id);
-        updateStation();
+        this.updateStation();
         this.line = new LineInfo(api, this.id.substring(this.id.indexOf("_") + 1, this.id.indexOf("_") + 2)); // Memory Issue?
         this.setLocation();
     }
@@ -49,6 +51,8 @@ public class TrainInfo {
     public void updateStation() {
         this.stopTimes = api.getStopTimes(id);
         if (stopTimes != null) {
+        	this.trainPosition = api.getVehiclePosition(id);
+        	this.status = trainPosition.getCurrentStatus();
             this.currentStation = stopTimes.get(0).getStopId(); // TODO: Does this always return the current stop?
             if (stopTimes.size() > 1) {
                 this.nextStation = stopTimes.get(1).getStopId();
@@ -62,6 +66,9 @@ public class TrainInfo {
     }
 
     public StationInfo getNextStation() {
+    	if (this.nextStation == null) {
+    		return null;
+    	}
         return new StationInfo(api, StopsStaticFactory.getStop(this.nextStation));
     }
 
@@ -70,22 +77,21 @@ public class TrainInfo {
     }
 
     public void setLocation() {
+    	updateStation();
+    	if (this.status.equals(VehicleStopStatus.STOPPED_AT)) {
+    		this.location = this.getCurrentStation().getLocation();
+    		return;
+    	}
         StationInfo current = this.getCurrentStation();
-        StationInfo next;
-        try {
-            next = this.getNextStation();
-        } catch (Exception e) {
-            next = current;
+        StationInfo next = this.getNextStation();
+        if (next == null) {
+        	this.location = current.getLocation();
+        	return;
         }
-        Location currentCoords = new Location(current.getLatitude(), current.getLongitude());
-        Location nextCoords = new Location(next.getLatitude(), next.getLongitude());
-        if (next.equals(current)) {
-            this.location = TrainMapsUtil.getTrainPosition(currentCoords, nextCoords, this.stopTimes.get(0).getArrival().getTime() - this.stopTimes.get(0).getArrival().getTime(),
-                    30.0); // TODO change units on time and velocity;
-        } else {
-            this.location = TrainMapsUtil.getTrainPosition(currentCoords, nextCoords, this.stopTimes.get(1).getArrival().getTime() - this.stopTimes.get(0).getArrival().getTime(),
-                    30.0); // TODO change units on time and velocity;
-        }
+        Location currentCoords = current.getLocation();
+        Location nextCoords = next.getLocation();
+        this.location = TrainMapsUtil.getTrainPosition(currentCoords, nextCoords, this.stopTimes.get(1).getArrival().getTime(), this.stopTimes.get(0).getArrival().getTime(),
+                30.0);
     }
 
     public Location getLocation() {
@@ -100,6 +106,10 @@ public class TrainInfo {
         return location.getLongitude();
     }
 
+    public List<StopTimeUpdate> getStopTimes() {
+    	return this.stopTimes;
+    }
+    
     public double calcultateDistanceFromStation(final StationInfo station) {
         return -1; // use the time from station and distance from the next station
     }

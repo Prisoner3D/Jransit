@@ -44,8 +44,8 @@ public class StationInfo {
         return Double.parseDouble(stop.getLatitude());
     }
 
-    public String getStationName() {
-        return stop.getName();
+    public String getStopID() {
+        return stop.getStopID();
     }
 
     public String getZoneID() {
@@ -66,6 +66,10 @@ public class StationInfo {
 
     public String getLocationType() {
         return stop.getLocationType();
+    }
+    
+    public Location getLocation() {
+    	return this.location;
     }
     /*
     public String getParentStation() {

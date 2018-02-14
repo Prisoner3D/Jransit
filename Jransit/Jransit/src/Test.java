@@ -2,6 +2,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import com.google.transit.realtime.GtfsRealtime.VehiclePosition;
+
 import api.MTAApi;
 import api.MTAApiStaticFactory;
 import api.TrainFeed;
@@ -38,12 +40,22 @@ public class Test {
 		System.out.println(location.angleTo(location2));
 		//System.out.println(Direction.NORTH);
 		
-        //apis.get(TrainFeed.GREEN).printEverything();
+        apis.get(TrainFeed.BLUE).printEverything();
+        for (VehiclePosition vp : apis.get(TrainFeed.BLUE).getTripIdAndTrain().values()) {
+        	System.out.println(vp.getCurrentStatus());
+        }
 		//System.out.println(apis.get(TrainFeed.BLUE).getTripIds());
 		
         List<TrainInfo> allBlueTrains = apis.get(TrainFeed.BLUE).getTrains();
         for (TrainInfo train : allBlueTrains) {
-            System.out.println(train.getLocation());
+        	if (!train.getId().equals("069528_A..S")) {
+        		continue;
+        	}
+        	System.out.println(train.getId());
+        	
+        	System.out.println(train.getStopTimes().size());
+            System.out.println(train.getArrivalTime(train.getCurrentStation().getStopID()));
+            break;
         }
 		
         //System.out.println(apis.get(TrainFeed.GREEN).getVehiclePosition("117121_G..N"));

@@ -38,18 +38,17 @@ public class TrainMapsUtil {
 	}
 	
 	// TODO: Confirm whether or not the order of current vs next is right
-	public static Location getTrainPosition(Location currentStop, Location nextStop, long time, double vel) {
+	// vel in mph
+	public static Location getTrainPosition(Location currentStop, Location nextStop, long timeC, long timeN, double vel) {
 		//	Double distanceX = lat * longt * Math.sqrt(Time); 
-			if (currentStop.equals(nextStop)) {
-				return currentStop;
-			}
-			Double distanceX = currentStop.getLongitude()- nextStop.getLongitude();
-			Double distanceY = currentStop.getLatitude() - nextStop.getLatitude();
-			Double distanceTotal = Math.sqrt(Math.pow(distanceX, 2)+ Math.pow(distanceY,2));
-			Double trainsDistance = (1 * vel) / 111139;
-			Double proportion = trainsDistance / distanceTotal;
-			Double longitudeX = nextStop.getLongitude() + (distanceX * proportion);
-			Double latitudeY = nextStop.getLatitude() + (distanceY * proportion);
+		Double distanceX = currentStop.getLongitude() - nextStop.getLongitude();
+		Double distanceY = currentStop.getLatitude() - nextStop.getLatitude();
+		Double distanceTotal = Math.sqrt(Math.pow(distanceX, 2) + Math.pow(distanceY, 2));
+		
+		Double trainDistance = ((timeC - timeN) * vel) / 111139;
+		Double proportion = trainDistance / distanceTotal;
+		Double longitudeX = nextStop.getLongitude() + (distanceX * proportion);
+		Double latitudeY = nextStop.getLatitude() + (distanceY * proportion);
 			/*if(lat2 < 0) {
 				if(latitudeY < lat2)
 					latitudeY = lat2;
