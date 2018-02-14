@@ -66,16 +66,16 @@ public class JavaFXExample extends Application {
                     map.setOptions(options);
                     Marker marker = new Marker(map);
                     Icon icon = new Icon();
-                    File ccu = new File(getClass().getResource("bus-icon.png").getFile());
+                    File ccu = new File(getClass().getResource("1.png").getFile());
                     icon.loadFromFile(ccu);
                     marker.setIcon(icon);
                     // 40.650002, and the longitude is -73.949997.
-                    List<Stop> stops = StopsStaticFactory.getAllStops();
+                 /*   List<Stop> stops = StopsStaticFactory.getAllStops();
                     for (Stop stop : stops) {
                     	Marker markerlol = new Marker(map); 
                     	markerlol.setPosition(new LatLng(Double.valueOf(stop.getLatitude()), Double.valueOf(stop.getLongitude())));
                     	markerlol.setIcon(icon);
-                    }
+                    }*/
                     marker.setPosition(new LatLng(40.650002, -73.949997));
                     InfoWindow infoWindow = new InfoWindow(map);
                     infoWindow.setContent("dank");
