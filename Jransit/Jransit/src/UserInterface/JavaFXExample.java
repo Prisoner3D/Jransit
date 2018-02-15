@@ -87,26 +87,26 @@ public class JavaFXExample extends Application {
                     map.setZoom(20.0);
                     // Setting map options
                     map.setOptions(options);
-                    Marker marker = new Marker(map);
-                    busImage = new Icon();
-                    File ccu = new File(getClass().getResource("bus-icon.png").getFile());
-                    busImage.loadFromFile(ccu);
-                    busImage.setScaledSize(new Size(24, 24));
-                    marker.setIcon(busImage);
-                    // 40.650002, and the longitude is -73.949997.
-
-                 /*   List<Stop> stops = StopsStaticFactory.getAllStops();
-                    for (Stop stop : stops) {
->>>>>>> branch 'master' of https://github.com/Prisoner3D/Jransit.git
-                    	Marker markerlol = new Marker(map); 
-                    	markerlol.setPosition(new LatLng(Double.valueOf(stop.getLatitude()), Double.valueOf(stop.getLongitude())));
-                    	markerlol.setIcon(icon);
-                    }*/
-                    marker.setPosition(new LatLng(40.650002, -73.949997));
-                    InfoWindow infoWindow = new InfoWindow(map);
-                    infoWindow.setContent("dank");
-                    // Showing info windows under the marker
-                    infoWindow.open(map, marker);
+//                    Marker marker = new Marker(map);
+//                    busImage = new Icon();
+//                    File ccu = new File(getClass().getResource("bus-icon.png").getFile());
+//                    busImage.loadFromFile(ccu);
+//                    busImage.setScaledSize(new Size(24, 24));
+//                    marker.setIcon(busImage);
+//                    // 40.650002, and the longitude is -73.949997.
+//
+//                 /*   List<Stop> stops = StopsStaticFactory.getAllStops();
+//                    for (Stop stop : stops) {
+//>>>>>>> branch 'master' of https://github.com/Prisoner3D/Jransit.git
+//                    	Marker markerlol = new Marker(map); 
+//                    	markerlol.setPosition(new LatLng(Double.valueOf(stop.getLatitude()), Double.valueOf(stop.getLongitude())));
+//                    	markerlol.setIcon(icon);
+//                    }*/
+//                    marker.setPosition(new LatLng(40.650002, -73.949997));
+//                    InfoWindow infoWindow = new InfoWindow(map);
+//                    infoWindow.setContent("dank");
+//                    // Showing info windows under the marker
+//                    infoWindow.open(map, marker);
                     // Adding event listener that intercepts clicking on map
                   
                     map.addEventListener("click", new MapMouseEvent() {

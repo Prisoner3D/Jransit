@@ -8,24 +8,30 @@ public class BusInfo {
     private double lon;
     private String lineName;
     private String destinationName; // LAST STATION
-    private String nextStop;
+    private String nextStop = "N/A";
+    private String presentableDistance;
     private JsonObject busJson;
 
     // expected arrival time
     public BusInfo(JsonObject b) {
         this.busJson = b;
         JsonObject data = b.get("MonitoredVehicleJourney").getAsJsonObject();
-        // System.out.println(data);
-        destinationName = data.get("DestinationName").toString();
+        //System.out.println(data);
+        destinationName = data.get("DestinationName").toString().replace("\"", "");
         JsonObject location = data.get("VehicleLocation").getAsJsonObject();
         JsonElement lineName = data.get("PublishedLineName");
         if (data.get("MonitoredCall") != null) {
-            this.nextStop = data.get("MonitoredCall").getAsJsonObject().get("StopPointName").toString();
+            this.nextStop = data.get("MonitoredCall").getAsJsonObject().get("StopPointName").toString().replace("\"", "");
+            this.presentableDistance = data.get("MonitoredCall").getAsJsonObject().get("Extensions").getAsJsonObject().get("Distances").getAsJsonObject().get("PresentableDistance").toString().replace("\"", "");;
         }
         
         lon = location.get("Longitude").getAsDouble();
         lat = location.get("Latitude").getAsDouble();
         this.lineName = lineName.getAsString();
+    }
+
+    public String getPresentableDistance() {
+        return presentableDistance;
     }
 
     public String getNextStop() {

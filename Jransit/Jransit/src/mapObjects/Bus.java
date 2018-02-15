@@ -38,11 +38,17 @@ public class Bus {
         if (place) {
             this.marker.setPosition(new LatLng(Double.valueOf(info.getLat()), Double.valueOf(info.getLng())));
         }
+        // ADD CLOSE
+        // ADD TIMES
+        // ADD MORE STOPS
         this.marker.addEventListener("click", new MapMouseEvent() {
             @Override
             public void onEvent(MouseEvent mouseEvent) {
+                int stopCounter = 1;
                 InfoWindow infoWindow = new InfoWindow(map);
-                infoWindow.setContent("<p>" + info.getLineName() + "</br>" + "Next Stop: " + info.getNextStop() + "</br>" + "Last Stop: " + info.getDestinationName() + "</p>");
+                StringBuilder stops = new StringBuilder();
+                infoWindow.setContent("<p><big><b>" + info.getLineName() + " - " + info.getDestinationName() + "</br> </b></big> " 
+                        + " <b>Next Stop: </b>" + info.getNextStop() + ", <b>" + info.getPresentableDistance() + "</b> </p>");
                 infoWindow.open(map, marker);
             }
         });
