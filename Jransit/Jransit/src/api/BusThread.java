@@ -59,6 +59,11 @@ public class BusThread extends Thread {
 				List<Bus> busses = busFac.placeBusses(map, true);
 				this.histRec.write(busses);
 				MapsApp.slider.getSlider().setDisable(false);
+			} else {
+				MapsApp.slider.getSlider().setDisable(true);
+				List<Bus> busses = busFac.placeBusses(map, false);
+				this.histRec.write(busses);
+				MapsApp.slider.getSlider().setDisable(false);
 			}
 
 			MapsApp.setTimer(new AtomicInteger(30));

@@ -25,7 +25,8 @@ public class TimelineSlider {
 	 * Create a slider that displays buses on the map over time
 	 */
 	public TimelineSlider() {
-		this.start = this.end = this.majorTickUnit = 1; // TODO this better not be by reference
+		this.start = this.end = 0;
+		this.majorTickUnit = 1;
 		slider = new Slider(start, end, end);
 		slider.setShowTickMarks(true);
 		slider.setMinorTickCount(0);
@@ -54,8 +55,8 @@ public class TimelineSlider {
 			this.slider.setDisable(false);
 		}
 		if (numOfTicks == 0) {
-			this.start = 0;
-			slider.setMin(this.start);
+			this.end = 1;
+			slider.setMax(this.end);
 			numOfTicks++;
 		} else {
 			numOfTicks++;
