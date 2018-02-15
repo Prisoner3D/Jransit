@@ -43,18 +43,13 @@ public class BusThread extends Thread {
 	@Override
 	public void run() {
 		while (true) {
-			if (!firstRun) {
-				JavaFXExample.slider.addTick();
-				JavaFXExample.slider.addTick();
-			}
-			if (firstRun) {
-				firstRun = false;
-			}
 			//TODO: lock on run
 			double sliderState = JavaFXExample.slider.getSlider().getValue();
 			if (sliderState == 1) {
+				JavaFXExample.slider.getSlider().setDisable(true);
 				List<Bus> busses = busFac.placeBusses(map, icon, true);
 				this.histRec.write(busses);
+				JavaFXExample.slider.getSlider().setDisable(false);
 			}
 			
 			JavaFXExample.setTimer(new AtomicInteger(30));
@@ -64,6 +59,7 @@ public class BusThread extends Thread {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			JavaFXExample.slider.addTick();
 		}
 	}
 	

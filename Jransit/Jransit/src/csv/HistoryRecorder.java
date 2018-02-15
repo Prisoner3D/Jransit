@@ -40,10 +40,11 @@ public class HistoryRecorder {
 				checkingForEnd = true;
 			}
 		}
-		// if the state wanted is the last one, swap beginning and end;
-		if (idx == times.size() - 1) {
-			endIdxForState = idx;
+		// if the state wanted is the last one, set last to size
+		if (startIdxForState > endIdxForState) {
+			endIdxForState = times.size() - 1;
 		}
+		System.out.println(idx);
 		return data.subList(startIdxForState, endIdxForState + 1);
 	}
 	

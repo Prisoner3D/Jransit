@@ -40,8 +40,13 @@ public class CSVUtilities {
 	public CSVUtilities(File csv, String delimiter) {
 		this.file = csv;
 		this.delimiter = delimiter;
+		update();
+		System.out.println("Test");
+	}
+	
+	private void update() {
 		CSVData = new ArrayList<String>();
-		try (BufferedReader input = new BufferedReader(new FileReader(csv))) {
+		try (BufferedReader input = new BufferedReader(new FileReader(this.file))) {
 			String line;
 			while ((line = input.readLine()) != null) {
 				CSVData.add(line);
@@ -49,7 +54,6 @@ public class CSVUtilities {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		System.out.println("Test");
 	}
 
 	/**
@@ -65,6 +69,7 @@ public class CSVUtilities {
 	 */
 	public List<String> getDataString(int column) {
 		List<String> data = new ArrayList<String>();
+		System.out.println("Size " + CSVData.size());
 		for (int i = 0; i < CSVData.size(); i++) {
 			String[] row = CSVData.get(i).split("\\" + delimiter, 2);
 			data.add(row[column]);
@@ -266,5 +271,6 @@ public class CSVUtilities {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		update();
 	}
 }

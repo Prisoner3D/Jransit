@@ -23,6 +23,7 @@ public class TimelineSlider {
         slider.setMajorTickUnit(this.majorTickUnit);
         slider.setBlockIncrement(this.majorTickUnit);
         slider.setSnapToTicks(true);
+        slider.setShowTickLabels(true);
         TimelineSlider self = this;
         slider.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
@@ -57,6 +58,9 @@ public class TimelineSlider {
 	}
 
 	public void addTick() {
+		if (numOfTicks > 3) {
+			this.slider.setDisable(false);
+		}
 		if (numOfTicks == 0) {
 			this.start = 0;
 			slider.setMin(this.start);
