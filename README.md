@@ -1,6 +1,7 @@
 # Jransit
+The next and upcoming revolution to predicting your next MTA trip. (not really)</br>
 <h1> To Do List: </h1>
- The next and upcoming revolution to predicting your next MTA trip. (not really)</br>
+ 
  <ul>
 	<li>API compilation and integration with the remaining classes - Alex F</li>
  <li>Fix the header problem - Thomas</li>
