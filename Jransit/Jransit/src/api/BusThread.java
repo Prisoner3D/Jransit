@@ -54,7 +54,7 @@ public class BusThread extends Thread {
 		while (true) {
 			// TODO: lock on run
 			double sliderState = MapsApp.slider.getSlider().getValue();
-			if (sliderState == 1) {
+			if (sliderState == 0) {
 				MapsApp.slider.getSlider().setDisable(true);
 				List<Bus> busses = busFac.placeBusses(map, true);
 				this.histRec.write(busses);
