@@ -97,7 +97,7 @@ public class DirectionsExample extends MapView implements ControlPanel {
                     // Showing info windows under the marker
                     infoWindow.open(map, marker);
                     // Adding event listener that intercepts clicking on map
-                    (new BusFactory()).placeBusses(map);
+                    (new BusFactory()).placeBusses(map, true);
                     
                     controlOptions.setPosition(ControlPosition.TOP_RIGHT);
                     // Setting map type control options

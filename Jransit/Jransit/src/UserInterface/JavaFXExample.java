@@ -5,7 +5,13 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import javax.swing.JTextField;
+
 import com.teamdev.jxmaps.ControlPosition;
+import com.teamdev.jxmaps.DirectionsRequest;
+import com.teamdev.jxmaps.DirectionsResult;
+import com.teamdev.jxmaps.DirectionsRouteCallback;
+import com.teamdev.jxmaps.DirectionsStatus;
 import com.teamdev.jxmaps.Icon;
 import com.teamdev.jxmaps.InfoWindow;
 import com.teamdev.jxmaps.LatLng;
@@ -18,6 +24,7 @@ import com.teamdev.jxmaps.MapTypeControlOptions;
 import com.teamdev.jxmaps.Marker;
 import com.teamdev.jxmaps.MouseEvent;
 import com.teamdev.jxmaps.Size;
+import com.teamdev.jxmaps.TravelMode;
 import com.teamdev.jxmaps.javafx.MapView;
 
 import api.BusThread;
@@ -39,6 +46,10 @@ public class JavaFXExample extends Application {
     public static Icon busImage;
     public static BusThread busThread;
     public static TimelineSlider slider;
+    private JTextField fromField;
+    private JTextField toField;
+    private int directionClicks = 0;
+    
     TimelineReader readTime;
 	//CSVUtilities csv = new CSVUtilities(new File("Jransit\\stops.txt"));
     
@@ -50,6 +61,8 @@ public class JavaFXExample extends Application {
 
     @Override
     public void start(final Stage primaryStage) {
+    	fromField = new JTextField("");
+        toField = new JTextField("");
         // Setting of a ready handler to MapView object. onMapReady will be called when map initialization is done and
         // the map object is ready to use. Current implementation of onMapReady customizes the map object.
     	mapView.setOnMapReadyHandler(new MapReadyHandler() {
@@ -99,22 +112,16 @@ public class JavaFXExample extends Application {
                     map.addEventListener("click", new MapMouseEvent() {
                         @Override
                         public void onEvent(MouseEvent mouseEvent) {
-                            // Closing initially created info window
-                            infoWindow.close();
-                            // Creating a new marker
-                            Marker mark = new Marker(map);
-                            // Move marker to the position where user clicked
-                            mark.setTitle("Train");
-                            mark.setPosition(mouseEvent.latLng());
-                            
-                            // Adding event listener that intercepts clicking on marker
-                            mark.addEventListener("click", new MapMouseEvent() {
-                                @Override
-                                public void onEvent(MouseEvent mouseEvent) {
-                                    // Removing marker from the map
-                                	mark.remove();
-                                }
-                            });
+                            LatLng loc = mouseEvent.latLng();
+                            if (directionClicks % 2 == 0 ) {
+                            	fromField.setText(loc.getLat() + "," + loc.getLng());
+                            	directionClicks++;
+                            }
+                            else {
+                            	toField.setText(loc.getLat() + "," + loc.getLng());
+                            	calculateDirection();
+                            	directionClicks++;
+                            }
                         }
                     });
                     busThread = new BusThread(map, busImage);
@@ -125,7 +132,7 @@ public class JavaFXExample extends Application {
         BorderPane root = new BorderPane();
         BorderPane map = new BorderPane(mapView);
         map.setMaxSize(750,750);
-        
+
         slider = new TimelineSlider();
         
         countdown = new Label();
@@ -165,6 +172,33 @@ public class JavaFXExample extends Application {
         }, 1000,1000);
     }
 
+    private void calculateDirection() {
+        // Getting the associated map object
+        final Map map = mapView.getMap();
+        // Creating a directions request
+        DirectionsRequest request = new DirectionsRequest();
+        // Setting of the origin location to the request
+        request.setOriginString(fromField.getText());
+        // Setting of the destination location to the request
+        request.setDestinationString(toField.getText());
+        // Setting of the travel mode
+        request.setTravelMode(TravelMode.DRIVING);
+        // Calculating the route between locations
+        mapView.getServices().getDirectionService().route(request, new DirectionsRouteCallback(map) {
+            @Override
+            public void onRoute(DirectionsResult result, DirectionsStatus status) {
+                // Checking of the operation status
+                if (status == DirectionsStatus.OK) {
+                    // Drawing the calculated route on the map
+                    map.getDirectionsRenderer().setDirections(result);
+                } else {
+                }
+            }
+        });
+        
+        
+    }
+    
     @Override
     public void stop(){
     	busThread.clearFile();

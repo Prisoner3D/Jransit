@@ -52,7 +52,7 @@ public class BusThread extends Thread {
 			double sliderState = JavaFXExample.slider.getSlider().getValue();
 			if (sliderState == 1) {
 				JavaFXExample.slider.getSlider().setDisable(true);
-				List<Bus> busses = busFac.placeBusses(map, icon, true);
+				List<Bus> busses = busFac.placeBusses(map, true);
 				this.histRec.write(busses);
 				JavaFXExample.slider.getSlider().setDisable(false);
 			}
