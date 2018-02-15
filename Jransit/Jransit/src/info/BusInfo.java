@@ -19,7 +19,7 @@ public class BusInfo {
     /**
      * Converts data from JsonObject into usable fields
      * @param b JsonObject with bus information
-     */
+     */ 
     // expected arrival time
     public BusInfo(JsonObject b) {
         this.busJson = b;
