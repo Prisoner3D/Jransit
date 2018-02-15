@@ -26,7 +26,7 @@ public class BusFactory {
 	}
 	
 	
-	public List<Bus> placeBusses(Map m, Icon ico, boolean place) {
+	public List<Bus> placeBusses(Map m, boolean place) {
 		List<BusInfo> busses = BusInfoListStaticFactory.getAllBuses();
 		this.removeBusses();
 		for (int i = 0; i < busses.size(); i++) {

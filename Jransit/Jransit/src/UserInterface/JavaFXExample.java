@@ -5,7 +5,13 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import javax.swing.JTextField;
+
 import com.teamdev.jxmaps.ControlPosition;
+import com.teamdev.jxmaps.DirectionsRequest;
+import com.teamdev.jxmaps.DirectionsResult;
+import com.teamdev.jxmaps.DirectionsRouteCallback;
+import com.teamdev.jxmaps.DirectionsStatus;
 import com.teamdev.jxmaps.Icon;
 import com.teamdev.jxmaps.InfoWindow;
 import com.teamdev.jxmaps.LatLng;
@@ -18,6 +24,7 @@ import com.teamdev.jxmaps.MapTypeControlOptions;
 import com.teamdev.jxmaps.Marker;
 import com.teamdev.jxmaps.MouseEvent;
 import com.teamdev.jxmaps.Size;
+import com.teamdev.jxmaps.TravelMode;
 import com.teamdev.jxmaps.javafx.MapView;
 
 import api.BusThread;
@@ -39,6 +46,10 @@ public class JavaFXExample extends Application {
     public static Icon busImage;
     public static BusThread busThread;
     public static TimelineSlider slider;
+    private JTextField fromField;
+    private JTextField toField;
+    private int directionClicks = 0;
+    
     TimelineReader readTime;
 	//CSVUtilities csv = new CSVUtilities(new File("Jransit\\stops.txt"));
     
@@ -50,6 +61,8 @@ public class JavaFXExample extends Application {
 
     @Override
     public void start(final Stage primaryStage) {
+    	fromField = new JTextField("");
+        toField = new JTextField("");
         // Setting of a ready handler to MapView object. onMapReady will be called when map initialization is done and
         // the map object is ready to use. Current implementation of onMapReady customizes the map object.
     	mapView.setOnMapReadyHandler(new MapReadyHandler() {
@@ -74,53 +87,43 @@ public class JavaFXExample extends Application {
                     map.setZoom(20.0);
                     // Setting map options
                     map.setOptions(options);
-//                    Marker marker = new Marker(map);
-//                    busImage = new Icon();
-//                    File ccu = new File(getClass().getResource("bus-icon.png").getFile());
-//                    busImage.loadFromFile(ccu);
-//                    busImage.setScaledSize(new Size(24, 24));
-//                    
-//                    // 40.650002, and the longitude is -73.949997.
-//
-//                 /*   List<Stop> stops = StopsStaticFactory.getAllStops();
-//                    for (Stop stop : stops) {
-//>>>>>>> branch 'master' of https://github.com/Prisoner3D/Jransit.git
-//                    	Marker markerlol = new Marker(map); 
-//                    	markerlol.setPosition(new LatLng(Double.valueOf(stop.getLatitude()), Double.valueOf(stop.getLongitude())));
-//                    	markerlol.setIcon(icon);
-//                    }*/
-//                    marker.setIcon(busImage);
-//                    marker.setPosition(new LatLng(40.650002, -73.949997));
-//                    InfoWindow infoWindow = new InfoWindow(map);
-//                    infoWindow.setContent("dank");
-//                    // Showing info windows under the marker
-//                    infoWindow.open(map, marker);
-//                    // Adding event listener that intercepts clicking on map
-//                  
-//                    
-//                    // Adds reg google maps markers
-//                    marker.addEventListener("click", new MapMouseEvent() {
-//                        @Override
-//                        public void onEvent(MouseEvent mouseEvent) {
-//                            // Closing initially created info window
-//                            infoWindow.close();
-//                            // Creating a new marker
-//                            Marker mark = new Marker(map);
-//                            mark.setIcon(busImage);
-//                            // Move marker to the position where user clicked
-//                            mark.setTitle("Train");
-//                            mark.setPosition(mouseEvent.latLng());
-//                            infoWindow.open(map, mark);
-//                            // Adding event listener that intercepts clicking on marker
-//                            mark.addEventListener("click", new MapMouseEvent() {
-//                                @Override
-//                                public void onEvent(MouseEvent mouseEvent) {
-//                                    // Removing marker from the map
-//                                	mark.remove();
-//                                }
-//                            });
-//                        }
-//                    });
+                    Marker marker = new Marker(map);
+                    busImage = new Icon();
+                    File ccu = new File(getClass().getResource("bus-icon.png").getFile());
+                    busImage.loadFromFile(ccu);
+                    busImage.setScaledSize(new Size(24, 24));
+                    marker.setIcon(busImage);
+                    // 40.650002, and the longitude is -73.949997.
+
+                 /*   List<Stop> stops = StopsStaticFactory.getAllStops();
+                    for (Stop stop : stops) {
+>>>>>>> branch 'master' of https://github.com/Prisoner3D/Jransit.git
+                    	Marker markerlol = new Marker(map); 
+                    	markerlol.setPosition(new LatLng(Double.valueOf(stop.getLatitude()), Double.valueOf(stop.getLongitude())));
+                    	markerlol.setIcon(icon);
+                    }*/
+                    marker.setPosition(new LatLng(40.650002, -73.949997));
+                    InfoWindow infoWindow = new InfoWindow(map);
+                    infoWindow.setContent("dank");
+                    // Showing info windows under the marker
+                    infoWindow.open(map, marker);
+                    // Adding event listener that intercepts clicking on map
+                  
+                    map.addEventListener("click", new MapMouseEvent() {
+                        @Override
+                        public void onEvent(MouseEvent mouseEvent) {
+                            LatLng loc = mouseEvent.latLng();
+                            if (directionClicks % 2 == 0 ) {
+                            	fromField.setText(loc.getLat() + "," + loc.getLng());
+                            	directionClicks++;
+                            }
+                            else {
+                            	toField.setText(loc.getLat() + "," + loc.getLng());
+                            	calculateDirection();
+                            	directionClicks++;
+                            }
+                        }
+                    });
                     busThread = new BusThread(map, busImage);
                     busThread.start();
                 }
@@ -129,7 +132,7 @@ public class JavaFXExample extends Application {
         BorderPane root = new BorderPane();
         BorderPane map = new BorderPane(mapView);
         map.setMaxSize(750,750);
-        
+
         slider = new TimelineSlider();
         
         countdown = new Label();
@@ -169,6 +172,33 @@ public class JavaFXExample extends Application {
         }, 1000,1000);
     }
 
+    private void calculateDirection() {
+        // Getting the associated map object
+        final Map map = mapView.getMap();
+        // Creating a directions request
+        DirectionsRequest request = new DirectionsRequest();
+        // Setting of the origin location to the request
+        request.setOriginString(fromField.getText());
+        // Setting of the destination location to the request
+        request.setDestinationString(toField.getText());
+        // Setting of the travel mode
+        request.setTravelMode(TravelMode.DRIVING);
+        // Calculating the route between locations
+        mapView.getServices().getDirectionService().route(request, new DirectionsRouteCallback(map) {
+            @Override
+            public void onRoute(DirectionsResult result, DirectionsStatus status) {
+                // Checking of the operation status
+                if (status == DirectionsStatus.OK) {
+                    // Drawing the calculated route on the map
+                    map.getDirectionsRenderer().setDirections(result);
+                } else {
+                }
+            }
+        });
+        
+        
+    }
+    
     @Override
     public void stop(){
     	busThread.clearFile();
