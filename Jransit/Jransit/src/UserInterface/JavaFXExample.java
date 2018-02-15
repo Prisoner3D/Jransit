@@ -8,6 +8,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import javax.swing.JTextField;
 
 import com.teamdev.jxmaps.ControlPosition;
+import com.teamdev.jxmaps.DirectionsLeg;
 import com.teamdev.jxmaps.DirectionsRequest;
 import com.teamdev.jxmaps.DirectionsResult;
 import com.teamdev.jxmaps.DirectionsRouteCallback;
@@ -49,6 +50,7 @@ public class JavaFXExample extends Application {
     private JTextField fromField;
     private JTextField toField;
     private int directionClicks = 0;
+    private Label distance;
     
     TimelineReader readTime;
 	//CSVUtilities csv = new CSVUtilities(new File("Jransit\\stops.txt"));
@@ -87,26 +89,26 @@ public class JavaFXExample extends Application {
                     map.setZoom(20.0);
                     // Setting map options
                     map.setOptions(options);
-//                    Marker marker = new Marker(map);
-//                    busImage = new Icon();
-//                    File ccu = new File(getClass().getResource("bus-icon.png").getFile());
-//                    busImage.loadFromFile(ccu);
-//                    busImage.setScaledSize(new Size(24, 24));
-//                    marker.setIcon(busImage);
-//                    // 40.650002, and the longitude is -73.949997.
-//
-//                 /*   List<Stop> stops = StopsStaticFactory.getAllStops();
-//                    for (Stop stop : stops) {
-//>>>>>>> branch 'master' of https://github.com/Prisoner3D/Jransit.git
-//                    	Marker markerlol = new Marker(map); 
-//                    	markerlol.setPosition(new LatLng(Double.valueOf(stop.getLatitude()), Double.valueOf(stop.getLongitude())));
-//                    	markerlol.setIcon(icon);
-//                    }*/
-//                    marker.setPosition(new LatLng(40.650002, -73.949997));
-//                    InfoWindow infoWindow = new InfoWindow(map);
-//                    infoWindow.setContent("dank");
-//                    // Showing info windows under the marker
-//                    infoWindow.open(map, marker);
+                    Marker marker = new Marker(map);
+                    busImage = new Icon();
+                    File ccu = new File(getClass().getResource("bus-icon.png").getFile());
+                    busImage.loadFromFile(ccu);
+                    busImage.setScaledSize(new Size(24, 24));
+                    marker.setIcon(busImage);
+                    // 40.650002, and the longitude is -73.949997.
+
+                 /*   List<Stop> stops = StopsStaticFactory.getAllStops();
+                    for (Stop stop : stops) {
+>>>>>>> branch 'master' of https://github.com/Prisoner3D/Jransit.git
+                    	Marker markerlol = new Marker(map); 
+                    	markerlol.setPosition(new LatLng(Double.valueOf(stop.getLatitude()), Double.valueOf(stop.getLongitude())));
+                    	markerlol.setIcon(icon);
+                    }*/
+                    marker.setPosition(new LatLng(40.650002, -73.949997));
+                    InfoWindow infoWindow = new InfoWindow(map);
+                    infoWindow.setContent("dank");
+                    // Showing info windows under the marker
+                    infoWindow.open(map, marker);
                     // Adding event listener that intercepts clicking on map
                   
                     map.addEventListener("click", new MapMouseEvent() {
@@ -141,12 +143,17 @@ public class JavaFXExample extends Application {
         Label countdownPad = new Label();
         countdownPad.setText("Update in ");
         
+        distance = new Label();
+        distance.setText("Click on two points to calculate the duration between them.");
+        
         HBox countdownText = new HBox(countdownPad, countdown);
         countdownText.setAlignment(Pos.CENTER);
         
+        
         VBox bottom = new VBox();
+        bottom.styleProperty().set("-fx-font-size: 20");
         bottom.setAlignment(Pos.CENTER);
-        bottom.getChildren().addAll(countdownText, slider.getSlider());
+        bottom.getChildren().addAll(distance, countdownText, slider.getSlider());
         root.setCenter(map);
         root.setBottom(bottom);
         Scene scene = new Scene(root,1000,1000);
@@ -190,12 +197,17 @@ public class JavaFXExample extends Application {
                 // Checking of the operation status
                 if (status == DirectionsStatus.OK) {
                     // Drawing the calculated route on the map
+                	long sum = 0;
+                	for (DirectionsLeg leg : result.getRoutes()[0].getLegs()) {
+                		Platform.runLater(() -> distance.setText("Duration: " + leg.getDuration().getText()));
+                		
+                	};
+                	System.out.println(sum);
                     map.getDirectionsRenderer().setDirections(result);
                 } else {
                 }
             }
         });
-        
         
     }
     
