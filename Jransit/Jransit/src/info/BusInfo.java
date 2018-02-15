@@ -7,8 +7,10 @@ public class BusInfo {
 	private double lon;
 	private String lineName;
 	private String destinationName;
+	private JsonObject busJson;
 	// expected arrival time
 	public BusInfo(JsonObject b) {
+		this.busJson = b;
 		JsonObject data = b.get("MonitoredVehicleJourney")
 		.getAsJsonObject();
 		JsonObject location = data.get("VehicleLocation")
@@ -22,5 +24,10 @@ public class BusInfo {
 	public double getLng() {
 		return lon;
 	}
+	public JsonObject getBusJson() {
+		return busJson;
+	}
+	
+	
 	
 }
