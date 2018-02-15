@@ -1,6 +1,9 @@
 package UserInterface;
 	
 import java.io.File;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import com.teamdev.jxmaps.ControlPosition;
 import com.teamdev.jxmaps.Icon;
@@ -19,14 +22,20 @@ import com.teamdev.jxmaps.javafx.MapView;
 
 import api.BusThread;
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import mapObjects.TimelineSlider;
 
 public class JavaFXExample extends Application {
     public final static MapView mapView = new MapView();
     public final static Stage primaryStage = new Stage();
+    public static Label countdown;
     public static Icon busImage;
     public static BusThread busThread;
     public static TimelineSlider slider;
@@ -119,16 +128,47 @@ public class JavaFXExample extends Application {
         
         slider = new TimelineSlider();
         
+        countdown = new Label();
+        countdown.setText("(Grabbing API)");
+        
+        Label countdownPad = new Label();
+        countdownPad.setText("Update in ");
+        
+        HBox countdownText = new HBox(countdownPad, countdown);
+        countdownText.setAlignment(Pos.CENTER);
+        
+        VBox bottom = new VBox();
+        bottom.setAlignment(Pos.CENTER);
+        bottom.getChildren().addAll(countdownText, slider.getSlider());
         root.setCenter(map);
-        root.setBottom(slider.getSlider());
+        root.setBottom(bottom);
         Scene scene = new Scene(root,1000,1000);
         primaryStage.setScene(scene);
         primaryStage.show();
+    }
+    
+    // Modified version of https://stackoverflow.com/questions/47655695/javafx-countdown-timer-in-label-settext
+    public static void setTimer(AtomicInteger interval) {
+        Timer timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            public void run() {
+                if(interval.get() > 0)
+                {
+                    Platform.runLater(() -> countdown.setText(interval + ""));
+                    interval.decrementAndGet();
+                }
+                else {
+                	Platform.runLater(() -> countdown.setText("(Grabbing API)"));
+                    timer.cancel();
+                }
+            }
+        }, 1000,1000);
     }
 
     @Override
     public void stop(){
     	busThread.clearFile();
+    	System.exit(0);
     }
     public static void main(String[] args) {
         launch(args);

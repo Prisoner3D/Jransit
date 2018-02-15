@@ -2,6 +2,7 @@ package api;
 
 import java.io.File;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import com.teamdev.jxmaps.Icon;
 import com.teamdev.jxmaps.Map;
@@ -56,7 +57,7 @@ public class BusThread extends Thread {
 				this.histRec.write(busses);
 			}
 			
-			
+			JavaFXExample.setTimer(new AtomicInteger(30));
 			try {
 				this.sleep(30000);
 			} catch (InterruptedException e) {
