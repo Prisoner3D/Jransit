@@ -1,6 +1,6 @@
 package util;
 
-public class ImageUtilities 
+public class ImageUtilities
 
 /**
  * Image utilities to display images.
@@ -8,11 +8,11 @@ public class ImageUtilities
 {
 	/**
 	 * Location of Train Icons
-	 * @param train 
+	 * 
+	 * @param train
 	 * @return the relative path of the train image
 	 */
-	public static String getTrainIcon(String train)
-	{
-		return "src/" +  train + ".png";
+	public static String getTrainIcon(String train) {
+		return "src/" + train + ".png";
 	}
 }

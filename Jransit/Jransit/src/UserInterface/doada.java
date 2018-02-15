@@ -21,65 +21,66 @@ import java.awt.event.WindowEvent;
  */
 
 abstract class OptionsWindow {
-    protected JFrame parentFrame;
-    protected JWindow contentWindow;
-    private Dimension size;
+	protected JFrame parentFrame;
+	protected JWindow contentWindow;
+	private Dimension size;
 
-    public OptionsWindow(MapView parentWindow, Dimension size) {
-        this.size = size;
-        Container parent = parentWindow.getParent();
-        while (parent != null) {
-            if (parent instanceof JFrame) {
-                parentFrame = (JFrame) parent;
-                break;
-            }
-            parent = parent.getParent();
-        }
+	public OptionsWindow(MapView parentWindow, Dimension size) {
+		this.size = size;
+		Container parent = parentWindow.getParent();
+		while (parent != null) {
+			if (parent instanceof JFrame) {
+				parentFrame = (JFrame) parent;
+				break;
+			}
+			parent = parent.getParent();
+		}
 
-        parentFrame.addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentMoved(ComponentEvent e) {
-                updatePosition();
-            }
+		parentFrame.addComponentListener(new ComponentAdapter() {
+			@Override
+			public void componentMoved(ComponentEvent e) {
+				updatePosition();
+			}
 
-            @Override
-            public void componentResized(ComponentEvent e) {
-                updatePosition();
-            }
-        });
+			@Override
+			public void componentResized(ComponentEvent e) {
+				updatePosition();
+			}
+		});
 
-        contentWindow = new JWindow(parentFrame);
-        contentWindow.setVisible(true);
-        contentWindow.setFocusable(true);
-        contentWindow.setFocusableWindowState(true);
+		contentWindow = new JWindow(parentFrame);
+		contentWindow.setVisible(true);
+		contentWindow.setFocusable(true);
+		contentWindow.setFocusableWindowState(true);
 
-        parentFrame.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowIconified(WindowEvent e) {
-                contentWindow.setVisible(false);
-            }
+		parentFrame.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowDeiconified(WindowEvent e) {
+				contentWindow.setVisible(true);
+			}
 
-            @Override
-            public void windowDeiconified(WindowEvent e) {
-                contentWindow.setVisible(true);
-            }
-        });
+			@Override
+			public void windowIconified(WindowEvent e) {
+				contentWindow.setVisible(false);
+			}
+		});
 
-        initContent(contentWindow);
-        updatePosition();
-    }
+		initContent(contentWindow);
+		updatePosition();
+	}
 
-    abstract public void initContent(JWindow contentWindow);
+	public void dispose() {
+		contentWindow.dispose();
+	}
 
-    protected void updatePosition() {
-        Rectangle bounds = new Rectangle();
-        bounds.setLocation((int) (parentFrame.getX() + (parentFrame.getWidth() - size.getWidth()) / 2), (int) (parentFrame.getY() + parentFrame.getHeight() - size.getHeight() - 20));
-        bounds.setSize(size);
+	abstract public void initContent(JWindow contentWindow);
 
-        contentWindow.setBounds(bounds);
-    }
+	protected void updatePosition() {
+		Rectangle bounds = new Rectangle();
+		bounds.setLocation((int) (parentFrame.getX() + (parentFrame.getWidth() - size.getWidth()) / 2),
+				(int) (parentFrame.getY() + parentFrame.getHeight() - size.getHeight() - 20));
+		bounds.setSize(size);
 
-    public void dispose() {
-        contentWindow.dispose();
-    }
+		contentWindow.setBounds(bounds);
+	}
 }

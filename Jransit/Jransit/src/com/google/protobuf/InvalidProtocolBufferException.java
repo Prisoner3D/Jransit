@@ -33,118 +33,110 @@ package com.google.protobuf;
 import java.io.IOException;
 
 /**
- * Thrown when a protocol message being parsed is invalid in some way,
- * e.g. it contains a malformed varint or a negative byte length.
+ * Thrown when a protocol message being parsed is invalid in some way, e.g. it
+ * contains a malformed varint or a negative byte length.
  *
  * @author kenton@google.com Kenton Varda
  */
 public class InvalidProtocolBufferException extends IOException {
-  private static final long serialVersionUID = -1616151763072450476L;
-  private MessageLite unfinishedMessage = null;
+	/**
+	 * Exception indicating that and unexpected wire type was encountered for a
+	 * field.
+	 */
+	@ExperimentalApi
+	public static class InvalidWireTypeException extends InvalidProtocolBufferException {
+		private static final long serialVersionUID = 3283890091615336259L;
 
-  public InvalidProtocolBufferException(final String description) {
-    super(description);
-  }
+		public InvalidWireTypeException(String description) {
+			super(description);
+		}
+	}
+	private static final long serialVersionUID = -1616151763072450476L;
 
-  public InvalidProtocolBufferException(IOException e) {
-    super(e.getMessage(), e);
-  }
+	static InvalidProtocolBufferException invalidEndTag() {
+		return new InvalidProtocolBufferException("Protocol message end-group tag did not match expected tag.");
+	}
 
-  public InvalidProtocolBufferException(final String description, IOException e) {
-    super(description, e);
-  }
+	static InvalidProtocolBufferException invalidTag() {
+		return new InvalidProtocolBufferException("Protocol message contained an invalid tag (zero).");
+	}
 
-  /**
-   * Attaches an unfinished message to the exception to support best-effort
-   * parsing in {@code Parser} interface.
-   *
-   * @return this
-   */
-  public InvalidProtocolBufferException setUnfinishedMessage(
-      MessageLite unfinishedMessage) {
-    this.unfinishedMessage = unfinishedMessage;
-    return this;
-  }
+	static InvalidProtocolBufferException invalidUtf8() {
+		return new InvalidProtocolBufferException("Protocol message had invalid UTF-8.");
+	}
 
-  /**
-   * Returns the unfinished message attached to the exception, or null if
-   * no message is attached.
-   */
-  public MessageLite getUnfinishedMessage() {
-    return unfinishedMessage;
-  }
+	static InvalidWireTypeException invalidWireType() {
+		return new InvalidWireTypeException("Protocol message tag had invalid wire type.");
+	}
 
-  /**
-   * Unwraps the underlying {@link IOException} if this exception was caused by an I/O
-   * problem. Otherwise, returns {@code this}.
-   */
-  public IOException unwrapIOException() {
-    return getCause() instanceof IOException ? (IOException) getCause() : this;
-  }
+	static InvalidProtocolBufferException malformedVarint() {
+		return new InvalidProtocolBufferException("CodedInputStream encountered a malformed varint.");
+	}
 
-  static InvalidProtocolBufferException truncatedMessage() {
-    return new InvalidProtocolBufferException(
-      "While parsing a protocol message, the input ended unexpectedly " +
-      "in the middle of a field.  This could mean either that the " +
-      "input has been truncated or that an embedded message " +
-      "misreported its own length.");
-  }
+	static InvalidProtocolBufferException negativeSize() {
+		return new InvalidProtocolBufferException(
+				"CodedInputStream encountered an embedded string or message " + "which claimed to have negative size.");
+	}
 
-  static InvalidProtocolBufferException negativeSize() {
-    return new InvalidProtocolBufferException(
-      "CodedInputStream encountered an embedded string or message " +
-      "which claimed to have negative size.");
-  }
+	static InvalidProtocolBufferException parseFailure() {
+		return new InvalidProtocolBufferException("Failed to parse the message.");
+	}
 
-  static InvalidProtocolBufferException malformedVarint() {
-    return new InvalidProtocolBufferException(
-      "CodedInputStream encountered a malformed varint.");
-  }
+	static InvalidProtocolBufferException recursionLimitExceeded() {
+		return new InvalidProtocolBufferException(
+				"Protocol message had too many levels of nesting.  May be malicious.  "
+						+ "Use CodedInputStream.setRecursionLimit() to increase the depth limit.");
+	}
 
-  static InvalidProtocolBufferException invalidTag() {
-    return new InvalidProtocolBufferException(
-      "Protocol message contained an invalid tag (zero).");
-  }
+	static InvalidProtocolBufferException sizeLimitExceeded() {
+		return new InvalidProtocolBufferException("Protocol message was too large.  May be malicious.  "
+				+ "Use CodedInputStream.setSizeLimit() to increase the size limit.");
+	}
 
-  static InvalidProtocolBufferException invalidEndTag() {
-    return new InvalidProtocolBufferException(
-      "Protocol message end-group tag did not match expected tag.");
-  }
+	static InvalidProtocolBufferException truncatedMessage() {
+		return new InvalidProtocolBufferException("While parsing a protocol message, the input ended unexpectedly "
+				+ "in the middle of a field.  This could mean either that the "
+				+ "input has been truncated or that an embedded message " + "misreported its own length.");
+	}
 
-  static InvalidWireTypeException invalidWireType() {
-    return new InvalidWireTypeException(
-      "Protocol message tag had invalid wire type.");
-  }
+	private MessageLite unfinishedMessage = null;
 
-  /**
-   * Exception indicating that and unexpected wire type was encountered for a field.
-   */
-  @ExperimentalApi
-  public static class InvalidWireTypeException extends InvalidProtocolBufferException {
-    private static final long serialVersionUID = 3283890091615336259L;
+	public InvalidProtocolBufferException(IOException e) {
+		super(e.getMessage(), e);
+	}
 
-    public InvalidWireTypeException(String description) {
-      super(description);
-    }
-  }
+	public InvalidProtocolBufferException(final String description) {
+		super(description);
+	}
 
-  static InvalidProtocolBufferException recursionLimitExceeded() {
-    return new InvalidProtocolBufferException(
-      "Protocol message had too many levels of nesting.  May be malicious.  " +
-      "Use CodedInputStream.setRecursionLimit() to increase the depth limit.");
-  }
+	public InvalidProtocolBufferException(final String description, IOException e) {
+		super(description, e);
+	}
 
-  static InvalidProtocolBufferException sizeLimitExceeded() {
-    return new InvalidProtocolBufferException(
-      "Protocol message was too large.  May be malicious.  " +
-      "Use CodedInputStream.setSizeLimit() to increase the size limit.");
-  }
+	/**
+	 * Returns the unfinished message attached to the exception, or null if no
+	 * message is attached.
+	 */
+	public MessageLite getUnfinishedMessage() {
+		return unfinishedMessage;
+	}
 
-  static InvalidProtocolBufferException parseFailure() {
-    return new InvalidProtocolBufferException("Failed to parse the message.");
-  }
+	/**
+	 * Attaches an unfinished message to the exception to support best-effort
+	 * parsing in {@code Parser} interface.
+	 *
+	 * @return this
+	 */
+	public InvalidProtocolBufferException setUnfinishedMessage(MessageLite unfinishedMessage) {
+		this.unfinishedMessage = unfinishedMessage;
+		return this;
+	}
 
-  static InvalidProtocolBufferException invalidUtf8() {
-    return new InvalidProtocolBufferException("Protocol message had invalid UTF-8.");
-  }
+	/**
+	 * Unwraps the underlying {@link IOException} if this exception was caused by an
+	 * I/O problem. Otherwise, returns {@code this}.
+	 */
+	public IOException unwrapIOException() {
+		return getCause() instanceof IOException ? (IOException) getCause() : this;
+	}
 }

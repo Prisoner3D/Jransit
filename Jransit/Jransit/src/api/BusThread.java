@@ -7,7 +7,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import com.teamdev.jxmaps.Icon;
 import com.teamdev.jxmaps.Map;
 
-import UserInterface.JavaFXExample;
+import UserInterface.MapsApp;
 import csv.CSVUtilities;
 import csv.HistoryRecorder;
 import mapObjects.Bus;
@@ -15,7 +15,7 @@ import mapObjects.BusFactory;
 
 /**
  * 
- * @author 
+ * @author
  *
  */
 public class BusThread extends Thread {
@@ -24,51 +24,51 @@ public class BusThread extends Thread {
 	private BusFactory busFac;
 	private HistoryRecorder histRec;
 	private boolean firstRun = true;
+
 	public BusThread(Map map, Icon icon) {
-		System.out.println("thread started");
-		 this.map = map;
-		 this.icon = icon;
-		 this.busFac = (new BusFactory());
-		 String basePath = (new File("").getAbsolutePath());
-		 File file = new File(basePath + "\\Jransit\\src\\csv\\bus history.txt");
-		 System.out.println("Testt");
-		 this.histRec = new HistoryRecorder(new CSVUtilities(file, "|"));
-		 System.out.println("end of constructer");
+		
+		this.map = map;
+		this.icon = icon;
+		this.busFac = (new BusFactory());
+		String basePath = (new File("").getAbsolutePath());
+		File file = new File(basePath + "\\Jransit\\src\\csv\\bus history.txt");
+		
+		this.histRec = new HistoryRecorder(new CSVUtilities(file, "|"));
+		
+	}
+
+	public void clearFile() {
+		this.histRec.resetFile();
+	}
+
+	public BusFactory getBusFac() {
+		return busFac;
 	}
 
 	public HistoryRecorder getHistRec() {
 		return histRec;
 	}
 
-	
-	public BusFactory getBusFac() {
-		return busFac;
-	}
-
 	@Override
 	public void run() {
 		while (true) {
-			//TODO: lock on run
-			double sliderState = JavaFXExample.slider.getSlider().getValue();
+			// TODO: lock on run
+			double sliderState = MapsApp.slider.getSlider().getValue();
 			if (sliderState == 1) {
-				JavaFXExample.slider.getSlider().setDisable(true);
+				MapsApp.slider.getSlider().setDisable(true);
 				List<Bus> busses = busFac.placeBusses(map, true);
 				this.histRec.write(busses);
-				JavaFXExample.slider.getSlider().setDisable(false);
+				MapsApp.slider.getSlider().setDisable(false);
 			}
-			
-			JavaFXExample.setTimer(new AtomicInteger(30));
+
+			MapsApp.setTimer(new AtomicInteger(30));
 			try {
 				this.sleep(30000);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			JavaFXExample.slider.addTick();
+			MapsApp.slider.addTick();
 		}
-	}
-	
-	public void clearFile() {
-		this.histRec.resetFile();
 	}
 }

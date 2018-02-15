@@ -1,9 +1,9 @@
 package api;
 
-
 /**
  * Class of constants used to access different feeds in GTFS directly through
  * http://datamine.mta.info/mta_esi.php?key={key}&feed_id=[TrainFeed]
+ * 
  * @author alex
  *
  */
@@ -23,7 +23,7 @@ public enum TrainFeed {
 	/**
 	 * Feed Access to Trains : B D F M
 	 */
-	ORANGE(21), 
+	ORANGE(21),
 	/**
 	 * Feed Access to Trains : L
 	 */
@@ -39,41 +39,40 @@ public enum TrainFeed {
 	/**
 	 * Feed Access to Trains : J Z
 	 */
-	BROWN(36)
-	;
-	
+	BROWN(36);
+
+	public static String getLetters(TrainFeed tf) {
+		switch (tf) {
+		case BLUE:
+			return "ACE";
+		case NUM_S:
+			return "123456S";
+		case YELLOW:
+			return "NQRW";
+		case ORANGE:
+			return "BDFM";
+		case GRAY:
+			return "L";
+		case SIR:
+			return "SIR";
+		case GREEN:
+			return "G";
+		case BROWN:
+			return "JZ";
+
+		default:
+			return null;
+		}
+	}
+
 	private final int id;
-	private TrainFeed(int id)
-    {
-        this.id = id;
-    }
-	
+
+	private TrainFeed(int id) {
+		this.id = id;
+	}
+
 	@Override
 	public String toString() {
 		return String.valueOf(this.id);
-	}
-	
-	public static String getLetters(TrainFeed tf) {
-		switch(tf) {
-			case BLUE:
-				return "ACE";
-			case NUM_S:
-				return "123456S";
-			case YELLOW:
-				return "NQRW";
-			case ORANGE:
-				return "BDFM";
-			case GRAY:
-				return "L";
-			case SIR:
-				return "SIR";
-			case GREEN:
-				return "G";
-			case BROWN:
-				return "JZ";
-				
-			default:
-				return null;
-		}
 	}
 }

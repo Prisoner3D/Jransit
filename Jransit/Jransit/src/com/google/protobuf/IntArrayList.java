@@ -43,228 +43,231 @@ import java.util.RandomAccess;
  * @author dweis@google.com (Daniel Weis)
  */
 final class IntArrayList extends AbstractProtobufList<Integer>
-    implements IntList, RandomAccess, PrimitiveNonBoxingCollection {
+		implements IntList, RandomAccess, PrimitiveNonBoxingCollection {
 
-  private static final IntArrayList EMPTY_LIST = new IntArrayList();
-  static {
-    EMPTY_LIST.makeImmutable();
-  }
+	private static final IntArrayList EMPTY_LIST = new IntArrayList();
+	static {
+		EMPTY_LIST.makeImmutable();
+	}
 
-  public static IntArrayList emptyList() {
-    return EMPTY_LIST;
-  }
+	public static IntArrayList emptyList() {
+		return EMPTY_LIST;
+	}
 
-  /**
-   * The backing store for the list.
-   */
-  private int[] array;
+	/**
+	 * The backing store for the list.
+	 */
+	private int[] array;
 
-  /**
-   * The size of the list distinct from the length of the array. That is, it is the number of
-   * elements set in the list.
-   */
-  private int size;
+	/**
+	 * The size of the list distinct from the length of the array. That is, it is
+	 * the number of elements set in the list.
+	 */
+	private int size;
 
-  /**
-   * Constructs a new mutable {@code IntArrayList} with default capacity.
-   */
-  IntArrayList() {
-    this(new int[DEFAULT_CAPACITY], 0);
-  }
+	/**
+	 * Constructs a new mutable {@code IntArrayList} with default capacity.
+	 */
+	IntArrayList() {
+		this(new int[DEFAULT_CAPACITY], 0);
+	}
 
-  /**
-   * Constructs a new mutable {@code IntArrayList}
-   * containing the same elements as {@code other}.
-   */
-  private IntArrayList(int[] other, int size) {
-    array = other;
-    this.size = size;
-  }
+	/**
+	 * Constructs a new mutable {@code IntArrayList} containing the same elements as
+	 * {@code other}.
+	 */
+	private IntArrayList(int[] other, int size) {
+		array = other;
+		this.size = size;
+	}
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (!(o instanceof IntArrayList)) {
-      return super.equals(o);
-    }
-    IntArrayList other = (IntArrayList) o;
-    if (size != other.size) {
-      return false;
-    }
+	@Override
+	public void add(int index, Integer element) {
+		addInt(index, element);
+	}
 
-    final int[] arr = other.array;
-    for (int i = 0; i < size; i++) {
-      if (array[i] != arr[i]) {
-        return false;
-      }
-    }
+	@Override
+	public boolean addAll(Collection<? extends Integer> collection) {
+		ensureIsMutable();
 
-    return true;
-  }
+		checkNotNull(collection);
 
-  @Override
-  public int hashCode() {
-    int result = 1;
-    for (int i = 0; i < size; i++) {
-      result = (31 * result) + array[i];
-    }
-    return result;
-  }
+		// We specialize when adding another IntArrayList to avoid boxing elements.
+		if (!(collection instanceof IntArrayList)) {
+			return super.addAll(collection);
+		}
 
-  @Override
-  public IntList mutableCopyWithCapacity(int capacity) {
-    if (capacity < size) {
-      throw new IllegalArgumentException();
-    }
-    return new IntArrayList(Arrays.copyOf(array, capacity), size);
-  }
+		IntArrayList list = (IntArrayList) collection;
+		if (list.size == 0) {
+			return false;
+		}
 
-  @Override
-  public Integer get(int index) {
-    return getInt(index);
-  }
+		int overflow = Integer.MAX_VALUE - size;
+		if (overflow < list.size) {
+			// We can't actually represent a list this large.
+			throw new OutOfMemoryError();
+		}
 
-  @Override
-  public int getInt(int index) {
-    ensureIndexInRange(index);
-    return array[index];
-  }
+		int newSize = size + list.size;
+		if (newSize > array.length) {
+			array = Arrays.copyOf(array, newSize);
+		}
 
-  @Override
-  public int size() {
-    return size;
-  }
+		System.arraycopy(list.array, 0, array, size, list.size);
+		size = newSize;
+		modCount++;
+		return true;
+	}
 
-  @Override
-  public Integer set(int index, Integer element) {
-    return setInt(index, element);
-  }
+	/**
+	 * Like {@link #add(Integer)} but more efficient in that it doesn't box the
+	 * element.
+	 */
+	@Override
+	public void addInt(int element) {
+		addInt(size, element);
+	}
 
-  @Override
-  public int setInt(int index, int element) {
-    ensureIsMutable();
-    ensureIndexInRange(index);
-    int previousValue = array[index];
-    array[index] = element;
-    return previousValue;
-  }
+	/**
+	 * Like {@link #add(int, Integer)} but more efficient in that it doesn't box the
+	 * element.
+	 */
+	private void addInt(int index, int element) {
+		ensureIsMutable();
+		if (index < 0 || index > size) {
+			throw new IndexOutOfBoundsException(makeOutOfBoundsExceptionMessage(index));
+		}
 
-  @Override
-  public void add(int index, Integer element) {
-    addInt(index, element);
-  }
+		if (size < array.length) {
+			// Shift everything over to make room
+			System.arraycopy(array, index, array, index + 1, size - index);
+		} else {
+			// Resize to 1.5x the size
+			int length = ((size * 3) / 2) + 1;
+			int[] newArray = new int[length];
 
-  /**
-   * Like {@link #add(Integer)} but more efficient in that it doesn't box the element.
-   */
-  @Override
-  public void addInt(int element) {
-    addInt(size, element);
-  }
+			// Copy the first part directly
+			System.arraycopy(array, 0, newArray, 0, index);
 
-  /**
-   * Like {@link #add(int, Integer)} but more efficient in that it doesn't box the element.
-   */
-  private void addInt(int index, int element) {
-    ensureIsMutable();
-    if (index < 0 || index > size) {
-      throw new IndexOutOfBoundsException(makeOutOfBoundsExceptionMessage(index));
-    }
+			// Copy the rest shifted over by one to make room
+			System.arraycopy(array, index, newArray, index + 1, size - index);
+			array = newArray;
+		}
 
-    if (size < array.length) {
-      // Shift everything over to make room
-      System.arraycopy(array, index, array, index + 1, size - index);
-    } else {
-      // Resize to 1.5x the size
-      int length = ((size * 3) / 2) + 1;
-      int[] newArray = new int[length];
+		array[index] = element;
+		size++;
+		modCount++;
+	}
 
-      // Copy the first part directly
-      System.arraycopy(array, 0, newArray, 0, index);
+	/**
+	 * Ensures that the provided {@code index} is within the range of
+	 * {@code [0, size]}. Throws an {@link IndexOutOfBoundsException} if it is not.
+	 *
+	 * @param index
+	 *            the index to verify is in range
+	 */
+	private void ensureIndexInRange(int index) {
+		if (index < 0 || index >= size) {
+			throw new IndexOutOfBoundsException(makeOutOfBoundsExceptionMessage(index));
+		}
+	}
 
-      // Copy the rest shifted over by one to make room
-      System.arraycopy(array, index, newArray, index + 1, size - index);
-      array = newArray;
-    }
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (!(o instanceof IntArrayList)) {
+			return super.equals(o);
+		}
+		IntArrayList other = (IntArrayList) o;
+		if (size != other.size) {
+			return false;
+		}
 
-    array[index] = element;
-    size++;
-    modCount++;
-  }
+		final int[] arr = other.array;
+		for (int i = 0; i < size; i++) {
+			if (array[i] != arr[i]) {
+				return false;
+			}
+		}
 
-  @Override
-  public boolean addAll(Collection<? extends Integer> collection) {
-    ensureIsMutable();
+		return true;
+	}
 
-    checkNotNull(collection);
+	@Override
+	public Integer get(int index) {
+		return getInt(index);
+	}
 
-    // We specialize when adding another IntArrayList to avoid boxing elements.
-    if (!(collection instanceof IntArrayList)) {
-      return super.addAll(collection);
-    }
+	@Override
+	public int getInt(int index) {
+		ensureIndexInRange(index);
+		return array[index];
+	}
 
-    IntArrayList list = (IntArrayList) collection;
-    if (list.size == 0) {
-      return false;
-    }
+	@Override
+	public int hashCode() {
+		int result = 1;
+		for (int i = 0; i < size; i++) {
+			result = (31 * result) + array[i];
+		}
+		return result;
+	}
 
-    int overflow = Integer.MAX_VALUE - size;
-    if (overflow < list.size) {
-      // We can't actually represent a list this large.
-      throw new OutOfMemoryError();
-    }
+	private String makeOutOfBoundsExceptionMessage(int index) {
+		return "Index:" + index + ", Size:" + size;
+	}
 
-    int newSize = size + list.size;
-    if (newSize > array.length) {
-      array = Arrays.copyOf(array, newSize);
-    }
+	@Override
+	public IntList mutableCopyWithCapacity(int capacity) {
+		if (capacity < size) {
+			throw new IllegalArgumentException();
+		}
+		return new IntArrayList(Arrays.copyOf(array, capacity), size);
+	}
 
-    System.arraycopy(list.array, 0, array, size, list.size);
-    size = newSize;
-    modCount++;
-    return true;
-  }
+	@Override
+	public Integer remove(int index) {
+		ensureIsMutable();
+		ensureIndexInRange(index);
+		int value = array[index];
+		System.arraycopy(array, index + 1, array, index, size - index);
+		size--;
+		modCount++;
+		return value;
+	}
 
-  @Override
-  public boolean remove(Object o) {
-    ensureIsMutable();
-    for (int i = 0; i < size; i++) {
-      if (o.equals(array[i])) {
-        System.arraycopy(array, i + 1, array, i, size - i);
-        size--;
-        modCount++;
-        return true;
-      }
-    }
-    return false;
-  }
+	@Override
+	public boolean remove(Object o) {
+		ensureIsMutable();
+		for (int i = 0; i < size; i++) {
+			if (o.equals(array[i])) {
+				System.arraycopy(array, i + 1, array, i, size - i);
+				size--;
+				modCount++;
+				return true;
+			}
+		}
+		return false;
+	}
 
-  @Override
-  public Integer remove(int index) {
-    ensureIsMutable();
-    ensureIndexInRange(index);
-    int value = array[index];
-    System.arraycopy(array, index + 1, array, index, size - index);
-    size--;
-    modCount++;
-    return value;
-  }
+	@Override
+	public Integer set(int index, Integer element) {
+		return setInt(index, element);
+	}
 
-  /**
-   * Ensures that the provided {@code index} is within the range of {@code [0, size]}. Throws an
-   * {@link IndexOutOfBoundsException} if it is not.
-   *
-   * @param index the index to verify is in range
-   */
-  private void ensureIndexInRange(int index) {
-    if (index < 0 || index >= size) {
-      throw new IndexOutOfBoundsException(makeOutOfBoundsExceptionMessage(index));
-    }
-  }
+	@Override
+	public int setInt(int index, int element) {
+		ensureIsMutable();
+		ensureIndexInRange(index);
+		int previousValue = array[index];
+		array[index] = element;
+		return previousValue;
+	}
 
-  private String makeOutOfBoundsExceptionMessage(int index) {
-    return "Index:" + index + ", Size:" + size;
-  }
+	@Override
+	public int size() {
+		return size;
+	}
 }

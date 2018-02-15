@@ -35,37 +35,45 @@ package com.google.protobuf;
  */
 public final class DiscardUnknownFieldsParser {
 
-  /**
-   * Warps a given {@link Parser} into a new {@link Parser} that discards unknown fields during
-   * parsing.
-   *
-   * <p>Usage example:
-   * <pre>{@code
-     * private final static Parser<Foo> FOO_PARSER = DiscardUnknownFieldsParser.wrap(Foo.parser());
-     * Foo parseFooDiscardUnknown(ByteBuffer input) throws IOException {
-     *   return FOO_PARSER.parseFrom(input);
-     * }
-   * }</pre>
-   *
-   * <p>Like all other implementations of {@code Parser}, this parser is stateless and thread-safe.
-   *
-   * @param parser The delegated parser that parses messages.
-   * @return a {@link Parser} that will discard unknown fields during parsing.
-   */
-  public static final <T extends Message> Parser<T> wrap(final Parser<T> parser) {
-    return new AbstractParser<T>() {
-      @Override
-      public T parsePartialFrom(CodedInputStream input, ExtensionRegistryLite extensionRegistry)
-          throws InvalidProtocolBufferException {
-        try {
-          input.discardUnknownFields();
-          return parser.parsePartialFrom(input, extensionRegistry);
-        } finally {
-          input.unsetDiscardUnknownFields();
-        }
-      }
-    };
-  }
+	/**
+	 * Warps a given {@link Parser} into a new {@link Parser} that discards unknown
+	 * fields during parsing.
+	 *
+	 * <p>
+	 * Usage example:
+	 * 
+	 * <pre>
+	 * {@code
+	   * private final static Parser<Foo> FOO_PARSER = DiscardUnknownFieldsParser.wrap(Foo.parser());
+	   * Foo parseFooDiscardUnknown(ByteBuffer input) throws IOException {
+	   *   return FOO_PARSER.parseFrom(input);
+	   * }
+	 * }
+	 * </pre>
+	 *
+	 * <p>
+	 * Like all other implementations of {@code Parser}, this parser is stateless
+	 * and thread-safe.
+	 *
+	 * @param parser
+	 *            The delegated parser that parses messages.
+	 * @return a {@link Parser} that will discard unknown fields during parsing.
+	 */
+	public static final <T extends Message> Parser<T> wrap(final Parser<T> parser) {
+		return new AbstractParser<T>() {
+			@Override
+			public T parsePartialFrom(CodedInputStream input, ExtensionRegistryLite extensionRegistry)
+					throws InvalidProtocolBufferException {
+				try {
+					input.discardUnknownFields();
+					return parser.parsePartialFrom(input, extensionRegistry);
+				} finally {
+					input.unsetDiscardUnknownFields();
+				}
+			}
+		};
+	}
 
-  private DiscardUnknownFieldsParser() {}
+	private DiscardUnknownFieldsParser() {
+	}
 }

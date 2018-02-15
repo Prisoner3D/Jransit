@@ -47,190 +47,194 @@ import java.util.Set;
  */
 public final class MapFieldLite<K, V> extends LinkedHashMap<K, V> {
 
-  private boolean isMutable;
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private static final MapFieldLite EMPTY_MAP_FIELD = new MapFieldLite();
 
-  private MapFieldLite() {
-    this.isMutable = true;
-  }
+	static {
+		EMPTY_MAP_FIELD.makeImmutable();
+	}
 
-  private MapFieldLite(Map<K, V> mapData) {
-    super(mapData);
-    this.isMutable = true;
-  }
+	/**
+	 * Calculates the hash code for a {@link Map}. We don't use the default hash
+	 * code method of {@link Map} because for byte arrays and protobuf enums it use
+	 * {@link Object#hashCode()}.
+	 */
+	static <K, V> int calculateHashCodeForMap(Map<K, V> a) {
+		int result = 0;
+		for (Map.Entry<K, V> entry : a.entrySet()) {
+			result += calculateHashCodeForObject(entry.getKey()) ^ calculateHashCodeForObject(entry.getValue());
+		}
+		return result;
+	}
 
-  @SuppressWarnings({"rawtypes", "unchecked"})
-  private static final MapFieldLite EMPTY_MAP_FIELD = new MapFieldLite();
-  static {
-    EMPTY_MAP_FIELD.makeImmutable();
-  }
+	private static int calculateHashCodeForObject(Object a) {
+		if (a instanceof byte[]) {
+			return Internal.hashCode((byte[]) a);
+		}
+		// Enums should be stored as integers internally.
+		if (a instanceof EnumLite) {
+			throw new UnsupportedOperationException();
+		}
+		return a.hashCode();
+	}
+	private static void checkForNullKeysAndValues(Map<?, ?> m) {
+		for (Object key : m.keySet()) {
+			checkNotNull(key);
+			checkNotNull(m.get(key));
+		}
+	}
 
-  /** Returns an singleton immutable empty MapFieldLite instance. */
-  @SuppressWarnings({"unchecked", "cast"})
-  public static <K, V> MapFieldLite<K, V> emptyMapField() {
-    return (MapFieldLite<K, V>) EMPTY_MAP_FIELD;
-  }
+	/**
+	 * Makes a deep copy of a {@link Map}. Immutable objects in the map will be
+	 * shared (e.g., integers, strings, immutable messages) and mutable ones will
+	 * have a copy (e.g., byte arrays, mutable messages).
+	 */
+	@SuppressWarnings("unchecked")
+	static <K, V> Map<K, V> copy(Map<K, V> map) {
+		Map<K, V> result = new LinkedHashMap<K, V>();
+		for (Map.Entry<K, V> entry : map.entrySet()) {
+			result.put(entry.getKey(), (V) copy(entry.getValue()));
+		}
+		return result;
+	}
 
-  public void mergeFrom(MapFieldLite<K, V> other) {
-    ensureMutable();
-    if (!other.isEmpty()) {
-      putAll(other);
-    }
-  }
+	private static Object copy(Object object) {
+		if (object instanceof byte[]) {
+			byte[] data = (byte[]) object;
+			return Arrays.copyOf(data, data.length);
+		}
+		return object;
+	}
 
-  @SuppressWarnings({"unchecked", "cast"})
-  @Override public Set<Map.Entry<K, V>> entrySet() {
-    return isEmpty() ? Collections.<Map.Entry<K, V>>emptySet() : super.entrySet();
-  }
+	/** Returns an singleton immutable empty MapFieldLite instance. */
+	@SuppressWarnings({ "unchecked", "cast" })
+	public static <K, V> MapFieldLite<K, V> emptyMapField() {
+		return (MapFieldLite<K, V>) EMPTY_MAP_FIELD;
+	}
 
-  @Override public void clear() {
-    ensureMutable();
-    super.clear();
-  }
+	/**
+	 * Checks whether two {@link Map}s are equal. We don't use the default equals
+	 * method of {@link Map} because it compares by identity not by content for byte
+	 * arrays.
+	 */
+	static <K, V> boolean equals(Map<K, V> a, Map<K, V> b) {
+		if (a == b) {
+			return true;
+		}
+		if (a.size() != b.size()) {
+			return false;
+		}
+		for (Map.Entry<K, V> entry : a.entrySet()) {
+			if (!b.containsKey(entry.getKey())) {
+				return false;
+			}
+			if (!equals(entry.getValue(), b.get(entry.getKey()))) {
+				return false;
+			}
+		}
+		return true;
+	}
 
-  @Override public V put(K key, V value) {
-    ensureMutable();
-    checkNotNull(key);
+	private static boolean equals(Object a, Object b) {
+		if (a instanceof byte[] && b instanceof byte[]) {
+			return Arrays.equals((byte[]) a, (byte[]) b);
+		}
+		return a.equals(b);
+	}
 
-    checkNotNull(value);
-    return super.put(key, value);
-  }
+	private boolean isMutable;
 
-  public V put(Map.Entry<K, V> entry) {
-    return put(entry.getKey(), entry.getValue());
-  }
+	private MapFieldLite() {
+		this.isMutable = true;
+	}
 
-  @Override public void putAll(Map<? extends K, ? extends V> m) {
-    ensureMutable();
-    checkForNullKeysAndValues(m);
-    super.putAll(m);
-  }
+	private MapFieldLite(Map<K, V> mapData) {
+		super(mapData);
+		this.isMutable = true;
+	}
 
-  @Override public V remove(Object key) {
-    ensureMutable();
-    return super.remove(key);
-  }
+	@Override
+	public void clear() {
+		ensureMutable();
+		super.clear();
+	}
 
-  private static void checkForNullKeysAndValues(Map<?, ?> m) {
-    for (Object key : m.keySet()) {
-      checkNotNull(key);
-      checkNotNull(m.get(key));
-    }
-  }
+	private void ensureMutable() {
+		if (!isMutable()) {
+			throw new UnsupportedOperationException();
+		}
+	}
 
-  private static boolean equals(Object a, Object b) {
-    if (a instanceof byte[] && b instanceof byte[]) {
-      return Arrays.equals((byte[]) a, (byte[]) b);
-    }
-    return a.equals(b);
-  }
+	@SuppressWarnings({ "unchecked", "cast" })
+	@Override
+	public Set<Map.Entry<K, V>> entrySet() {
+		return isEmpty() ? Collections.<Map.Entry<K, V>>emptySet() : super.entrySet();
+	}
 
-  /**
-   * Checks whether two {@link Map}s are equal. We don't use the default equals
-   * method of {@link Map} because it compares by identity not by content for
-   * byte arrays.
-   */
-  static <K, V> boolean equals(Map<K, V> a, Map<K, V> b) {
-    if (a == b) {
-      return true;
-    }
-    if (a.size() != b.size()) {
-      return false;
-    }
-    for (Map.Entry<K, V> entry : a.entrySet()) {
-      if (!b.containsKey(entry.getKey())) {
-        return false;
-      }
-      if (!equals(entry.getValue(), b.get(entry.getKey()))) {
-        return false;
-      }
-    }
-    return true;
-  }
+	/**
+	 * Checks whether two map fields are equal.
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public boolean equals(Object object) {
+		return (object instanceof Map) && equals(this, (Map<K, V>) object);
+	}
 
-  /**
-   * Checks whether two map fields are equal.
-   */
-  @SuppressWarnings("unchecked")
-  @Override
-  public boolean equals(Object object) {
-    return (object instanceof Map) && equals(this, (Map<K, V>) object);
-  }
+	@Override
+	public int hashCode() {
+		return calculateHashCodeForMap(this);
+	}
 
-  private static int calculateHashCodeForObject(Object a) {
-    if (a instanceof byte[]) {
-      return Internal.hashCode((byte[]) a);
-    }
-    // Enums should be stored as integers internally.
-    if (a instanceof EnumLite) {
-      throw new UnsupportedOperationException();
-    }
-    return a.hashCode();
-  }
+	/**
+	 * Returns whether this field can be modified.
+	 */
+	public boolean isMutable() {
+		return isMutable;
+	}
 
-  /**
-   * Calculates the hash code for a {@link Map}. We don't use the default hash
-   * code method of {@link Map} because for byte arrays and protobuf enums it
-   * use {@link Object#hashCode()}.
-   */
-  static <K, V> int calculateHashCodeForMap(Map<K, V> a) {
-    int result = 0;
-    for (Map.Entry<K, V> entry : a.entrySet()) {
-      result += calculateHashCodeForObject(entry.getKey())
-          ^ calculateHashCodeForObject(entry.getValue());
-    }
-    return result;
-  }
+	/**
+	 * Makes this field immutable. All subsequent modifications will throw an
+	 * {@link UnsupportedOperationException}.
+	 */
+	public void makeImmutable() {
+		isMutable = false;
+	}
 
-  @Override
-  public int hashCode() {
-    return calculateHashCodeForMap(this);
-  }
+	public void mergeFrom(MapFieldLite<K, V> other) {
+		ensureMutable();
+		if (!other.isEmpty()) {
+			putAll(other);
+		}
+	}
 
-  private static Object copy(Object object) {
-    if (object instanceof byte[]) {
-      byte[] data = (byte[]) object;
-      return Arrays.copyOf(data, data.length);
-    }
-    return object;
-  }
+	/** Returns a deep copy of this map field. */
+	public MapFieldLite<K, V> mutableCopy() {
+		return isEmpty() ? new MapFieldLite<K, V>() : new MapFieldLite<K, V>(this);
+	}
 
-  /**
-   * Makes a deep copy of a {@link Map}. Immutable objects in the map will be
-   * shared (e.g., integers, strings, immutable messages) and mutable ones will
-   * have a copy (e.g., byte arrays, mutable messages).
-   */
-  @SuppressWarnings("unchecked")
-  static <K, V> Map<K, V> copy(Map<K, V> map) {
-    Map<K, V> result = new LinkedHashMap<K, V>();
-    for (Map.Entry<K, V> entry : map.entrySet()) {
-      result.put(entry.getKey(), (V) copy(entry.getValue()));
-    }
-    return result;
-  }
+	@Override
+	public V put(K key, V value) {
+		ensureMutable();
+		checkNotNull(key);
 
-  /** Returns a deep copy of this map field. */
-  public MapFieldLite<K, V> mutableCopy() {
-    return isEmpty() ? new MapFieldLite<K, V>() : new MapFieldLite<K, V>(this);
-  }
+		checkNotNull(value);
+		return super.put(key, value);
+	}
 
-  /**
-   * Makes this field immutable. All subsequent modifications will throw an
-   * {@link UnsupportedOperationException}.
-   */
-  public void makeImmutable() {
-    isMutable = false;
-  }
+	public V put(Map.Entry<K, V> entry) {
+		return put(entry.getKey(), entry.getValue());
+	}
 
-  /**
-   * Returns whether this field can be modified.
-   */
-  public boolean isMutable() {
-    return isMutable;
-  }
+	@Override
+	public void putAll(Map<? extends K, ? extends V> m) {
+		ensureMutable();
+		checkForNullKeysAndValues(m);
+		super.putAll(m);
+	}
 
-  private void ensureMutable() {
-    if (!isMutable()) {
-      throw new UnsupportedOperationException();
-    }
-  }
+	@Override
+	public V remove(Object key) {
+		ensureMutable();
+		return super.remove(key);
+	}
 }

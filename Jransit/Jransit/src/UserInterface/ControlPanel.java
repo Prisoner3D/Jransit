@@ -7,9 +7,9 @@ package UserInterface;
 import javax.swing.*;
 
 public interface ControlPanel {
-    JComponent getControlPanel();
+	void configureControlPanel();
 
-    void configureControlPanel();
+	JComponent getControlPanel();
 
-    int getPreferredHeight();
+	int getPreferredHeight();
 }

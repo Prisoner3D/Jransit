@@ -43,229 +43,232 @@ import java.util.RandomAccess;
  * @author dweis@google.com (Daniel Weis)
  */
 final class DoubleArrayList extends AbstractProtobufList<Double>
-    implements DoubleList, RandomAccess, PrimitiveNonBoxingCollection {
+		implements DoubleList, RandomAccess, PrimitiveNonBoxingCollection {
 
-  private static final DoubleArrayList EMPTY_LIST = new DoubleArrayList();
-  static {
-    EMPTY_LIST.makeImmutable();
-  }
+	private static final DoubleArrayList EMPTY_LIST = new DoubleArrayList();
+	static {
+		EMPTY_LIST.makeImmutable();
+	}
 
-  public static DoubleArrayList emptyList() {
-    return EMPTY_LIST;
-  }
+	public static DoubleArrayList emptyList() {
+		return EMPTY_LIST;
+	}
 
-  /**
-   * The backing store for the list.
-   */
-  private double[] array;
+	/**
+	 * The backing store for the list.
+	 */
+	private double[] array;
 
-  /**
-   * The size of the list distinct from the length of the array. That is, it is the number of
-   * elements set in the list.
-   */
-  private int size;
+	/**
+	 * The size of the list distinct from the length of the array. That is, it is
+	 * the number of elements set in the list.
+	 */
+	private int size;
 
-  /**
-   * Constructs a new mutable {@code DoubleArrayList} with default capacity.
-   */
-  DoubleArrayList() {
-    this(new double[DEFAULT_CAPACITY], 0);
-  }
+	/**
+	 * Constructs a new mutable {@code DoubleArrayList} with default capacity.
+	 */
+	DoubleArrayList() {
+		this(new double[DEFAULT_CAPACITY], 0);
+	}
 
-  /**
-   * Constructs a new mutable {@code DoubleArrayList}
-   * containing the same elements as {@code other}.
-   */
-  private DoubleArrayList(double[] other, int size) {
-    array = other;
-    this.size = size;
-  }
+	/**
+	 * Constructs a new mutable {@code DoubleArrayList} containing the same elements
+	 * as {@code other}.
+	 */
+	private DoubleArrayList(double[] other, int size) {
+		array = other;
+		this.size = size;
+	}
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (!(o instanceof DoubleArrayList)) {
-      return super.equals(o);
-    }
-    DoubleArrayList other = (DoubleArrayList) o;
-    if (size != other.size) {
-      return false;
-    }
+	@Override
+	public void add(int index, Double element) {
+		addDouble(index, element);
+	}
 
-    final double[] arr = other.array;
-    for (int i = 0; i < size; i++) {
-      if (array[i] != arr[i]) {
-        return false;
-      }
-    }
+	@Override
+	public boolean addAll(Collection<? extends Double> collection) {
+		ensureIsMutable();
 
-    return true;
-  }
+		checkNotNull(collection);
 
-  @Override
-  public int hashCode() {
-    int result = 1;
-    for (int i = 0; i < size; i++) {
-      long bits = Double.doubleToLongBits(array[i]);
-      result = (31 * result) + Internal.hashLong(bits);
-    }
-    return result;
-  }
+		// We specialize when adding another DoubleArrayList to avoid boxing elements.
+		if (!(collection instanceof DoubleArrayList)) {
+			return super.addAll(collection);
+		}
 
-  @Override
-  public DoubleList mutableCopyWithCapacity(int capacity) {
-    if (capacity < size) {
-      throw new IllegalArgumentException();
-    }
-    return new DoubleArrayList(Arrays.copyOf(array, capacity), size);
-  }
+		DoubleArrayList list = (DoubleArrayList) collection;
+		if (list.size == 0) {
+			return false;
+		}
 
-  @Override
-  public Double get(int index) {
-    return getDouble(index);
-  }
+		int overflow = Integer.MAX_VALUE - size;
+		if (overflow < list.size) {
+			// We can't actually represent a list this large.
+			throw new OutOfMemoryError();
+		}
 
-  @Override
-  public double getDouble(int index) {
-    ensureIndexInRange(index);
-    return array[index];
-  }
+		int newSize = size + list.size;
+		if (newSize > array.length) {
+			array = Arrays.copyOf(array, newSize);
+		}
 
-  @Override
-  public int size() {
-    return size;
-  }
+		System.arraycopy(list.array, 0, array, size, list.size);
+		size = newSize;
+		modCount++;
+		return true;
+	}
 
-  @Override
-  public Double set(int index, Double element) {
-    return setDouble(index, element);
-  }
+	/**
+	 * Like {@link #add(Double)} but more efficient in that it doesn't box the
+	 * element.
+	 */
+	@Override
+	public void addDouble(double element) {
+		addDouble(size, element);
+	}
 
-  @Override
-  public double setDouble(int index, double element) {
-    ensureIsMutable();
-    ensureIndexInRange(index);
-    double previousValue = array[index];
-    array[index] = element;
-    return previousValue;
-  }
+	/**
+	 * Like {@link #add(int, Double)} but more efficient in that it doesn't box the
+	 * element.
+	 */
+	private void addDouble(int index, double element) {
+		ensureIsMutable();
+		if (index < 0 || index > size) {
+			throw new IndexOutOfBoundsException(makeOutOfBoundsExceptionMessage(index));
+		}
 
-  @Override
-  public void add(int index, Double element) {
-    addDouble(index, element);
-  }
+		if (size < array.length) {
+			// Shift everything over to make room
+			System.arraycopy(array, index, array, index + 1, size - index);
+		} else {
+			// Resize to 1.5x the size
+			int length = ((size * 3) / 2) + 1;
+			double[] newArray = new double[length];
 
-  /**
-   * Like {@link #add(Double)} but more efficient in that it doesn't box the element.
-   */
-  @Override
-  public void addDouble(double element) {
-    addDouble(size, element);
-  }
+			// Copy the first part directly
+			System.arraycopy(array, 0, newArray, 0, index);
 
-  /**
-   * Like {@link #add(int, Double)} but more efficient in that it doesn't box the element.
-   */
-  private void addDouble(int index, double element) {
-    ensureIsMutable();
-    if (index < 0 || index > size) {
-      throw new IndexOutOfBoundsException(makeOutOfBoundsExceptionMessage(index));
-    }
+			// Copy the rest shifted over by one to make room
+			System.arraycopy(array, index, newArray, index + 1, size - index);
+			array = newArray;
+		}
 
-    if (size < array.length) {
-      // Shift everything over to make room
-      System.arraycopy(array, index, array, index + 1, size - index);
-    } else {
-      // Resize to 1.5x the size
-      int length = ((size * 3) / 2) + 1;
-      double[] newArray = new double[length];
+		array[index] = element;
+		size++;
+		modCount++;
+	}
 
-      // Copy the first part directly
-      System.arraycopy(array, 0, newArray, 0, index);
+	/**
+	 * Ensures that the provided {@code index} is within the range of
+	 * {@code [0, size]}. Throws an {@link IndexOutOfBoundsException} if it is not.
+	 *
+	 * @param index
+	 *            the index to verify is in range
+	 */
+	private void ensureIndexInRange(int index) {
+		if (index < 0 || index >= size) {
+			throw new IndexOutOfBoundsException(makeOutOfBoundsExceptionMessage(index));
+		}
+	}
 
-      // Copy the rest shifted over by one to make room
-      System.arraycopy(array, index, newArray, index + 1, size - index);
-      array = newArray;
-    }
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (!(o instanceof DoubleArrayList)) {
+			return super.equals(o);
+		}
+		DoubleArrayList other = (DoubleArrayList) o;
+		if (size != other.size) {
+			return false;
+		}
 
-    array[index] = element;
-    size++;
-    modCount++;
-  }
+		final double[] arr = other.array;
+		for (int i = 0; i < size; i++) {
+			if (array[i] != arr[i]) {
+				return false;
+			}
+		}
 
-  @Override
-  public boolean addAll(Collection<? extends Double> collection) {
-    ensureIsMutable();
+		return true;
+	}
 
-    checkNotNull(collection);
+	@Override
+	public Double get(int index) {
+		return getDouble(index);
+	}
 
-    // We specialize when adding another DoubleArrayList to avoid boxing elements.
-    if (!(collection instanceof DoubleArrayList)) {
-      return super.addAll(collection);
-    }
+	@Override
+	public double getDouble(int index) {
+		ensureIndexInRange(index);
+		return array[index];
+	}
 
-    DoubleArrayList list = (DoubleArrayList) collection;
-    if (list.size == 0) {
-      return false;
-    }
+	@Override
+	public int hashCode() {
+		int result = 1;
+		for (int i = 0; i < size; i++) {
+			long bits = Double.doubleToLongBits(array[i]);
+			result = (31 * result) + Internal.hashLong(bits);
+		}
+		return result;
+	}
 
-    int overflow = Integer.MAX_VALUE - size;
-    if (overflow < list.size) {
-      // We can't actually represent a list this large.
-      throw new OutOfMemoryError();
-    }
+	private String makeOutOfBoundsExceptionMessage(int index) {
+		return "Index:" + index + ", Size:" + size;
+	}
 
-    int newSize = size + list.size;
-    if (newSize > array.length) {
-      array = Arrays.copyOf(array, newSize);
-    }
+	@Override
+	public DoubleList mutableCopyWithCapacity(int capacity) {
+		if (capacity < size) {
+			throw new IllegalArgumentException();
+		}
+		return new DoubleArrayList(Arrays.copyOf(array, capacity), size);
+	}
 
-    System.arraycopy(list.array, 0, array, size, list.size);
-    size = newSize;
-    modCount++;
-    return true;
-  }
+	@Override
+	public Double remove(int index) {
+		ensureIsMutable();
+		ensureIndexInRange(index);
+		double value = array[index];
+		System.arraycopy(array, index + 1, array, index, size - index);
+		size--;
+		modCount++;
+		return value;
+	}
 
-  @Override
-  public boolean remove(Object o) {
-    ensureIsMutable();
-    for (int i = 0; i < size; i++) {
-      if (o.equals(array[i])) {
-        System.arraycopy(array, i + 1, array, i, size - i);
-        size--;
-        modCount++;
-        return true;
-      }
-    }
-    return false;
-  }
+	@Override
+	public boolean remove(Object o) {
+		ensureIsMutable();
+		for (int i = 0; i < size; i++) {
+			if (o.equals(array[i])) {
+				System.arraycopy(array, i + 1, array, i, size - i);
+				size--;
+				modCount++;
+				return true;
+			}
+		}
+		return false;
+	}
 
-  @Override
-  public Double remove(int index) {
-    ensureIsMutable();
-    ensureIndexInRange(index);
-    double value = array[index];
-    System.arraycopy(array, index + 1, array, index, size - index);
-    size--;
-    modCount++;
-    return value;
-  }
+	@Override
+	public Double set(int index, Double element) {
+		return setDouble(index, element);
+	}
 
-  /**
-   * Ensures that the provided {@code index} is within the range of {@code [0, size]}. Throws an
-   * {@link IndexOutOfBoundsException} if it is not.
-   *
-   * @param index the index to verify is in range
-   */
-  private void ensureIndexInRange(int index) {
-    if (index < 0 || index >= size) {
-      throw new IndexOutOfBoundsException(makeOutOfBoundsExceptionMessage(index));
-    }
-  }
+	@Override
+	public double setDouble(int index, double element) {
+		ensureIsMutable();
+		ensureIndexInRange(index);
+		double previousValue = array[index];
+		array[index] = element;
+		return previousValue;
+	}
 
-  private String makeOutOfBoundsExceptionMessage(int index) {
-    return "Index:" + index + ", Size:" + size;
-  }
+	@Override
+	public int size() {
+		return size;
+	}
 }

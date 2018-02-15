@@ -30,5 +30,9 @@
 
 package com.google.protobuf;
 
-/** A marker interface indicating that the collection supports primitives and is non-boxing. */
-interface PrimitiveNonBoxingCollection {}
+/**
+ * A marker interface indicating that the collection supports primitives and is
+ * non-boxing.
+ */
+interface PrimitiveNonBoxingCollection {
+}

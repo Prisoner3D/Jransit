@@ -5,7 +5,5 @@ package bus_api;
  * @date 8/8/14
  */
 public enum BusTimeTypes {
-    STOP,
-    VEHICLE,
-    BOTH;
+	STOP, VEHICLE, BOTH;
 }

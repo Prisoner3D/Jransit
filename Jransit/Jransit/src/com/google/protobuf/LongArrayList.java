@@ -43,228 +43,231 @@ import java.util.RandomAccess;
  * @author dweis@google.com (Daniel Weis)
  */
 final class LongArrayList extends AbstractProtobufList<Long>
-    implements LongList, RandomAccess, PrimitiveNonBoxingCollection {
+		implements LongList, RandomAccess, PrimitiveNonBoxingCollection {
 
-  private static final LongArrayList EMPTY_LIST = new LongArrayList();
-  static {
-    EMPTY_LIST.makeImmutable();
-  }
+	private static final LongArrayList EMPTY_LIST = new LongArrayList();
+	static {
+		EMPTY_LIST.makeImmutable();
+	}
 
-  public static LongArrayList emptyList() {
-    return EMPTY_LIST;
-  }
+	public static LongArrayList emptyList() {
+		return EMPTY_LIST;
+	}
 
-  /**
-   * The backing store for the list.
-   */
-  private long[] array;
+	/**
+	 * The backing store for the list.
+	 */
+	private long[] array;
 
-  /**
-   * The size of the list distinct from the length of the array. That is, it is the number of
-   * elements set in the list.
-   */
-  private int size;
+	/**
+	 * The size of the list distinct from the length of the array. That is, it is
+	 * the number of elements set in the list.
+	 */
+	private int size;
 
-  /**
-   * Constructs a new mutable {@code LongArrayList} with default capacity.
-   */
-  LongArrayList() {
-    this(new long[DEFAULT_CAPACITY], 0);
-  }
+	/**
+	 * Constructs a new mutable {@code LongArrayList} with default capacity.
+	 */
+	LongArrayList() {
+		this(new long[DEFAULT_CAPACITY], 0);
+	}
 
-  /**
-   * Constructs a new mutable {@code LongArrayList}
-   * containing the same elements as {@code other}.
-   */
-  private LongArrayList(long[] other, int size) {
-    array = other;
-    this.size = size;
-  }
+	/**
+	 * Constructs a new mutable {@code LongArrayList} containing the same elements
+	 * as {@code other}.
+	 */
+	private LongArrayList(long[] other, int size) {
+		array = other;
+		this.size = size;
+	}
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (!(o instanceof LongArrayList)) {
-      return super.equals(o);
-    }
-    LongArrayList other = (LongArrayList) o;
-    if (size != other.size) {
-      return false;
-    }
+	@Override
+	public void add(int index, Long element) {
+		addLong(index, element);
+	}
 
-    final long[] arr = other.array;
-    for (int i = 0; i < size; i++) {
-      if (array[i] != arr[i]) {
-        return false;
-      }
-    }
+	@Override
+	public boolean addAll(Collection<? extends Long> collection) {
+		ensureIsMutable();
 
-    return true;
-  }
+		checkNotNull(collection);
 
-  @Override
-  public int hashCode() {
-    int result = 1;
-    for (int i = 0; i < size; i++) {
-      result = (31 * result) + Internal.hashLong(array[i]);
-    }
-    return result;
-  }
+		// We specialize when adding another LongArrayList to avoid boxing elements.
+		if (!(collection instanceof LongArrayList)) {
+			return super.addAll(collection);
+		}
 
-  @Override
-  public LongList mutableCopyWithCapacity(int capacity) {
-    if (capacity < size) {
-      throw new IllegalArgumentException();
-    }
-    return new LongArrayList(Arrays.copyOf(array, capacity), size);
-  }
+		LongArrayList list = (LongArrayList) collection;
+		if (list.size == 0) {
+			return false;
+		}
 
-  @Override
-  public Long get(int index) {
-    return getLong(index);
-  }
+		int overflow = Integer.MAX_VALUE - size;
+		if (overflow < list.size) {
+			// We can't actually represent a list this large.
+			throw new OutOfMemoryError();
+		}
 
-  @Override
-  public long getLong(int index) {
-    ensureIndexInRange(index);
-    return array[index];
-  }
+		int newSize = size + list.size;
+		if (newSize > array.length) {
+			array = Arrays.copyOf(array, newSize);
+		}
 
-  @Override
-  public int size() {
-    return size;
-  }
+		System.arraycopy(list.array, 0, array, size, list.size);
+		size = newSize;
+		modCount++;
+		return true;
+	}
 
-  @Override
-  public Long set(int index, Long element) {
-    return setLong(index, element);
-  }
+	/**
+	 * Like {@link #add(int, Long)} but more efficient in that it doesn't box the
+	 * element.
+	 */
+	private void addLong(int index, long element) {
+		ensureIsMutable();
+		if (index < 0 || index > size) {
+			throw new IndexOutOfBoundsException(makeOutOfBoundsExceptionMessage(index));
+		}
 
-  @Override
-  public long setLong(int index, long element) {
-    ensureIsMutable();
-    ensureIndexInRange(index);
-    long previousValue = array[index];
-    array[index] = element;
-    return previousValue;
-  }
+		if (size < array.length) {
+			// Shift everything over to make room
+			System.arraycopy(array, index, array, index + 1, size - index);
+		} else {
+			// Resize to 1.5x the size
+			int length = ((size * 3) / 2) + 1;
+			long[] newArray = new long[length];
 
-  @Override
-  public void add(int index, Long element) {
-    addLong(index, element);
-  }
+			// Copy the first part directly
+			System.arraycopy(array, 0, newArray, 0, index);
 
-  /**
-   * Like {@link #add(Long)} but more efficient in that it doesn't box the element.
-   */
-  @Override
-  public void addLong(long element) {
-    addLong(size, element);
-  }
+			// Copy the rest shifted over by one to make room
+			System.arraycopy(array, index, newArray, index + 1, size - index);
+			array = newArray;
+		}
 
-  /**
-   * Like {@link #add(int, Long)} but more efficient in that it doesn't box the element.
-   */
-  private void addLong(int index, long element) {
-    ensureIsMutable();
-    if (index < 0 || index > size) {
-      throw new IndexOutOfBoundsException(makeOutOfBoundsExceptionMessage(index));
-    }
+		array[index] = element;
+		size++;
+		modCount++;
+	}
 
-    if (size < array.length) {
-      // Shift everything over to make room
-      System.arraycopy(array, index, array, index + 1, size - index);
-    } else {
-      // Resize to 1.5x the size
-      int length = ((size * 3) / 2) + 1;
-      long[] newArray = new long[length];
+	/**
+	 * Like {@link #add(Long)} but more efficient in that it doesn't box the
+	 * element.
+	 */
+	@Override
+	public void addLong(long element) {
+		addLong(size, element);
+	}
 
-      // Copy the first part directly
-      System.arraycopy(array, 0, newArray, 0, index);
+	/**
+	 * Ensures that the provided {@code index} is within the range of
+	 * {@code [0, size]}. Throws an {@link IndexOutOfBoundsException} if it is not.
+	 *
+	 * @param index
+	 *            the index to verify is in range
+	 */
+	private void ensureIndexInRange(int index) {
+		if (index < 0 || index >= size) {
+			throw new IndexOutOfBoundsException(makeOutOfBoundsExceptionMessage(index));
+		}
+	}
 
-      // Copy the rest shifted over by one to make room
-      System.arraycopy(array, index, newArray, index + 1, size - index);
-      array = newArray;
-    }
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (!(o instanceof LongArrayList)) {
+			return super.equals(o);
+		}
+		LongArrayList other = (LongArrayList) o;
+		if (size != other.size) {
+			return false;
+		}
 
-    array[index] = element;
-    size++;
-    modCount++;
-  }
+		final long[] arr = other.array;
+		for (int i = 0; i < size; i++) {
+			if (array[i] != arr[i]) {
+				return false;
+			}
+		}
 
-  @Override
-  public boolean addAll(Collection<? extends Long> collection) {
-    ensureIsMutable();
+		return true;
+	}
 
-    checkNotNull(collection);
+	@Override
+	public Long get(int index) {
+		return getLong(index);
+	}
 
-    // We specialize when adding another LongArrayList to avoid boxing elements.
-    if (!(collection instanceof LongArrayList)) {
-      return super.addAll(collection);
-    }
+	@Override
+	public long getLong(int index) {
+		ensureIndexInRange(index);
+		return array[index];
+	}
 
-    LongArrayList list = (LongArrayList) collection;
-    if (list.size == 0) {
-      return false;
-    }
+	@Override
+	public int hashCode() {
+		int result = 1;
+		for (int i = 0; i < size; i++) {
+			result = (31 * result) + Internal.hashLong(array[i]);
+		}
+		return result;
+	}
 
-    int overflow = Integer.MAX_VALUE - size;
-    if (overflow < list.size) {
-      // We can't actually represent a list this large.
-      throw new OutOfMemoryError();
-    }
+	private String makeOutOfBoundsExceptionMessage(int index) {
+		return "Index:" + index + ", Size:" + size;
+	}
 
-    int newSize = size + list.size;
-    if (newSize > array.length) {
-      array = Arrays.copyOf(array, newSize);
-    }
+	@Override
+	public LongList mutableCopyWithCapacity(int capacity) {
+		if (capacity < size) {
+			throw new IllegalArgumentException();
+		}
+		return new LongArrayList(Arrays.copyOf(array, capacity), size);
+	}
 
-    System.arraycopy(list.array, 0, array, size, list.size);
-    size = newSize;
-    modCount++;
-    return true;
-  }
+	@Override
+	public Long remove(int index) {
+		ensureIsMutable();
+		ensureIndexInRange(index);
+		long value = array[index];
+		System.arraycopy(array, index + 1, array, index, size - index);
+		size--;
+		modCount++;
+		return value;
+	}
 
-  @Override
-  public boolean remove(Object o) {
-    ensureIsMutable();
-    for (int i = 0; i < size; i++) {
-      if (o.equals(array[i])) {
-        System.arraycopy(array, i + 1, array, i, size - i);
-        size--;
-        modCount++;
-        return true;
-      }
-    }
-    return false;
-  }
+	@Override
+	public boolean remove(Object o) {
+		ensureIsMutable();
+		for (int i = 0; i < size; i++) {
+			if (o.equals(array[i])) {
+				System.arraycopy(array, i + 1, array, i, size - i);
+				size--;
+				modCount++;
+				return true;
+			}
+		}
+		return false;
+	}
 
-  @Override
-  public Long remove(int index) {
-    ensureIsMutable();
-    ensureIndexInRange(index);
-    long value = array[index];
-    System.arraycopy(array, index + 1, array, index, size - index);
-    size--;
-    modCount++;
-    return value;
-  }
+	@Override
+	public Long set(int index, Long element) {
+		return setLong(index, element);
+	}
 
-  /**
-   * Ensures that the provided {@code index} is within the range of {@code [0, size]}. Throws an
-   * {@link IndexOutOfBoundsException} if it is not.
-   *
-   * @param index the index to verify is in range
-   */
-  private void ensureIndexInRange(int index) {
-    if (index < 0 || index >= size) {
-      throw new IndexOutOfBoundsException(makeOutOfBoundsExceptionMessage(index));
-    }
-  }
+	@Override
+	public long setLong(int index, long element) {
+		ensureIsMutable();
+		ensureIndexInRange(index);
+		long previousValue = array[index];
+		array[index] = element;
+		return previousValue;
+	}
 
-  private String makeOutOfBoundsExceptionMessage(int index) {
-    return "Index:" + index + ", Size:" + size;
-  }
+	@Override
+	public int size() {
+		return size;
+	}
 }

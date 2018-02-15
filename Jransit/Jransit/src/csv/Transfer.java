@@ -14,13 +14,17 @@ public class Transfer implements EntityComposition {
 		this.transferType = entity.getAttribute("transfer_type");
 		this.minTransferTime = entity.getAttribute("min_transfer_time");
 	}
-	
+
 	public Entity getEntity() {
 		return entity;
 	}
 
 	public String getFromStopID() {
 		return fromStopID;
+	}
+
+	public String getMinTransferTime() {
+		return minTransferTime;
 	}
 
 	public String getToStopID() {
@@ -31,10 +35,6 @@ public class Transfer implements EntityComposition {
 		return transferType;
 	}
 
-	public String getMinTransferTime() {
-		return minTransferTime;
-	}
-	
 	@Override
 	public String toString() {
 		return String.valueOf(entity.getAttributes());

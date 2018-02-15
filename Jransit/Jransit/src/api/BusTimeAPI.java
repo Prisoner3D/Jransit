@@ -22,15 +22,7 @@ public class BusTimeAPI {
 			e.printStackTrace();
 		}
 	}
-	public static BusTimeVehicleMonitoring getBusTimeVehicleMonitoring() {
-		try {
-			return btb.createNewBusTimeVehicleMonitoring();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
-	}
+
 	public static BusTimeStopMonitoring getBusTimeStopMonitoring() {
 		try {
 			return btb.createNewBusTimeStopMonitoring();
@@ -40,6 +32,15 @@ public class BusTimeAPI {
 		}
 		return null;
 	}
-	
-	
+
+	public static BusTimeVehicleMonitoring getBusTimeVehicleMonitoring() {
+		try {
+			return btb.createNewBusTimeVehicleMonitoring();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+
 }

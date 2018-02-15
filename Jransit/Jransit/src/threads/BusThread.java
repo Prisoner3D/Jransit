@@ -7,6 +7,7 @@ import mapObjects.BusFactory;
 
 /**
  * Manages runtime used to display bus icons.
+ * 
  * @author
  *
  */
@@ -14,18 +15,21 @@ public class BusThread extends Thread {
 	private Map map;
 	private Icon icon;
 	private BusFactory busFac;
-	
+
 	/**
 	 * BusThread Constructor
-	 * @param map to be placed on
-	 * @param icon to be placed
+	 * 
+	 * @param map
+	 *            to be placed on
+	 * @param icon
+	 *            to be placed
 	 */
 	public BusThread(Map map, Icon icon) {
-		 this.map = map;
-		 this.icon = icon;
-		 this.busFac = (new BusFactory());
+		this.map = map;
+		this.icon = icon;
+		this.busFac = (new BusFactory());
 	}
-	
+
 	/**
 	 * Places bus icon on map and waits 30s.
 	 */

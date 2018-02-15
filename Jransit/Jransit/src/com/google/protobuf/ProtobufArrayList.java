@@ -40,66 +40,66 @@ import java.util.List;
  */
 final class ProtobufArrayList<E> extends AbstractProtobufList<E> {
 
-  private static final ProtobufArrayList<Object> EMPTY_LIST = new ProtobufArrayList<Object>();
-  static {
-    EMPTY_LIST.makeImmutable();
-  }
-  
-  @SuppressWarnings("unchecked") // Guaranteed safe by runtime.
-  public static <E> ProtobufArrayList<E> emptyList() {
-    return (ProtobufArrayList<E>) EMPTY_LIST;
-  }
-  
-  private final List<E> list;
+	private static final ProtobufArrayList<Object> EMPTY_LIST = new ProtobufArrayList<Object>();
+	static {
+		EMPTY_LIST.makeImmutable();
+	}
 
-  ProtobufArrayList() {
-    this(new ArrayList<E>(DEFAULT_CAPACITY));
-  }
-  
-  private ProtobufArrayList(List<E> list) {
-    this.list = list;
-  }
+	@SuppressWarnings("unchecked") // Guaranteed safe by runtime.
+	public static <E> ProtobufArrayList<E> emptyList() {
+		return (ProtobufArrayList<E>) EMPTY_LIST;
+	}
 
-  @Override
-  public ProtobufArrayList<E> mutableCopyWithCapacity(int capacity) {
-    if (capacity < size()) {
-      throw new IllegalArgumentException();
-    }
-    List<E> newList = new ArrayList<E>(capacity);
-    newList.addAll(list);
-    return new ProtobufArrayList<E>(newList);
-  }
-  
-  @Override
-  public void add(int index, E element) {
-    ensureIsMutable();
-    list.add(index, element);
-    modCount++;
-  }
+	private final List<E> list;
 
-  @Override
-  public E get(int index) {
-    return list.get(index);
-  }
-  
-  @Override
-  public E remove(int index) {
-    ensureIsMutable();
-    E toReturn = list.remove(index);
-    modCount++;
-    return toReturn;
-  }
-  
-  @Override
-  public E set(int index, E element) {
-    ensureIsMutable();
-    E toReturn = list.set(index, element);
-    modCount++;
-    return toReturn;
-  }
+	ProtobufArrayList() {
+		this(new ArrayList<E>(DEFAULT_CAPACITY));
+	}
 
-  @Override
-  public int size() {
-    return list.size();
-  }
+	private ProtobufArrayList(List<E> list) {
+		this.list = list;
+	}
+
+	@Override
+	public void add(int index, E element) {
+		ensureIsMutable();
+		list.add(index, element);
+		modCount++;
+	}
+
+	@Override
+	public E get(int index) {
+		return list.get(index);
+	}
+
+	@Override
+	public ProtobufArrayList<E> mutableCopyWithCapacity(int capacity) {
+		if (capacity < size()) {
+			throw new IllegalArgumentException();
+		}
+		List<E> newList = new ArrayList<E>(capacity);
+		newList.addAll(list);
+		return new ProtobufArrayList<E>(newList);
+	}
+
+	@Override
+	public E remove(int index) {
+		ensureIsMutable();
+		E toReturn = list.remove(index);
+		modCount++;
+		return toReturn;
+	}
+
+	@Override
+	public E set(int index, E element) {
+		ensureIsMutable();
+		E toReturn = list.set(index, element);
+		modCount++;
+		return toReturn;
+	}
+
+	@Override
+	public int size() {
+		return list.size();
+	}
 }

@@ -1,6 +1,5 @@
 package csv;
 
-
 public class Stop implements EntityComposition {
 	private final String stopID;
 	private final Entity entity;
@@ -12,11 +11,7 @@ public class Stop implements EntityComposition {
 	private final String name;
 	private final String locationType;
 	private final String parentStation;
-	
-	public String getStopID() {
-		return stopID;
-	}
-	
+
 	public Stop(Entity entity) {
 		this.stopID = entity.getPrimaryKey();
 		this.entity = entity;
@@ -29,44 +24,47 @@ public class Stop implements EntityComposition {
 		this.locationType = entity.getAttribute("location_type");
 		this.parentStation = entity.getAttribute("parent_station");
 	}
-	
+
+	public String getDescription() {
+		return description;
+	}
+
 	public Entity getEntity() {
 		return entity;
-	}
-
-	public String getZoneID() {
-		return zoneID;
-	}
-
-	public String getLongitude() {
-		return longitude;
 	}
 
 	public String getLatitude() {
 		return latitude;
 	}
 
-	public String getStopUrl() {
-		return stopUrl;
+	public String getLocationType() {
+		return locationType;
 	}
 
-	public String getDescription() {
-		return description;
+	public String getLongitude() {
+		return longitude;
 	}
 
 	public String getName() {
 		return name;
 	}
 
-	public String getLocationType() {
-		return locationType;
-	}
-
 	public String getParentStation() {
 		return parentStation;
 	}
 
-	
+	public String getStopID() {
+		return stopID;
+	}
+
+	public String getStopUrl() {
+		return stopUrl;
+	}
+
+	public String getZoneID() {
+		return zoneID;
+	}
+
 	@Override
 	public String toString() {
 		return String.valueOf(entity.getAttributes());

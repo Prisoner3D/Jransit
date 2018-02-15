@@ -12,7 +12,8 @@ import bus_api.BusTimeVehicleMonitoring;
 
 /**
  * Contains bus information that stays the same
- * @author 
+ * 
+ * @author
  *
  */
 public class BusInfoListStaticFactory {
@@ -20,26 +21,28 @@ public class BusInfoListStaticFactory {
 	private static List<BusInfo> busses = new ArrayList<>();
 	static {
 		btvm = BusTimeAPI.getBusTimeVehicleMonitoring();
-		
+
 	}
-	
+
+	public static List<BusInfo> getAllBuses() {
+		
+		updateList();
+		return busses;
+	}
+
 	/**
 	 * Update the list of buses
 	 */
 	private static void updateList() {
 		busses.clear();
 		try {
-			System.out.println("test");
+			
 			JsonElement allBuses = btvm.callApi();
-			System.out.println("test");
-			JsonArray allBusesArray = allBuses.getAsJsonObject().get("Siri")
-										.getAsJsonObject().get("ServiceDelivery")
-										.getAsJsonObject().get("VehicleMonitoringDelivery")
-										.getAsJsonArray().get(0)
-										.getAsJsonObject()
-										.get("VehicleActivity")
-										.getAsJsonArray();
-			System.out.println("test");
+			
+			JsonArray allBusesArray = allBuses.getAsJsonObject().get("Siri").getAsJsonObject().get("ServiceDelivery")
+					.getAsJsonObject().get("VehicleMonitoringDelivery").getAsJsonArray().get(0).getAsJsonObject()
+					.get("VehicleActivity").getAsJsonArray();
+			
 			for (int i = 0; i < allBusesArray.size(); i++) {
 				busses.add(new BusInfo(allBusesArray.get(i).getAsJsonObject()));
 			}
@@ -47,11 +50,5 @@ public class BusInfoListStaticFactory {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
-	
-	public static List<BusInfo> getAllBuses() {
-		System.out.println("test2");
-		updateList();
-		return busses;
 	}
 }

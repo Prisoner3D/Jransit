@@ -36,61 +36,62 @@ import static com.google.protobuf.ExtensionRegistryLite.EMPTY_REGISTRY_LITE;
  * A factory object to create instances of {@link ExtensionRegistryLite}.
  *
  * <p>
- * This factory detects (via reflection) if the full (non-Lite) protocol buffer libraries
- * are available, and if so, the instances returned are actually {@link ExtensionRegistry}.
+ * This factory detects (via reflection) if the full (non-Lite) protocol buffer
+ * libraries are available, and if so, the instances returned are actually
+ * {@link ExtensionRegistry}.
  */
 final class ExtensionRegistryFactory {
 
-  static final String FULL_REGISTRY_CLASS_NAME = "com.google.protobuf.ExtensionRegistry";
+	static final String FULL_REGISTRY_CLASS_NAME = "com.google.protobuf.ExtensionRegistry";
 
-  /* Visible for Testing
-     @Nullable */
-  static final Class<?> EXTENSION_REGISTRY_CLASS = reflectExtensionRegistry();
+	/*
+	 * Visible for Testing
+	 * 
+	 * @Nullable
+	 */
+	static final Class<?> EXTENSION_REGISTRY_CLASS = reflectExtensionRegistry();
 
-  /* @Nullable */
-  static Class<?> reflectExtensionRegistry() {
-    try {
-      return Class.forName(FULL_REGISTRY_CLASS_NAME);
-    } catch (ClassNotFoundException e) {
-      // The exception allocation is potentially expensive on Android (where it can be triggered
-      // many times at start up). Is there a way to ameliorate this?
-      return null;
-    }
-  }
+	/** Construct a new, empty instance. */
+	public static ExtensionRegistryLite create() {
+		if (EXTENSION_REGISTRY_CLASS != null) {
+			try {
+				return invokeSubclassFactory("newInstance");
+			} catch (Exception e) {
+				// return a Lite registry.
+			}
+		}
+		return new ExtensionRegistryLite();
+	}
 
-  /** Construct a new, empty instance. */
-  public static ExtensionRegistryLite create() {
-    if (EXTENSION_REGISTRY_CLASS != null) {
-      try {
-        return invokeSubclassFactory("newInstance");
-      } catch (Exception e) {
-        // return a Lite registry.
-      }
-    }
-    return new ExtensionRegistryLite();
-  }
+	/** Get the unmodifiable singleton empty instance. */
+	public static ExtensionRegistryLite createEmpty() {
+		if (EXTENSION_REGISTRY_CLASS != null) {
+			try {
+				return invokeSubclassFactory("getEmptyRegistry");
+			} catch (Exception e) {
+				// return a Lite registry.
+			}
+		}
+		return EMPTY_REGISTRY_LITE;
+	}
 
-  /** Get the unmodifiable singleton empty instance. */
-  public static ExtensionRegistryLite createEmpty() {
-    if (EXTENSION_REGISTRY_CLASS != null) {
-      try {
-        return invokeSubclassFactory("getEmptyRegistry");
-      } catch (Exception e) {
-        // return a Lite registry.
-      }
-    }
-    return EMPTY_REGISTRY_LITE;
-  }
+	private static final ExtensionRegistryLite invokeSubclassFactory(String methodName) throws Exception {
+		return (ExtensionRegistryLite) EXTENSION_REGISTRY_CLASS.getDeclaredMethod(methodName).invoke(null);
+	}
 
+	static boolean isFullRegistry(ExtensionRegistryLite registry) {
+		return EXTENSION_REGISTRY_CLASS != null && EXTENSION_REGISTRY_CLASS.isAssignableFrom(registry.getClass());
+	}
 
-  static boolean isFullRegistry(ExtensionRegistryLite registry) {
-    return EXTENSION_REGISTRY_CLASS != null
-        && EXTENSION_REGISTRY_CLASS.isAssignableFrom(registry.getClass());
-  }
-
-  private static final ExtensionRegistryLite invokeSubclassFactory(String methodName)
-      throws Exception {
-    return (ExtensionRegistryLite) EXTENSION_REGISTRY_CLASS
-        .getDeclaredMethod(methodName).invoke(null);
-  }
+	/* @Nullable */
+	static Class<?> reflectExtensionRegistry() {
+		try {
+			return Class.forName(FULL_REGISTRY_CLASS_NAME);
+		} catch (ClassNotFoundException e) {
+			// The exception allocation is potentially expensive on Android (where it can be
+			// triggered
+			// many times at start up). Is there a way to ameliorate this?
+			return null;
+		}
+	}
 }

@@ -48,244 +48,245 @@ import java.util.List;
  * A {@link ByteString} that wraps around a {@link ByteBuffer}.
  */
 final class NioByteString extends ByteString.LeafByteString {
-  private final ByteBuffer buffer;
+	private final ByteBuffer buffer;
 
-  NioByteString(ByteBuffer buffer) {
-    checkNotNull(buffer, "buffer");
+	NioByteString(ByteBuffer buffer) {
+		checkNotNull(buffer, "buffer");
 
-    // Use native byte order for fast fixed32/64 operations.
-    this.buffer = buffer.slice().order(ByteOrder.nativeOrder());
-  }
+		// Use native byte order for fast fixed32/64 operations.
+		this.buffer = buffer.slice().order(ByteOrder.nativeOrder());
+	}
 
-  // =================================================================
-  // Serializable
+	// =================================================================
+	// Serializable
 
-  /**
-   * Magic method that lets us override serialization behavior.
-   */
-  private Object writeReplace() {
-    return ByteString.copyFrom(buffer.slice());
-  }
+	@Override
+	public ByteBuffer asReadOnlyByteBuffer() {
+		return buffer.asReadOnlyBuffer();
+	}
 
-  /**
-   * Magic method that lets us override deserialization behavior.
-   */
-  private void readObject(@SuppressWarnings("unused") ObjectInputStream in) throws IOException {
-    throw new InvalidObjectException("NioByteString instances are not to be serialized directly");
-  }
+	@Override
+	public List<ByteBuffer> asReadOnlyByteBufferList() {
+		return Collections.singletonList(asReadOnlyByteBuffer());
+	}
 
-  // =================================================================
+	// =================================================================
 
-  @Override
-  public byte byteAt(int index) {
-    try {
-      return buffer.get(index);
-    } catch (ArrayIndexOutOfBoundsException e) {
-      throw e;
-    } catch (IndexOutOfBoundsException e) {
-      throw new ArrayIndexOutOfBoundsException(e.getMessage());
-    }
-  }
+	@Override
+	public byte byteAt(int index) {
+		try {
+			return buffer.get(index);
+		} catch (ArrayIndexOutOfBoundsException e) {
+			throw e;
+		} catch (IndexOutOfBoundsException e) {
+			throw new ArrayIndexOutOfBoundsException(e.getMessage());
+		}
+	}
 
-  @Override
-  public int size() {
-    return buffer.remaining();
-  }
+	@Override
+	public void copyTo(ByteBuffer target) {
+		target.put(buffer.slice());
+	}
 
-  @Override
-  public ByteString substring(int beginIndex, int endIndex) {
-    try {
-      ByteBuffer slice = slice(beginIndex, endIndex);
-      return new NioByteString(slice);
-    } catch (ArrayIndexOutOfBoundsException e) {
-      throw e;
-    } catch (IndexOutOfBoundsException e) {
-      throw new ArrayIndexOutOfBoundsException(e.getMessage());
-    }
-  }
+	@Override
+	protected void copyToInternal(byte[] target, int sourceOffset, int targetOffset, int numberToCopy) {
+		ByteBuffer slice = buffer.slice();
+		slice.position(sourceOffset);
+		slice.get(target, targetOffset, numberToCopy);
+	}
 
-  @Override
-  protected void copyToInternal(
-      byte[] target, int sourceOffset, int targetOffset, int numberToCopy) {
-    ByteBuffer slice = buffer.slice();
-    slice.position(sourceOffset);
-    slice.get(target, targetOffset, numberToCopy);
-  }
+	@Override
+	public boolean equals(Object other) {
+		if (other == this) {
+			return true;
+		}
+		if (!(other instanceof ByteString)) {
+			return false;
+		}
+		ByteString otherString = ((ByteString) other);
+		if (size() != otherString.size()) {
+			return false;
+		}
+		if (size() == 0) {
+			return true;
+		}
+		if (other instanceof NioByteString) {
+			return buffer.equals(((NioByteString) other).buffer);
+		}
+		if (other instanceof RopeByteString) {
+			return other.equals(this);
+		}
+		return buffer.equals(otherString.asReadOnlyByteBuffer());
+	}
 
-  @Override
-  public void copyTo(ByteBuffer target) {
-    target.put(buffer.slice());
-  }
+	@Override
+	boolean equalsRange(ByteString other, int offset, int length) {
+		return substring(0, length).equals(other.substring(offset, offset + length));
+	}
 
-  @Override
-  public void writeTo(OutputStream out) throws IOException {
-    out.write(toByteArray());
-  }
+	@Override
+	public boolean isValidUtf8() {
+		return Utf8.isValidUtf8(buffer);
+	}
 
-  @Override
-  boolean equalsRange(ByteString other, int offset, int length) {
-    return substring(0, length).equals(other.substring(offset, offset + length));
-  }
+	@Override
+	public CodedInputStream newCodedInput() {
+		return CodedInputStream.newInstance(buffer, true);
+	}
 
-  @Override
-  void writeToInternal(OutputStream out, int sourceOffset, int numberToWrite) throws IOException {
-    if (buffer.hasArray()) {
-      // Optimized write for array-backed buffers.
-      // Note that we're taking the risk that a malicious OutputStream could modify the array.
-      int bufferOffset = buffer.arrayOffset() + buffer.position() + sourceOffset;
-      out.write(buffer.array(), bufferOffset, numberToWrite);
-      return;
-    }
+	@Override
+	public InputStream newInput() {
+		return new InputStream() {
+			private final ByteBuffer buf = buffer.slice();
 
-    ByteBufferWriter.write(slice(sourceOffset, sourceOffset + numberToWrite), out);
-  }
+			@Override
+			public int available() throws IOException {
+				return buf.remaining();
+			}
 
-  @Override
-  void writeTo(ByteOutput output) throws IOException {
-    output.writeLazy(buffer.slice());
-  }
+			@Override
+			public void mark(int readlimit) {
+				buf.mark();
+			}
 
-  @Override
-  public ByteBuffer asReadOnlyByteBuffer() {
-    return buffer.asReadOnlyBuffer();
-  }
+			@Override
+			public boolean markSupported() {
+				return true;
+			}
 
-  @Override
-  public List<ByteBuffer> asReadOnlyByteBufferList() {
-    return Collections.singletonList(asReadOnlyByteBuffer());
-  }
+			@Override
+			public int read() throws IOException {
+				if (!buf.hasRemaining()) {
+					return -1;
+				}
+				return buf.get() & 0xFF;
+			}
 
-  @Override
-  protected String toStringInternal(Charset charset) {
-    final byte[] bytes;
-    final int offset;
-    final int length;
-    if (buffer.hasArray()) {
-      bytes = buffer.array();
-      offset = buffer.arrayOffset() + buffer.position();
-      length = buffer.remaining();
-    } else {
-      // TODO(nathanmittler): Can we optimize this?
-      bytes = toByteArray();
-      offset = 0;
-      length = bytes.length;
-    }
-    return new String(bytes, offset, length, charset);
-  }
+			@Override
+			public int read(byte[] bytes, int off, int len) throws IOException {
+				if (!buf.hasRemaining()) {
+					return -1;
+				}
 
-  @Override
-  public boolean isValidUtf8() {
-    return Utf8.isValidUtf8(buffer);
-  }
+				len = Math.min(len, buf.remaining());
+				buf.get(bytes, off, len);
+				return len;
+			}
 
-  @Override
-  protected int partialIsValidUtf8(int state, int offset, int length) {
-    return Utf8.partialIsValidUtf8(state, buffer, offset, offset + length);
-  }
+			@Override
+			public void reset() throws IOException {
+				try {
+					buf.reset();
+				} catch (InvalidMarkException e) {
+					throw new IOException(e);
+				}
+			}
+		};
+	}
 
-  @Override
-  public boolean equals(Object other) {
-    if (other == this) {
-      return true;
-    }
-    if (!(other instanceof ByteString)) {
-      return false;
-    }
-    ByteString otherString = ((ByteString) other);
-    if (size() != otherString.size()) {
-      return false;
-    }
-    if (size() == 0) {
-      return true;
-    }
-    if (other instanceof NioByteString) {
-      return buffer.equals(((NioByteString) other).buffer);
-    }
-    if (other instanceof RopeByteString) {
-      return other.equals(this);
-    }
-    return buffer.equals(otherString.asReadOnlyByteBuffer());
-  }
+	@Override
+	protected int partialHash(int h, int offset, int length) {
+		for (int i = offset; i < offset + length; i++) {
+			h = h * 31 + buffer.get(i);
+		}
+		return h;
+	}
 
-  @Override
-  protected int partialHash(int h, int offset, int length) {
-    for (int i = offset; i < offset + length; i++) {
-      h = h * 31 + buffer.get(i);
-    }
-    return h;
-  }
+	@Override
+	protected int partialIsValidUtf8(int state, int offset, int length) {
+		return Utf8.partialIsValidUtf8(state, buffer, offset, offset + length);
+	}
 
-  @Override
-  public InputStream newInput() {
-    return new InputStream() {
-      private final ByteBuffer buf = buffer.slice();
+	/**
+	 * Magic method that lets us override deserialization behavior.
+	 */
+	private void readObject(@SuppressWarnings("unused") ObjectInputStream in) throws IOException {
+		throw new InvalidObjectException("NioByteString instances are not to be serialized directly");
+	}
 
-      @Override
-      public void mark(int readlimit) {
-        buf.mark();
-      }
+	@Override
+	public int size() {
+		return buffer.remaining();
+	}
 
-      @Override
-      public boolean markSupported() {
-        return true;
-      }
+	/**
+	 * Creates a slice of a range of this buffer.
+	 *
+	 * @param beginIndex
+	 *            the beginning index of the slice (inclusive).
+	 * @param endIndex
+	 *            the end index of the slice (exclusive).
+	 * @return the requested slice.
+	 */
+	private ByteBuffer slice(int beginIndex, int endIndex) {
+		if (beginIndex < buffer.position() || endIndex > buffer.limit() || beginIndex > endIndex) {
+			throw new IllegalArgumentException(String.format("Invalid indices [%d, %d]", beginIndex, endIndex));
+		}
 
-      @Override
-      public void reset() throws IOException {
-        try {
-          buf.reset();
-        } catch (InvalidMarkException e) {
-          throw new IOException(e);
-        }
-      }
+		ByteBuffer slice = buffer.slice();
+		slice.position(beginIndex - buffer.position());
+		slice.limit(endIndex - buffer.position());
+		return slice;
+	}
 
-      @Override
-      public int available() throws IOException {
-        return buf.remaining();
-      }
+	@Override
+	public ByteString substring(int beginIndex, int endIndex) {
+		try {
+			ByteBuffer slice = slice(beginIndex, endIndex);
+			return new NioByteString(slice);
+		} catch (ArrayIndexOutOfBoundsException e) {
+			throw e;
+		} catch (IndexOutOfBoundsException e) {
+			throw new ArrayIndexOutOfBoundsException(e.getMessage());
+		}
+	}
 
-      @Override
-      public int read() throws IOException {
-        if (!buf.hasRemaining()) {
-          return -1;
-        }
-        return buf.get() & 0xFF;
-      }
+	@Override
+	protected String toStringInternal(Charset charset) {
+		final byte[] bytes;
+		final int offset;
+		final int length;
+		if (buffer.hasArray()) {
+			bytes = buffer.array();
+			offset = buffer.arrayOffset() + buffer.position();
+			length = buffer.remaining();
+		} else {
+			// TODO(nathanmittler): Can we optimize this?
+			bytes = toByteArray();
+			offset = 0;
+			length = bytes.length;
+		}
+		return new String(bytes, offset, length, charset);
+	}
 
-      @Override
-      public int read(byte[] bytes, int off, int len) throws IOException {
-        if (!buf.hasRemaining()) {
-          return -1;
-        }
+	/**
+	 * Magic method that lets us override serialization behavior.
+	 */
+	private Object writeReplace() {
+		return ByteString.copyFrom(buffer.slice());
+	}
 
-        len = Math.min(len, buf.remaining());
-        buf.get(bytes, off, len);
-        return len;
-      }
-    };
-  }
+	@Override
+	void writeTo(ByteOutput output) throws IOException {
+		output.writeLazy(buffer.slice());
+	}
 
-  @Override
-  public CodedInputStream newCodedInput() {
-    return CodedInputStream.newInstance(buffer, true);
-  }
+	@Override
+	public void writeTo(OutputStream out) throws IOException {
+		out.write(toByteArray());
+	}
 
-  /**
-   * Creates a slice of a range of this buffer.
-   *
-   * @param beginIndex the beginning index of the slice (inclusive).
-   * @param endIndex the end index of the slice (exclusive).
-   * @return the requested slice.
-   */
-  private ByteBuffer slice(int beginIndex, int endIndex) {
-    if (beginIndex < buffer.position() || endIndex > buffer.limit() || beginIndex > endIndex) {
-      throw new IllegalArgumentException(
-          String.format("Invalid indices [%d, %d]", beginIndex, endIndex));
-    }
+	@Override
+	void writeToInternal(OutputStream out, int sourceOffset, int numberToWrite) throws IOException {
+		if (buffer.hasArray()) {
+			// Optimized write for array-backed buffers.
+			// Note that we're taking the risk that a malicious OutputStream could modify
+			// the array.
+			int bufferOffset = buffer.arrayOffset() + buffer.position() + sourceOffset;
+			out.write(buffer.array(), bufferOffset, numberToWrite);
+			return;
+		}
 
-    ByteBuffer slice = buffer.slice();
-    slice.position(beginIndex - buffer.position());
-    slice.limit(endIndex - buffer.position());
-    return slice;
-  }
+		ByteBufferWriter.write(slice(sourceOffset, sourceOffset + numberToWrite), out);
+	}
 }
