@@ -14,19 +14,35 @@ public class Bus
 {
 	private Marker marker;
 	private Map map;
-	private BusInfo busLoc;
-	public Bus(Map map, BusInfo latLon)
+	private BusInfo info;
+	public Bus(Icon i, Map map, BusInfo info, boolean place)
 	{
-		 this.marker = new Marker(map);
-         Icon icon = new Icon();
-         File ccu = new File(getClass().getResource("bus-icon.png").getFile());
-         icon.loadFromFile(ccu);
-         marker.setIcon(icon);
-         this.marker.setPosition(new LatLng(Double.valueOf(latLon.getLat()), Double.valueOf(latLon.getLng())));
+		System.out.println("Bus created");
+		this.info = info;
+		this.map = map;
+		this.marker = new Marker(map);
+        marker.setIcon(i);
+		if (place) {
+         this.marker.setPosition(new LatLng(Double.valueOf(info.getLat()), Double.valueOf(info.getLng())));
+		}
 	}
 	
 	public void updatePosition()
 	{
-		this.marker.setPosition(new LatLng(Double.valueOf(this.busLoc.getLat()), Double.valueOf(this.busLoc.getLng())));
+		this.marker.setPosition(new LatLng(Double.valueOf(this.info.getLat()), Double.valueOf(this.info.getLng())));
 	}
+
+	public Marker getMarker() {
+		return marker;
+	}
+
+	public Map getMap() {
+		return map;
+	}
+
+	public BusInfo getInfo() {
+		return info;
+	}
+	
+	
 }

@@ -7,7 +7,7 @@ import java.util.List;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 
-import bus_api.BusTimeAPI;
+import api.BusTimeAPI;
 import bus_api.BusTimeVehicleMonitoring;
 
 public class BusInfoListStaticFactory {
@@ -21,7 +21,9 @@ public class BusInfoListStaticFactory {
 	private static void updateList() {
 		busses.clear();
 		try {
+			System.out.println("test");
 			JsonElement allBuses = btvm.callApi();
+			System.out.println("test");
 			JsonArray allBusesArray = allBuses.getAsJsonObject().get("Siri")
 										.getAsJsonObject().get("ServiceDelivery")
 										.getAsJsonObject().get("VehicleMonitoringDelivery")
@@ -29,6 +31,7 @@ public class BusInfoListStaticFactory {
 										.getAsJsonObject()
 										.get("VehicleActivity")
 										.getAsJsonArray();
+			System.out.println("test");
 			for (int i = 0; i < allBusesArray.size(); i++) {
 				busses.add(new BusInfo(allBusesArray.get(i).getAsJsonObject()));
 			}
@@ -39,6 +42,7 @@ public class BusInfoListStaticFactory {
 	}
 	
 	public static List<BusInfo> getAllBuses() {
+		System.out.println("test2");
 		updateList();
 		return busses;
 	}

@@ -1,7 +1,6 @@
 package UserInterface;
 	
 import java.io.File;
-import java.util.List;
 
 import com.teamdev.jxmaps.ControlPosition;
 import com.teamdev.jxmaps.Icon;
@@ -15,20 +14,21 @@ import com.teamdev.jxmaps.MapStatus;
 import com.teamdev.jxmaps.MapTypeControlOptions;
 import com.teamdev.jxmaps.Marker;
 import com.teamdev.jxmaps.MouseEvent;
+import com.teamdev.jxmaps.Size;
 import com.teamdev.jxmaps.javafx.MapView;
 
-import csv.Stop;
-import csv.StopsStaticFactory;
+import api.BusThread;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import mapObjects.BusFactory;
+import mapObjects.TimelineSlider;
 
 public class JavaFXExample extends Application {
-    final static MapView mapView = new MapView();
-    final static Stage primaryStage = new Stage();
+    private final static MapView mapView = new MapView();
+    public final static Stage primaryStage = new Stage();
+    private static BusThread busThread;
+    public static TimelineSlider slider;
     TimelineReader readTime;
 	//CSVUtilities csv = new CSVUtilities(new File("Jransit\\stops.txt"));
     
@@ -66,12 +66,15 @@ public class JavaFXExample extends Application {
                     map.setOptions(options);
                     Marker marker = new Marker(map);
                     Icon icon = new Icon();
-                    File ccu = new File(getClass().getResource("1.png").getFile());
+                    File ccu = new File(getClass().getResource("bus-icon.png").getFile());
                     icon.loadFromFile(ccu);
+                    icon.setScaledSize(new Size(24, 24));
                     marker.setIcon(icon);
                     // 40.650002, and the longitude is -73.949997.
+
                  /*   List<Stop> stops = StopsStaticFactory.getAllStops();
                     for (Stop stop : stops) {
+>>>>>>> branch 'master' of https://github.com/Prisoner3D/Jransit.git
                     	Marker markerlol = new Marker(map); 
                     	markerlol.setPosition(new LatLng(Double.valueOf(stop.getLatitude()), Double.valueOf(stop.getLongitude())));
                     	markerlol.setIcon(icon);
@@ -82,7 +85,7 @@ public class JavaFXExample extends Application {
                     // Showing info windows under the marker
                     infoWindow.open(map, marker);
                     // Adding event listener that intercepts clicking on map
-                    (new BusFactory()).placeBusses(map);
+                  
                     map.addEventListener("click", new MapMouseEvent() {
                         @Override
                         public void onEvent(MouseEvent mouseEvent) {
@@ -104,25 +107,28 @@ public class JavaFXExample extends Application {
                             });
                         }
                     });
+                    busThread = new BusThread(map, icon);
+                    busThread.start();
                 }
             }
         });
-        StackPane root = new StackPane();
+        BorderPane root = new BorderPane();
         BorderPane map = new BorderPane(mapView);
         map.setMaxSize(750,750);
-        StackPane slider = new StackPane();
-        slider.setMinWidth(500);
-       // JFXSlider time = new JFXSlider();
-		//TimeSlider history = new TimeSlider(time, 0, 3600, slider);
-    /*	readTime = new TimelineReader(csv,history);
-    	readTime.updateMap();*/
-        root.getChildren().addAll(slider,map);
+        
+        slider = new TimelineSlider();
+        
+        root.setCenter(map);
+        root.setBottom(slider.getSlider());
         Scene scene = new Scene(root,1000,1000);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
 
-
+    @Override
+    public void stop(){
+    	busThread.clearFile();
+    }
     public static void main(String[] args) {
         launch(args);
     }
