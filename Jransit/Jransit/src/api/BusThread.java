@@ -24,7 +24,6 @@ public class BusThread extends Thread {
 		 this.icon = icon;
 		 this.busFac = (new BusFactory());
 		 String basePath = (new File("").getAbsolutePath());
-		 System.out.println(basePath);
 		 File file = new File(basePath + "\\Jransit\\src\\csv\\bus history.txt");
 		 System.out.println("Testt");
 		 this.histRec = new HistoryRecorder(new CSVUtilities(file, "|"));

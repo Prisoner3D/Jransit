@@ -1,27 +1,37 @@
 package mapObjects;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 
 import com.teamdev.jxmaps.Icon;
 import com.teamdev.jxmaps.LatLng;
 import com.teamdev.jxmaps.Map;
 import com.teamdev.jxmaps.Marker;
+import com.teamdev.jxmaps.Size;
 
 import info.BusInfo;
-import javafx.scene.image.Image;
 
 public class Bus
 {
 	private Marker marker;
 	private Map map;
 	private BusInfo info;
-	public Bus(Icon i, Map map, BusInfo info, boolean place)
+	public Bus(Map map, BusInfo info, boolean place)
 	{
-		System.out.println("Bus created");
 		this.info = info;
 		this.map = map;
 		this.marker = new Marker(map);
-        marker.setIcon(i);
+		String basePath = (new File("").getAbsolutePath());
+		File file = new File(basePath + "\\busIcons\\" + info.getLineName() + ".png");
+		Icon ico = new Icon();
+		if (file.exists()) {
+			ico.loadFromFile(file);
+		} else {
+			file = new File(basePath + "\\busIcons\\bus.png");
+			ico.loadFromFile(file);
+		}
+		ico.setScaledSize(new Size(24, 24));
+        marker.setIcon(ico);
 		if (place) {
          this.marker.setPosition(new LatLng(Double.valueOf(info.getLat()), Double.valueOf(info.getLng())));
 		}

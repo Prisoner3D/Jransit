@@ -1,5 +1,6 @@
 package info;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 public class BusInfo {
@@ -15,8 +16,11 @@ public class BusInfo {
 		.getAsJsonObject();
 		JsonObject location = data.get("VehicleLocation")
 		.getAsJsonObject();
+		JsonElement lineName = data.get("PublishedLineName");
+		
 		lon = location.get("Longitude").getAsDouble();
 		lat = location.get("Latitude").getAsDouble();
+		this.lineName = lineName.getAsString();
 	}
 	public double getLat() {
 		return lat;
@@ -27,6 +31,10 @@ public class BusInfo {
 	public JsonObject getBusJson() {
 		return busJson;
 	}
+	public String getLineName() {
+		return lineName;
+	}
+	
 	
 	
 	

@@ -21,7 +21,7 @@ public class BusFactory {
 		JsonParser parser = new JsonParser();
 		for (String s : busData) {
 			JsonObject o = parser.parse(s).getAsJsonObject();
-			this.busses.add(new Bus(JavaFXExample.busImage, JavaFXExample.mapView.getMap(), new BusInfo(o), true));
+			this.busses.add(new Bus(JavaFXExample.mapView.getMap(), new BusInfo(o), true));
 		}
 	}
 	
@@ -30,7 +30,7 @@ public class BusFactory {
 		List<BusInfo> busses = BusInfoListStaticFactory.getAllBuses();
 		this.removeBusses();
 		for (int i = 0; i < busses.size(); i++) {
-			this.busses.add(new Bus(ico, m, busses.get(i), place));
+			this.busses.add(new Bus(m, busses.get(i), place));
 		}
 		return new ArrayList<>(this.busses);
 	}
