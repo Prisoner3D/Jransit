@@ -7,11 +7,21 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import util.MappingFunctions;
 
+/**
+ * Representation of train stations
+ * @author 
+ *
+ */
 public class Station extends Pane implements MapObject {
 	private StationInfo info;
 	private double x;
 	private double y;
 	private Image icon;
+	
+	/**
+	 * Station Constructor
+	 * @param info station information
+	 */
 	public Station(StationInfo info) {
 		super();
 		this.info = info;

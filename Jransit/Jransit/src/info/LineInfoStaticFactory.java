@@ -14,6 +14,11 @@ import api.TrainFeed;
 
 import java.util.TreeMap;
 
+/**
+ * Contains train information that stays the same
+ * @author 
+ *
+ */
 public class LineInfoStaticFactory {
     private static final String LINES = "123456SACENQRWBDFMLGJZ";
     private static final String sNUM_S = "123456S";

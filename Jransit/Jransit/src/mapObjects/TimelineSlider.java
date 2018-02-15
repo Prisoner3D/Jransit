@@ -7,6 +7,11 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.Slider;
 
+/**
+ * Slider that can be used to view history of buses on the map 
+ * @author 
+ *
+ */
 public class TimelineSlider {
 	private Slider slider;
 	private double start;
@@ -15,6 +20,9 @@ public class TimelineSlider {
 	private int numOfTicks = 0;
 	private int currentTick = 1;
 	
+	/**
+	 * Create a slider that displays buses on the map over time
+	 */
 	public TimelineSlider() {
 		this.start = this.end = this.majorTickUnit = 1; //TODO  this  better not be by reference
 		slider = new Slider(start, end, end);
@@ -56,7 +64,7 @@ public class TimelineSlider {
 	public int getNumOfTicks() {
 		return numOfTicks;
 	}
-
+	
 	public void addTick() {
 		if (numOfTicks > 3) {
 			this.slider.setDisable(false);

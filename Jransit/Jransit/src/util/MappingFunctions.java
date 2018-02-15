@@ -2,7 +2,20 @@ package util;
 
 import info.Location;
 
+/**
+ * Functions to manipulate displayed map information
+ * @author 
+ *
+ */
 public class MappingFunctions {
+	
+	/**
+	 * Used to calculate distance through triangles. 
+	 * @param current current location
+	 * @param upperLeft the x-component distance to the current location
+	 * @param lowerRight the y-component distance to the current location
+	 * @return location of X and Y coordinate
+	 */
 	public static double[] mapCoordinatesToPixels(Location current, Location upperLeft, Location lowerRight) {
 		double hypotenuse = upperLeft.distanceTo(current);
 		System.out.println(hypotenuse);

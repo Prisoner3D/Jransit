@@ -6,7 +6,24 @@ import csv.Stop;
 import csv.StopDb;
 import info.Location;
 
+/**
+ * Utilities to manage train displays on the map.
+ * @author 
+ *
+ */
+
 public class TrainMapsUtil {
+	
+	/**
+	 * Calculates position of train between two points
+	 * @param lat latitude of location
+	 * @param lon longitude of location
+	 * @param time current time 
+	 * @param lat2 latitude of destination
+	 * @param lon2 longitude of destination
+	 * @param vel velocity of train
+	 * @return the train's position relative to a destination and location
+	 */
 	// THE TIME IN VELOCITY AND TIME FIELD MUST BE MATCHING UNITS
 	public static Double[] getTrainPosition(Double lat, Double lon, Double time, Double lat2, Double lon2, Double vel) {
 	//	Double distanceX = lat * longt * Math.sqrt(Time); 
@@ -36,6 +53,17 @@ public class TrainMapsUtil {
 		
 		
 	}
+	
+	/**
+	 * Calculates position of train between two points
+	 * @param lat latitude of location
+	 * @param lon longitude of location
+	 * @param time current time 
+	 * @param lat2 latitude of destination
+	 * @param lon2 longitude of destination
+	 * @param vel velocity of train
+	 * @return the train's position relative to a destination and location
+	 */
 	
 	// TODO: Confirm whether or not the order of current vs next is right
 	// vel in mph

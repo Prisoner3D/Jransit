@@ -1,5 +1,10 @@
 package info;
 
+/**
+ * Useful information of an object's location
+ * @author
+ *
+ */
 public class Location {
     private final double longitude;
     private final double latitude;

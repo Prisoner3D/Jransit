@@ -3,6 +3,11 @@ package info;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+/**
+ * Information about buses. (position, line, route destination)
+ * @author 
+ *
+ */
 public class BusInfo {
 	private double lat;
 	private double lon;
@@ -10,6 +15,11 @@ public class BusInfo {
 	private String destinationName;
 	private JsonObject busJson;
 	// expected arrival time
+	
+	/**
+	 * Converts data from JsonObject into usable fields
+	 * @param b JsonObject with bus information
+	 */
 	public BusInfo(JsonObject b) {
 		this.busJson = b;
 		JsonObject data = b.get("MonitoredVehicleJourney")

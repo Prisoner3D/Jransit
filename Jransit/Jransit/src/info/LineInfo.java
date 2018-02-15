@@ -7,11 +7,23 @@ import api.MTAApi;
 import csv.Stop;
 import csv.StopsStaticFactory;
 
+/**
+ * Information about a train line
+ * @author
+ *
+ */
+
 public class LineInfo {
 	private String lineLetter;
 	private List<StationInfo> stations = new ArrayList<StationInfo>();
 	private int numberOfStations;
 
+	/**
+	 * Retrieves information about a train line 
+	 * @param api mtaapi
+	 * @param trainName name of train to retrieve data
+	 * @throws IOException
+	 */
 	public LineInfo(MTAApi api, String trainName) throws IOException {
 		this.lineLetter = trainName;
 		List<Stop> stationColumns = StopsStaticFactory.getAllStops();
