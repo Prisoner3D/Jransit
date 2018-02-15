@@ -10,6 +10,11 @@ import com.google.gson.JsonElement;
 import api.BusTimeAPI;
 import bus_api.BusTimeVehicleMonitoring;
 
+/**
+ * Contains bus information that stays the same
+ * @author 
+ *
+ */
 public class BusInfoListStaticFactory {
 	private static BusTimeVehicleMonitoring btvm;
 	private static List<BusInfo> busses = new ArrayList<>();
@@ -18,6 +23,9 @@ public class BusInfoListStaticFactory {
 		
 	}
 	
+	/**
+	 * Update the list of buses
+	 */
 	private static void updateList() {
 		busses.clear();
 		try {

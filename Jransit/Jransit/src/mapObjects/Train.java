@@ -8,11 +8,21 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import util.MappingFunctions;
 
+/**
+ * Representation of trains
+ * @author
+ *
+ */
 public class Train extends Pane implements MapObject {
 	private TrainInfo info;
 	private double x;
 	private double y;
 	private Image icon;
+	
+	/**
+	 * Train Constructor
+	 * @param info train information
+	 */
 	public Train(TrainInfo info) {
 		super();
 		this.info = info;

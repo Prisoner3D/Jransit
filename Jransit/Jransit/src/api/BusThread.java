@@ -13,6 +13,11 @@ import csv.HistoryRecorder;
 import mapObjects.Bus;
 import mapObjects.BusFactory;
 
+/**
+ * 
+ * @author 
+ *
+ */
 public class BusThread extends Thread {
 	private Map map;
 	private Icon icon;

@@ -14,11 +14,24 @@ import com.teamdev.jxmaps.Size;
 
 import info.BusInfo;
 
+/**
+ * Representation of buses
+ * @author
+ *
+ */
+
 public class Bus {
     private Marker marker;
     private Map map;
     private BusInfo info;
 
+	
+	/**
+	 * Bus Constructor
+	 * @param map the map the bus is on
+	 * @param info bus line information
+	 * @param place whether or not bus has been placed on map
+	 */
     public Bus(Map map, BusInfo info, boolean place) {
         this.info = info;
         this.map = map;
@@ -54,6 +67,9 @@ public class Bus {
         });
     }
 
+	/**
+	 * Update the marker position representing the bus
+	 */
     public void updatePosition() {
         this.marker.setPosition(new LatLng(Double.valueOf(this.info.getLat()), Double.valueOf(this.info.getLng())));
     }

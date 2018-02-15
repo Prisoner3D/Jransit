@@ -15,6 +15,11 @@ import util.TrainMapsUtil;
 import com.google.transit.realtime.GtfsRealtime.VehiclePosition;
 import com.google.transit.realtime.GtfsRealtime.VehiclePosition.VehicleStopStatus;
 
+/**
+ * Train information that changes. (position, station location, etc.)
+ * @author
+ *
+ */
 public class TrainInfo {
     private final MTAApi api;
     private final String id;

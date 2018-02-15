@@ -15,6 +15,11 @@ import info.Location;
 import info.StationInfo;
 import info.TrainInfo;
 
+/**
+ * Test MTA API 
+ * @author 
+ *
+ */
 public class Test {
 	public static void main(String[] args) throws IOException, InterruptedException {
 	    // For Alex: http://web.mta.info/developers/data/nyct/subway/Stations.csv
