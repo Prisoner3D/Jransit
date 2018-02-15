@@ -19,7 +19,10 @@ public class BusInfo {
         destinationName = data.get("DestinationName").toString();
         JsonObject location = data.get("VehicleLocation").getAsJsonObject();
         JsonElement lineName = data.get("PublishedLineName");
-        this.nextStop = data.get("MonitoredCall").getAsJsonObject().get("StopPointName").toString();
+        if (data.get("MonitoredCall") != null) {
+            this.nextStop = data.get("MonitoredCall").getAsJsonObject().get("StopPointName").toString();
+        }
+        
         lon = location.get("Longitude").getAsDouble();
         lat = location.get("Latitude").getAsDouble();
         this.lineName = lineName.getAsString();
