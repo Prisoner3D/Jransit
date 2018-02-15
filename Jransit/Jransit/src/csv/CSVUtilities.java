@@ -66,7 +66,7 @@ public class CSVUtilities {
 	public List<String> getDataString(int column) {
 		List<String> data = new ArrayList<String>();
 		for (int i = 0; i < CSVData.size(); i++) {
-			String[] row = CSVData.get(i).split(this.delimiter);
+			String[] row = CSVData.get(i).split("\\" + delimiter, 2);
 			data.add(row[column]);
 		}
 		return data;
@@ -122,7 +122,7 @@ public class CSVUtilities {
 	public List<String> getDataString(int column, int count) {
 		List<String> data = new ArrayList<String>();
 		for (int i = 0; i < count; i++) {
-			String[] row = CSVData.get(i).split(this.delimiter);
+			String[] row = CSVData.get(i).split("\\" + this.delimiter);
 			data.add(row[column]);
 		}
 		return data;

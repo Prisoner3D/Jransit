@@ -13,25 +13,36 @@ public class HistoryRecorder {
 	}
 	
 	public List<String> get(int numOfStatesBehind) {
-		List<String> times = csv.getDataString(1);
-		List<String> data = csv.getDataString(2);
-		int idx = 0;
+		System.out.println(numOfStatesBehind);
+		List<String> times = csv.getDataString(0);
+		List<String> data = csv.getDataString(1);
 		int state = 0;
 		String curVal = times.get(0);
 		boolean checkingForEnd = false;
 		int startIdxForState = 0;
 		int endIdxForState = 0;
-		for (int i = 1; i < times.size(); i++) {
-			if (!curVal.equals(times.get(i))) {
+		int idx = 1;
+		for (; idx < times.size(); idx++) {
+			if (!curVal.equals(times.get(idx))) {
+				curVal = times.get(idx);
 				state++;
 			}
+			if (numOfStatesBehind == 0 && state == 1) {
+				endIdxForState = idx;
+				break;
+			}
 			if (state > numOfStatesBehind) {
-				endIdxForState = i;
+				endIdxForState = idx;
+				break;
 			}
 			if (state == numOfStatesBehind && !checkingForEnd) {
-				startIdxForState = i;
+				startIdxForState = idx;
 				checkingForEnd = true;
 			}
+		}
+		// if the state wanted is the last one, swap beginning and end;
+		if (idx == times.size() - 1) {
+			endIdxForState = idx;
 		}
 		return data.subList(startIdxForState, endIdxForState + 1);
 	}

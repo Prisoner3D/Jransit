@@ -25,9 +25,10 @@ import javafx.stage.Stage;
 import mapObjects.TimelineSlider;
 
 public class JavaFXExample extends Application {
-    private final static MapView mapView = new MapView();
+    public final static MapView mapView = new MapView();
     public final static Stage primaryStage = new Stage();
-    private static BusThread busThread;
+    public static Icon busImage;
+    public static BusThread busThread;
     public static TimelineSlider slider;
     TimelineReader readTime;
 	//CSVUtilities csv = new CSVUtilities(new File("Jransit\\stops.txt"));
@@ -65,11 +66,11 @@ public class JavaFXExample extends Application {
                     // Setting map options
                     map.setOptions(options);
                     Marker marker = new Marker(map);
-                    Icon icon = new Icon();
+                    busImage = new Icon();
                     File ccu = new File(getClass().getResource("bus-icon.png").getFile());
-                    icon.loadFromFile(ccu);
-                    icon.setScaledSize(new Size(24, 24));
-                    marker.setIcon(icon);
+                    busImage.loadFromFile(ccu);
+                    busImage.setScaledSize(new Size(24, 24));
+                    marker.setIcon(busImage);
                     // 40.650002, and the longitude is -73.949997.
 
                  /*   List<Stop> stops = StopsStaticFactory.getAllStops();
@@ -107,7 +108,7 @@ public class JavaFXExample extends Application {
                             });
                         }
                     });
-                    busThread = new BusThread(map, icon);
+                    busThread = new BusThread(map, busImage);
                     busThread.start();
                 }
             }

@@ -1,6 +1,7 @@
 package api;
 
 import java.io.File;
+import java.util.List;
 
 import com.teamdev.jxmaps.Icon;
 import com.teamdev.jxmaps.Map;
@@ -8,6 +9,7 @@ import com.teamdev.jxmaps.Map;
 import UserInterface.JavaFXExample;
 import csv.CSVUtilities;
 import csv.HistoryRecorder;
+import mapObjects.Bus;
 import mapObjects.BusFactory;
 
 public class BusThread extends Thread {
@@ -15,6 +17,7 @@ public class BusThread extends Thread {
 	private Icon icon;
 	private BusFactory busFac;
 	private HistoryRecorder histRec;
+	private boolean firstRun = true;
 	public BusThread(Map map, Icon icon) {
 		System.out.println("thread started");
 		 this.map = map;
@@ -28,16 +31,33 @@ public class BusThread extends Thread {
 		 System.out.println("end of constructer");
 	}
 
+	public HistoryRecorder getHistRec() {
+		return histRec;
+	}
+
+	
+	public BusFactory getBusFac() {
+		return busFac;
+	}
+
 	@Override
 	public void run() {
 		while (true) {
-			JavaFXExample.slider.addTick();
-			double sliderState = JavaFXExample.slider.getSlider().getValue();
-			if (sliderState != 1) {
-				int numOfStatesBehind = JavaFXExample.slider.getNumOfTicks() - JavaFXExample.slider.getCurrentTick();
+			if (!firstRun) {
+				JavaFXExample.slider.addTick();
+				JavaFXExample.slider.addTick();
 			}
-			busFac.placeBusses(map, icon, true);
-			this.histRec.write(busFac.getBusses());
+			if (firstRun) {
+				firstRun = false;
+			}
+			//TODO: lock on run
+			double sliderState = JavaFXExample.slider.getSlider().getValue();
+			if (sliderState == 1) {
+				List<Bus> busses = busFac.placeBusses(map, icon, true);
+				this.histRec.write(busses);
+			}
+			
+			
 			try {
 				this.sleep(30000);
 			} catch (InterruptedException e) {
