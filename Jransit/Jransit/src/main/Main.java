@@ -2,18 +2,22 @@ package main;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Observable;
 import java.util.Observer;
 
 import UserInterface.MapsApp;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 /**
  * Main application class.
@@ -54,7 +58,6 @@ public class Main extends Application {
         Pane mainPane = (Pane) loader.load(new FileInputStream(file));
 
         MainController mainController = loader.getController();
-
         VistaNavigator.setMainController(mainController);
         VistaNavigator.loadVista(VistaNavigator.VISTA_1);
 
@@ -67,7 +70,18 @@ public class Main extends Application {
         stage.setHeight(800);
         stage.setWidth(800);
         stage.setScene(createScene(loadMainPane()));
-
         stage.show();
+    }
+    
+    @Override
+    public void stop() {
+        File file = new File(new File("").getAbsolutePath() + "\\Jransit\\src\\csv\\bus history.txt");
+        try {
+            new PrintWriter(file).close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        
+        System.exit(0);
     }
 }
