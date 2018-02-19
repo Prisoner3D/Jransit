@@ -13,39 +13,39 @@ import java.io.IOException;
  */
 public class VistaNavigator {
 
-	/**
-	 * Convenience constants for fxml layouts managed by the navigator.
-	 */
-	public static final String MAIN = "main.fxml";
-	public static final String VISTA_1 = "vista1.fxml";
-	public static final String VISTA_2 = "vista2.fxml";
+    /**
+     * Convenience constants for fxml layouts managed by the navigator.
+     */
+    public static final String MAIN = "main.fxml";
+    public static final String VISTA_1 = "vista1.fxml";
+    public static final String VISTA_2 = "vista2.fxml";
 
-	/** The main application layout controller. */
-	private static MainController mainController;
+    /** The main application layout controller. */
+    private static MainController mainController;
 
-	/**
-	 * Loads the vista specified by the fxml file into the vistaHolder pane of the
-	 * main application layout.
-	 * 
-	 * @param fxml
-	 *            the fxml file to be loaded.
-	 */
-	public static void loadVista(String fxml) {
-		try {
-			mainController.setVista(FXMLLoader.load(VistaNavigator.class.getResource(fxml)));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+    /**
+     * Loads the vista specified by the fxml file into the vistaHolder pane of the
+     * main application layout.
+     * 
+     * @param fxml
+     *            the fxml file to be loaded.
+     */
+    public static void loadVista(String fxml) {
+        try {
+            mainController.setVista(FXMLLoader.load(VistaNavigator.class.getResource(fxml)));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-	/**
-	 * Stores the main controller for later use in navigation tasks.
-	 *
-	 * @param mainController
-	 *            the main application layout controller.
-	 */
-	public static void setMainController(MainController mainController) {
-		VistaNavigator.mainController = mainController;
-	}
+    /**
+     * Stores the main controller for later use in navigation tasks.
+     *
+     * @param mainController
+     *            the main application layout controller.
+     */
+    public static void setMainController(MainController mainController) {
+        VistaNavigator.mainController = mainController;
+    }
 
 }

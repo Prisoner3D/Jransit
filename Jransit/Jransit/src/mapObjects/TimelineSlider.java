@@ -14,68 +14,67 @@ import javafx.scene.control.Slider;
  *
  */
 public class TimelineSlider {
-	private Slider slider;
-	private double start;
-	private double end;
-	private double majorTickUnit;
-	private int numOfTicks = 0;
-	private int currentTick = 1;
+    private Slider slider;
+    private double start;
+    private double end;
+    private double majorTickUnit;
+    private int numOfTicks = 0;
+    private int currentTick = 1;
 
-	/**
-	 * Create a slider that displays buses on the map over time
-	 */
-	public TimelineSlider() {
-		this.start = this.end = 0;
-		this.majorTickUnit = 1;
-		slider = new Slider(start, end, end);
-		slider.setShowTickMarks(true);
-		slider.setMinorTickCount(0);
-		slider.setMajorTickUnit(this.majorTickUnit);
-		slider.setBlockIncrement(this.majorTickUnit);
-		slider.setSnapToTicks(true);
-		slider.setShowTickLabels(true);
-		TimelineSlider self = this;
-		slider.valueProperty().addListener(new ChangeListener<Number>() {
-			@Override
-			public void changed(ObservableValue<? extends Number> observableValue, Number previous, Number now) {
-				if (!slider.isValueChanging() || now.doubleValue() == slider.getMax()
-						|| now.doubleValue() == slider.getMin()) {
-					int numOfStatesBehind = self.getNumOfTicks() - self.getCurrentTick();
-					List<String> busData = MapsApp.busThread.getHistRec().get(numOfStatesBehind);
-					
-					BusFactory busFac = MapsApp.busThread.getBusFac();
-					busFac.placeBusses(busData);
-				}
-			}
-		});
-	}
+    /**
+     * Create a slider that displays buses on the map over time
+     */
+    public TimelineSlider() {
+        this.start = this.end = 0;
+        this.majorTickUnit = 1;
+        slider = new Slider(start, end, end);
+        slider.setShowTickMarks(true);
+        slider.setMinorTickCount(0);
+        slider.setMajorTickUnit(this.majorTickUnit);
+        slider.setBlockIncrement(this.majorTickUnit);
+        slider.setSnapToTicks(true);
+        slider.setShowTickLabels(true);
+        TimelineSlider self = this;
+        slider.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observableValue, Number previous, Number now) {
+                if (!slider.isValueChanging() || now.doubleValue() == slider.getMax() || now.doubleValue() == slider.getMin()) {
+                    int numOfStatesBehind = self.getNumOfTicks() - self.getCurrentTick();
+                    List<String> busData = MapsApp.busThread.getHistRec().get(numOfStatesBehind);
 
-	public void addTick() {
-		if (numOfTicks > 3) {
-			this.slider.setDisable(false);
-		}
-		if (numOfTicks == 0) {
-			this.end = 1;
-			slider.setMax(this.end);
-			numOfTicks++;
-		} else {
-			numOfTicks++;
-			this.majorTickUnit = 1 / (double) numOfTicks;
-			slider.setMajorTickUnit(this.majorTickUnit);
-			slider.setBlockIncrement(this.majorTickUnit);
-		}
-	}
+                    BusFactory busFac = MapsApp.busThread.getBusFac();
+                    busFac.placeBusses(busData);
+                }
+            }
+        });
+    }
 
-	public int getCurrentTick() {
-		double val = this.getSlider().getValue();
-		return (int) (numOfTicks * val);
-	}
+    public void addTick() {
+        if (numOfTicks > 3) {
+            this.slider.setDisable(false);
+        }
+        if (numOfTicks == 0) {
+            this.end = 1;
+            slider.setMax(this.end);
+            numOfTicks++;
+        } else {
+            numOfTicks++;
+            this.majorTickUnit = 1 / (double) numOfTicks;
+            slider.setMajorTickUnit(this.majorTickUnit);
+            slider.setBlockIncrement(this.majorTickUnit);
+        }
+    }
 
-	public int getNumOfTicks() {
-		return numOfTicks;
-	}
+    public int getCurrentTick() {
+        double val = this.getSlider().getValue();
+        return (int) (numOfTicks * val);
+    }
 
-	public Slider getSlider() {
-		return slider;
-	}
+    public int getNumOfTicks() {
+        return numOfTicks;
+    }
+
+    public Slider getSlider() {
+        return slider;
+    }
 }

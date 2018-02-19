@@ -10,27 +10,27 @@ import java.util.Map;
  *
  */
 public class Entity {
-	private final String primaryKey;
-	private final Map<String, String> attributes;
+    private final String primaryKey;
+    private final Map<String, String> attributes;
 
-	public Entity(String primaryKey) {
-		this.primaryKey = primaryKey;
-		this.attributes = new HashMap<>();
-	}
+    public Entity(String primaryKey) {
+        this.primaryKey = primaryKey;
+        this.attributes = new HashMap<>();
+    }
 
-	public String getAttribute(String attribute) {
-		return this.attributes.get(attribute);
-	}
+    public String getAttribute(String attribute) {
+        return this.attributes.get(attribute);
+    }
 
-	public Map<String, String> getAttributes() {
-		return attributes;
-	}
+    public Map<String, String> getAttributes() {
+        return attributes;
+    }
 
-	public String getPrimaryKey() {
-		return primaryKey;
-	}
+    public String getPrimaryKey() {
+        return primaryKey;
+    }
 
-	public void setAttribute(String attribute, String value) {
-		this.attributes.put(attribute, value);
-	}
+    public void setAttribute(String attribute, String value) {
+        this.attributes.put(attribute, value);
+    }
 }

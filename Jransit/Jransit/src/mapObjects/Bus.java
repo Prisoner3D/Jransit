@@ -42,15 +42,15 @@ public class Bus {
 		this.marker = new Marker(map);
 
 		String basePath = (new File("").getAbsolutePath());
-		File file = new File(basePath + "\\busIcons\\" + info.getLineName() + ".png");
+		File file = new File(basePath + "\\icons\\bus\\" + info.getLineName() + ".png");
 		Icon ico = new Icon();
 		if (file.exists()) {
 			ico.loadFromFile(file);
 		} else {
-			file = new File(basePath + "\\busIcons\\bus.png");
+			file = new File(basePath + "\\icons\\bus\\bus.png");
 			ico.loadFromFile(file);
 		}
-		ico.setScaledSize(new Size(24, 24));
+		ico.setScaledSize(new Size(32, 32));
 		marker.setIcon(ico);
 		if (place) {
 			this.marker.setPosition(new LatLng(Double.valueOf(info.getLat()), Double.valueOf(info.getLng())));
