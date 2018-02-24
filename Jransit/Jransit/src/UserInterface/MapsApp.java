@@ -128,12 +128,16 @@ public class MapsApp extends Application {
 
 	@Override
 	public void start(final Stage primaryStage) {
+		primaryStage.setTitle("Maps App");
+		
+		// for Directions modulo
 		fromField = new JTextField("");
 		toField = new JTextField("");
 		// Setting of a ready handler to MapView object. onMapReady will be called when
 		// map initialization is done and
 		// the map object is ready to use. Current implementation of onMapReady
 		// customizes the map object.
+		
 		mapView.setOnMapReadyHandler(new MapReadyHandler() {
 			@Override
 			public void onMapReady(MapStatus status) {

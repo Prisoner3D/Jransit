@@ -34,6 +34,8 @@ public class TimelineSlider {
         slider.setMajorTickUnit(this.majorTickUnit);
         slider.setBlockIncrement(this.majorTickUnit);
         slider.setSnapToTicks(true);
+        slider.setStyle("-fx-control-inner-background: orange;"
+        				+ "-fx-tick-label-fill: black");
         TimelineSlider self = this;
         // On slider change
         slider.valueProperty().addListener(new ChangeListener<Number>() {
