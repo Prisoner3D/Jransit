@@ -10,12 +10,12 @@ import com.teamdev.jxmaps.Map;
 import UserInterface.MapsApp;
 import csv.CSVUtilities;
 import csv.HistoryRecorder;
+import main.Main;
 import mapObjects.Bus;
 import mapObjects.BusFactory;
 
 /**
- * 
- * @author
+ * A thread that places the busses, reads and writes the bus history.
  *
  */
 public class BusThread extends Thread {
@@ -48,28 +48,34 @@ public class BusThread extends Thread {
 
     @Override
     public void run() {
-        while (true) {
+        while (!Thread.currentThread().isInterrupted()) {
             // TODO: lock on run
             double sliderState = MapsApp.slider.getSlider().getValue();
+            MapsApp.slider.getSlider().setDisable(true);
+            List<Bus> busses;
             if (sliderState == 0) {
-                MapsApp.slider.getSlider().setDisable(true);
-                List<Bus> busses = busFac.placeBusses(map, true);
-                this.histRec.write(busses);
-                MapsApp.slider.getSlider().setDisable(false);
+            	busses = busFac.placeBusses(map, true);
             } else {
-                MapsApp.slider.getSlider().setDisable(true);
-                List<Bus> busses = busFac.placeBusses(map, false);
-                this.histRec.write(busses);
-                MapsApp.slider.getSlider().setDisable(false);
+                busses = busFac.placeBusses(map, false);
             }
+            this.histRec.write(busses);
+            MapsApp.slider.getSlider().setDisable(false);
 
             MapsApp.setTimer(new AtomicInteger(30));
-            try {
-                this.sleep(30000);
-            } catch (InterruptedException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+            synchronized(this) {
+            	try {
+					this.wait();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
             }
+            
+            /*try {
+                BusThread.sleep(30000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }*/
             MapsApp.slider.addTick();
         }
     }

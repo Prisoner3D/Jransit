@@ -1,6 +1,7 @@
 package mapObjects;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import UserInterface.MapsApp;
 import javafx.beans.value.ChangeListener;
@@ -33,22 +34,29 @@ public class TimelineSlider {
         slider.setMajorTickUnit(this.majorTickUnit);
         slider.setBlockIncrement(this.majorTickUnit);
         slider.setSnapToTicks(true);
-        slider.setShowTickLabels(true);
         TimelineSlider self = this;
+        // On slider change
         slider.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observableValue, Number previous, Number now) {
                 if (!slider.isValueChanging() || now.doubleValue() == slider.getMax() || now.doubleValue() == slider.getMin()) {
-                    int numOfStatesBehind = self.getNumOfTicks() - self.getCurrentTick();
+                    //pause
+                	MapsApp.timer.cancel();
+                	
+                	int numOfStatesBehind = self.getNumOfTicks() - self.getCurrentTick();
                     List<String> busData = MapsApp.busThread.getHistRec().get(numOfStatesBehind);
-
                     BusFactory busFac = MapsApp.busThread.getBusFac();
                     busFac.placeBusses(busData);
+                    
+                    //resume
+                    MapsApp.setTimer(new AtomicInteger(30));
                 }
             }
         });
     }
-
+    /**
+     * Adds a tick to the timeline slider based on some rules
+     */
     public void addTick() {
         if (numOfTicks > 3) {
             this.slider.setDisable(false);

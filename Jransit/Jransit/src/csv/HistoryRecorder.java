@@ -6,6 +6,10 @@ import java.util.List;
 
 import mapObjects.Bus;
 
+/**
+ * Reads and write time series data of busses
+ *
+ */
 public class HistoryRecorder {
     private CSVUtilities csv;
 
@@ -13,6 +17,11 @@ public class HistoryRecorder {
         this.csv = csv;
     }
 
+    /**
+     * Gets data from x states behind the livest state
+     * @param numOfStatesBehind
+     * @return bus data for one time series
+     */
     public List<String> get(int numOfStatesBehind) {
         List<String> times = csv.getDataString(0);
         List<String> data = csv.getDataString(1);
@@ -48,6 +57,9 @@ public class HistoryRecorder {
         return data.subList(startIdxForState, endIdxForState + 1);
     }
 
+    /**
+     * resets the content in the file
+     */
     public void resetFile() {
         PrintWriter pw = null;
         try {
@@ -58,10 +70,12 @@ public class HistoryRecorder {
         pw.close();
     }
 
+    /**
+     * Writes bus data into the file
+     * @param bus list of busses
+     */
     public void write(List<Bus> bus) {
         long time = System.currentTimeMillis();
-        for (Bus b : bus) {
-            csv.write(String.valueOf(time) + csv.getDelimiter() + b.getInfo().getBusJson());
-        }
+        csv.customBusWrite(bus, time);
     }
 }

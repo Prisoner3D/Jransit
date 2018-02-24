@@ -23,8 +23,9 @@ import javafx.stage.WindowEvent;
  * Main application class.
  */
 public class Main extends Application {
-
+	public static Thread mainThread;
     public static void main(String[] args) {
+    	mainThread = Thread.currentThread();
         launch(args);
     }
 

@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -13,13 +12,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import mapObjects.Bus;
+
 public class CSVUtilities {
 
     private ArrayList<String> CSVData;
     private File file;
-
     private int numColumns;
-
     private String delimiter;
 
     /**
@@ -27,6 +26,8 @@ public class CSVUtilities {
      * 
      * @param csv
      *            the csv file to be read
+     * @param delimiter
+     * 		      the delimiter
      */
     public CSVUtilities(File csv, String delimiter) {
         this.file = csv;
@@ -278,6 +279,24 @@ public class CSVUtilities {
             }
             pw.append('\n');
             pw.flush();
+            pw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        update();
+    }
+    
+    public void customBusWrite(List<Bus> busses, long time) {
+        try (FileWriter pw = new FileWriter(this.file, true)) {
+        	busses.forEach(b -> {
+        		try {
+					pw.append(String.valueOf(time) + this.getDelimiter() + b.getInfo().getBusJson());
+					pw.append('\n');
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+        	});
+        	pw.flush();
             pw.close();
         } catch (IOException e) {
             e.printStackTrace();

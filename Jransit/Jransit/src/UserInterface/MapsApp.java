@@ -47,13 +47,18 @@ public class MapsApp extends Application {
 	public static Icon busImage;
 	public static BusThread busThread;
 	public static TimelineSlider slider;
+	public static Timer timer;
 	public static void main(String[] args) {
 		launch(args);
 	}
 	// Modified version of
 	// https://stackoverflow.com/questions/47655695/javafx-countdown-timer-in-label-settext
+	/**
+	 * Starts a countdown on the countdown text
+	 * @param interval
+	 */
 	public static void setTimer(AtomicInteger interval) {
-		Timer timer = new Timer();
+		timer = new Timer();
 		timer.scheduleAtFixedRate(new TimerTask() {
 			public void run() {
 				if (interval.get() > 0) {
@@ -61,6 +66,9 @@ public class MapsApp extends Application {
 					interval.decrementAndGet();
 				} else {
 					Platform.runLater(() -> countdown.setText("(Grabbing API)"));
+					synchronized(busThread) {
+						busThread.notify();
+					}
 					timer.cancel();
 				}
 			}
