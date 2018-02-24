@@ -5,6 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * UNUSED FOR NOW
+ *
+ */
 public class MTAApiStaticFactory {
     private static final Map<TrainFeed, MTAApi> apis = new HashMap<>();
     private static final String key = "e7ed4dd1445f127eb503c38630a5d3e0";

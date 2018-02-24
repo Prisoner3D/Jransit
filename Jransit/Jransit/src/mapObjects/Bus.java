@@ -15,9 +15,8 @@ import com.teamdev.jxmaps.Size;
 import info.BusInfo;
 
 /**
- * Representation of buses
- * 
- * @author
+ * Representation of buses for javaFX
+ * side effect: Places marker on map
  *
  */
 
@@ -55,9 +54,7 @@ public class Bus {
 		if (place) {
 			this.marker.setPosition(new LatLng(Double.valueOf(info.getLat()), Double.valueOf(info.getLng())));
 		}
-		// ADD CLOSE
-		// ADD TIMES
-		// ADD MORE STOPS
+		
 		this.marker.addEventListener("click", new MapMouseEvent() {
 			@Override
 			public void onEvent(MouseEvent mouseEvent) {

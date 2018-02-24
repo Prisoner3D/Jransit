@@ -45,9 +45,9 @@ public class BusFactory {
     /**
      * Create the list of buses to be displayed
      * 
-     * @param m
-     * @param ico
-     * @param place
+     * @param m the map
+     * @param ico image icon
+     * @param place flag to place or not
      * @return
      */
     public List<Bus> placeBusses(Map m, boolean place) {

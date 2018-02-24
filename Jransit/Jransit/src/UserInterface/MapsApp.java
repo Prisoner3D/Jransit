@@ -1,9 +1,13 @@
 package UserInterface;
 
-import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.swing.JTextField;
 
@@ -14,7 +18,6 @@ import com.teamdev.jxmaps.DirectionsResult;
 import com.teamdev.jxmaps.DirectionsRouteCallback;
 import com.teamdev.jxmaps.DirectionsStatus;
 import com.teamdev.jxmaps.Icon;
-import com.teamdev.jxmaps.InfoWindow;
 import com.teamdev.jxmaps.LatLng;
 import com.teamdev.jxmaps.Map;
 import com.teamdev.jxmaps.MapMouseEvent;
@@ -22,22 +25,25 @@ import com.teamdev.jxmaps.MapOptions;
 import com.teamdev.jxmaps.MapReadyHandler;
 import com.teamdev.jxmaps.MapStatus;
 import com.teamdev.jxmaps.MapTypeControlOptions;
-import com.teamdev.jxmaps.Marker;
 import com.teamdev.jxmaps.MouseEvent;
-import com.teamdev.jxmaps.Size;
 import com.teamdev.jxmaps.TravelMode;
 import com.teamdev.jxmaps.javafx.MapView;
 
 import api.BusThread;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import mapObjects.Bus;
 import mapObjects.TimelineSlider;
 
 public class MapsApp extends Application {
@@ -48,6 +54,8 @@ public class MapsApp extends Application {
 	public static BusThread busThread;
 	public static TimelineSlider slider;
 	public static Timer timer;
+	private List<Bus> nonVisibleMarkers = new ArrayList<Bus>();
+	
 	public static void main(String[] args) {
 		launch(args);
 	}
@@ -102,15 +110,10 @@ public class MapsApp extends Application {
 				// Checking of the operation status
 				if (status == DirectionsStatus.OK) {
 					// Drawing the calculated route on the map
-					long sum = 0;
 					for (DirectionsLeg leg : result.getRoutes()[0].getLegs()) {
 						Platform.runLater(() -> distance.setText("Duration: " + leg.getDuration().getText()));
-
 					}
-					;
-					
 					map.getDirectionsRenderer().setDirections(result);
-				} else {
 				}
 			}
 		});
@@ -190,13 +193,53 @@ public class MapsApp extends Application {
 		distance = new Label();
 		distance.setText("Click on two points to calculate the duration between them.");
 
+		HBox filterWrapper = new HBox();
+		Label filterLbl = new Label("Filter by bus: ");
+		TextField filterText = new TextField();
+		filterWrapper.getChildren().addAll(filterLbl, filterText);
+		filterText.setPrefWidth(300);
+		filterWrapper.setAlignment(Pos.CENTER);
+		filterWrapper.setPadding(new Insets(0, 0, 40, 0));
+		filterText.textProperty().addListener(new ChangeListener<String>() {
+		    @Override
+		    public void changed(ObservableValue<? extends String> observable,
+		            String oldValue, String newValue) {
+		    	nonVisibleMarkers.forEach(b -> {
+		    		b.getMarker().setVisible(true);
+		    	});
+		    	// Filter by matching characters from start for busname and text value to get
+		    	// non matching busses to set visible to false
+		    	List<Bus> nonMatchingBusses = busThread.getBusFac().getBusses().stream().filter(bus -> {
+		    		String busName = bus.getInfo().getLineName();
+		    		if (newValue.length() > busName.length()) {
+		    			return true;
+		    		}
+		    		for (int i = 0; i < newValue.length(); i++) {
+		    			if (newValue.charAt(i) != busName.charAt(i)) {
+		    				return true;
+		    			}
+		    		}
+		    		return false;
+		    	}).collect(Collectors.toList());
+		    	nonMatchingBusses.forEach(b -> {
+		    		b.getMarker().setVisible(false);
+		    	});
+		    	nonVisibleMarkers = nonMatchingBusses;
+		    }
+		});
+		
 		HBox countdownText = new HBox(countdownPad, countdown);
 		countdownText.setAlignment(Pos.CENTER);
 
 		VBox bottom = new VBox();
 		bottom.styleProperty().set("-fx-font-size: 20");
 		bottom.setAlignment(Pos.CENTER);
-		bottom.getChildren().addAll(distance, countdownText, slider.getSlider());
+		bottom.getChildren().addAll(
+				filterWrapper, 
+				distance, 
+				countdownText, 
+				slider.getSlider()
+		);
 		root.setCenter(map);
 		root.setBottom(bottom);
 		Scene scene = new Scene(root, 1000, 1000);
