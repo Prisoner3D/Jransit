@@ -286,6 +286,9 @@ public class CSVUtilities {
         update();
     }
     
+    /**
+     * Writes information into the CSV file with each bus and the time that is passed in. Acts as a historical record.
+     */
     public void customBusWrite(List<Bus> busses, long time) {
         try (FileWriter pw = new FileWriter(this.file, true)) {
         	busses.forEach(b -> {
